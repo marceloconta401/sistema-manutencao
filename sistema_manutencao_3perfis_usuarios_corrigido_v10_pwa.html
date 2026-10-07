@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest_v10.json">
+<meta name="theme-color" content="#101827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sistema de Manutenção">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Sistema de Manutenção</title>
+<style>
+:root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3aed;--blue:#2563eb;--orange:#ea580c;--shadow:0 12px 35px #0005}
+:root.light{--bg:#eef2f7;--panel:#fff;--panel2:#f8fafc;--text:#111827;--muted:#64748b;--line:#dbe3ee;--shadow:0 10px 30px #0f172a14}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topin{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;flex:1}.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;font-size:21px}.topbtn{background:var(--panel2);color:var(--text);border:1px solid var(--line);width:42px;height:42px;border-radius:12px}
+.layout{max-width:1200px;margin:auto;padding:18px 16px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:8px 0 20px}.hero h1{margin:0;font-size:28px}.hero p{margin:5px 0;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}.login{max-width:460px;margin:8vh auto}.login h1{margin-top:0}.field{margin:12px 0}.field label{display:block;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;outline:none}.field textarea{min-height:100px;resize:vertical}.btn{padding:12px 15px;border-radius:12px;font-weight:800}.primary{background:var(--primary);color:white}.primary:hover{background:var(--primary2)}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#7f1d1d;color:#fff}.full{width:100%}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.kpi{border-radius:16px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}.kpi b{font-size:30px}.kpi.ticket-filter{border:0;width:100%;text-align:left}.kpi.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.kpi span{font-weight:750}.k-yellow{background:#ca8a04}.k-red{background:#dc2626}.k-blue{background:#2563eb}.k-purple{background:#7c3aed}.k-green{background:#16a34a}
+.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0;font-size:20px}.list{display:grid;gap:10px}.ticket{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.tickettop{display:flex;justify-content:space-between;gap:10px}.ticket h3{margin:0 0 5px;font-size:17px}.small{font-size:13px;color:var(--muted)}.desc{margin:10px 0;color:var(--muted);line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:7px}.tag{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#334155;color:#fff}.s-open{background:#ca8a04}.s-accepted{background:#2563eb}.s-in_progress{background:#2563eb}.s-waiting_parts{background:#7c3aed}.s-completed{background:#16a34a}.s-cancelled{background:#64748b}.p-urgent{background:#dc2626}.p-high{background:#ea580c}.p-normal{background:#475569}.p-low{background:#64748b}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-filter{border:2px solid transparent}.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.actions .btn{flex:1;min-width:120px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.profileline{color:var(--muted)}.photo{width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:10px}.modal{position:fixed;inset:0;background:#0009;z-index:50;padding:18px;overflow:auto}.modalbox{max-width:700px;margin:4vh auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.close{float:right;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;width:38px;height:38px}.history{display:grid;gap:9px}.historyitem{padding:11px;border-left:3px solid var(--primary);background:var(--panel2);border-radius:8px}.notice{padding:12px;border-radius:12px;background:#172554;color:#bfdbfe;margin-bottom:12px}.error{background:#450a0a;color:#fecaca}.ok{background:#052e16;color:#bbf7d0}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.hero{align-items:flex-start}.hero h1{font-size:24px}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:92px;padding:13px}.kpi b{font-size:25px}.layout{padding:14px 11px 40px}.card{padding:14px}.actions .btn{min-width:100%;}.topin{padding:10px 11px}.brand{font-size:16px}}
+
+.historypanel{margin-top:16px}.filtergrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:10px}.historyrow{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.historyrow h3{margin:0 0 5px}.historymeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.historymeta span{padding:5px 8px;border-radius:999px;background:#334155;color:#fff;font-size:12px;font-weight:800}.historydetail{margin-top:10px;color:var(--muted);line-height:1.45}.historyactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:700px){.filtergrid{grid-template-columns:1fr 1fr}}
+
+.notifywrap{position:relative}
+.notifybadge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+.notifypanel{position:absolute;right:0;top:48px;width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(0,0,0,.28);z-index:50;overflow:hidden}
+.notifhead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border-bottom:1px solid var(--line)}
+.notifhead .btn{padding:7px 9px;font-size:12px}
+.notificationlist{max-height:360px;overflow:auto}
+.notificationitem{padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
+.notificationitem:last-child{border-bottom:0}
+.notificationitem:hover{background:var(--panel2)}
+.notificationitem.unread{border-left:4px solid #3b82f6}
+.notificationitem strong{display:block;margin-bottom:4px}
+.notificationitem .small{line-height:1.35}
+@media(max-width:700px){.notifypanel{right:-48px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="topbtn" id="themeBtn" title="Tema">☀️</button><div class="notifywrap">
+<button class="topbtn" id="notifyBtn" title="Ativar notificações">🔔<span id="notifyBadge" class="notifybadge hidden">0</span></button>
+<div id="notifyPanel" class="notifypanel hidden">
+  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
+  <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
+</div>
+</div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button></div></header>
+<main class="layout">
+<section id="login" class="card login">
+<h1>🔐 Acesso ao sistema</h1><p class="small">Entre com seu usuário do Supabase.</p>
+<div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="off" placeholder="seu e-mail"></div>
+<div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
+<button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
+</section>
+<section id="app" class="hidden">
+<div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
+<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>🔴 Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>🔵 Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>🟣 Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>🟢 Concluídos</span><b id="kDone">0</b></button></div>
+<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>👥 Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>🏢 Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>⚙️ Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>📋 Total de chamados</span><b id="aOrders">0</b></div></div></div>
+<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button">➕ Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>➕ Novo usuário</h3><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário"></label><label>E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off"></label><label>Perfil<select id="newUserRole"><option value="sector">🏢 Setor</option><option value="mechanic">🔧 Mecânico</option><option value="admin">👨‍💼 Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector"><option value="">Carregando setores...</option></select></label></div><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
+
+<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</button></div><div class="filtergrid"><div class="field"><label>Equipamento</label><select id="historyEquipment"><option value="">Todos os equipamentos</option></select></div><div class="field"><label>Tipo</label><select id="historyType"><option value="">Todos os tipos</option></select></div><div class="field"><label>De</label><input id="historyStart" type="date"></div><div class="field"><label>Até</label><input id="historyEnd" type="date"></div></div><div class="actions"><button class="btn primary" id="applyHistoryBtn" type="button">Aplicar filtros</button><button class="btn secondary" id="clearHistoryBtn" type="button">Limpar</button></div><div id="historyList" class="list" style="margin-top:14px"><div class="empty">Carregando histórico...</div></div></div>
+<div class="grid2">
+<div>
+<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class="empty">Carregando chamados...</div></div></div>
+</div>
+<div>
+<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">🖼️ Galeria</button><button class="btn secondary" type="button" id="cameraBtn">📷 Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
+<div class="card"><div class="sectionhead"><h2>🧭 Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
+</div></div>
+</section></main>
+<div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+let session=null,profile=null,equipment=[];
+let notificationTimer=null,notificationBaseline=null;
+const NOTIFY_KEY='maint_last_notification_state';
+const NOTIFY_LIST_KEY='maint_notifications';
+let appNotifications=[];
+function loadLocalNotifications(){
+  try{
+    appNotifications=JSON.parse(localStorage.getItem(NOTIFY_LIST_KEY)||'[]');
+    if(!Array.isArray(appNotifications)) appNotifications=[];
+  }catch(e){appNotifications=[]}
+  renderNotificationCenter();
+}
+function saveLocalNotifications(){
+  appNotifications=appNotifications.slice(0,30);
+  localStorage.setItem(NOTIFY_LIST_KEY,JSON.stringify(appNotifications));
+  renderNotificationCenter();
+}
+function renderNotificationCenter(){
+  const list=$('notificationList'),badge=$('notifyBadge');
+  if(!list||!badge)return;
+  const unread=appNotifications.filter(x=>!x.read).length;
+  badge.textContent=String(unread);
+  badge.classList.toggle('hidden',unread===0);
+  if(!appNotifications.length){
+    list.innerHTML='<div class="empty">Nenhuma notificação.</div>';
+    return;
+  }
+  list.innerHTML=appNotifications.map((n,i)=>`
+    <div class="notificationitem ${n.read?'':'unread'}" data-notification-index="${i}">
+      <strong>${escapeHtml(n.title)}</strong>
+      <div class="small">${escapeHtml(n.body)}</div>
+      <div class="small" style="margin-top:5px">${escapeHtml(n.time||'')}</div>
+    </div>`).join('');
+}
+function addAppNotification(title,body,callId){
+  appNotifications.unshift({
+    id:crypto?.randomUUID?crypto.randomUUID():String(Date.now()),
+    callId:callId||'',
+    title,body,time:new Date().toLocaleString('pt-BR'),read:false
+  });
+  saveLocalNotifications();
+}
+function playNotificationSound(){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return;
+    const ctx=new Ctx(),o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='sine';o.frequency.value=880;g.gain.value=.045;
+    o.connect(g);g.connect(ctx.destination);o.start();
+    setTimeout(()=>{o.frequency.value=660},90);
+    setTimeout(()=>{o.stop();ctx.close()},190);
+  }catch(e){}
+}
+async function enableNotifications(){
+  if(!('Notification' in window)) return alert('Este navegador não oferece notificações.');
+  const p=await Notification.requestPermission();
+  if(p==='granted'){
+    $('notifyBtn').firstChild.textContent='🔔';
+    alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. A base PWA já está preparada; o Push com o sistema fechado será ligado na próxima etapa ao servidor.');
+  }else if(p==='denied'){
+    alert('As notificações foram bloqueadas. Ative-as nas configurações do navegador.');
+  }
+}
+function notifyUser(title,body,tag){
+  addAppNotification(title,body,tag);
+  playNotificationSound();
+  if(!('Notification' in window)||Notification.permission!=='granted') return;
+  try{
+    const n=new Notification(title,{body,tag,icon:'icon-192-v10.png',badge:'icon-192-v10.png'});
+    n.onclick=()=>{window.focus();n.close();openNotificationByCall(tag)};
+  }catch(e){console.warn(e)}
+}
+function openNotificationByCall(callId){
+  const item=appNotifications.find(x=>x.callId===callId);
+  if(item)item.read=true;
+  saveLocalNotifications();
+  if(callId && typeof details==='function') details(callId);
+}
+async function checkNotifications(){
+  if(!session||!profile) return;
+
+  const [wr,pr] = await Promise.all([
+    sb.from('work_orders')
+      .select('id,title,status,priority,created_at,started_at,completed_at,mechanic_id,sector_id')
+      .order('created_at',{ascending:false}).limit(50),
+    sb.from('part_requests')
+      .select('id,work_order_id,part_name,quantity,status,requested_by,created_at')
+      .order('created_at',{ascending:false}).limit(50)
+  ]);
+  if(wr.error) return;
+
+  const rows=wr.data||[];
+  const parts=pr.error?[]:(pr.data||[]);
+
+  const currentState=rows.map(x=>[
+    x.id,x.status,x.priority,x.started_at,x.completed_at,x.mechanic_id||''
+  ].join('|')).join(';;');
+
+  if(notificationBaseline===null){
+    notificationBaseline=currentState;
+    localStorage.setItem(NOTIFY_KEY,currentState);
+    return;
+  }
+
+  if(currentState===notificationBaseline){
+    // Mesmo sem mudança de chamado, novas solicitações de peça podem gerar aviso ao administrador.
+    if(profile.role==='admin'){
+      const seenParts=new Set(
+        (JSON.parse(localStorage.getItem('maint_seen_parts')||'[]')||[])
+      );
+      const freshParts=parts.filter(p=>!seenParts.has(p.id) && p.status==='requested');
+      if(freshParts.length){
+        freshParts.slice(0,8).forEach(p=>{
+          notifyUser(
+            '📦 Solicitação de peça',
+            `${p.part_name} · quantidade ${p.quantity}`,
+            p.work_order_id
+          );
+        });
+        localStorage.setItem(
+          'maint_seen_parts',
+          JSON.stringify(parts.map(p=>p.id).slice(0,80))
+        );
+      }
+    }
+    return;
+  }
+
+  const previous=notificationBaseline;
+  const oldMap=new Map(
+    previous.split(';;').filter(Boolean).map(s=>{
+      const a=s.split('|');
+      return [a[0],{status:a[1],priority:a[2],started_at:a[3],completed_at:a[4],mechanic_id:a[5]||''}];
+    })
+  );
+
+  const changed=rows.filter(x=>{
+    const old=oldMap.get(x.id);
+    if(!old) return true;
+    return old.status!==x.status ||
+           old.priority!==x.priority ||
+           old.started_at!==x.started_at ||
+           old.completed_at!==x.completed_at ||
+           old.mechanic_id!==(x.mechanic_id||'');
+  });
+
+  notificationBaseline=currentState;
+  localStorage.setItem(NOTIFY_KEY,currentState);
+
+  for(const x of changed.slice(0,10)){
+    const old=oldMap.get(x.id);
+    const isNew=!old;
+    const oldStatus=old?.status||'';
+    const newStatus=x.status;
+
+    // SETOR: somente atualizações relevantes do próprio setor.
+    if(profile.role==='sector' && x.sector_id===profile.sector_id){
+      // Não avisar o próprio setor sobre a abertura do chamado.
+      if(isNew && newStatus==='open') continue;
+
+      let title='🔔 Chamado atualizado';
+      if(newStatus==='accepted') title='🔧 Chamado aceito';
+      else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
+      else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
+      else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
+      else if(newStatus==='completed') title='🟢 Chamado concluído';
+      else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
+
+      notifyUser(
+        title,
+        `${x.title||'Chamado'} · ${labels[newStatus]||newStatus}`,
+        x.id
+      );
+    }
+
+    // MECÂNICO: novos chamados + alterações dos chamados atribuídos a ele.
+    if(profile.role==='mechanic'){
+      if(isNew && newStatus==='open'){
+        notifyUser(
+          x.priority==='urgent'?'🔴 Novo chamado urgente':'🆕 Novo chamado',
+          `${x.title||'Chamado'} · ${plabels[x.priority]||x.priority}`,
+          x.id
+        );
+        continue;
+      }
+
+      if(x.mechanic_id===session.user.id){
+        let title='🔧 Chamado atualizado';
+        if(newStatus==='accepted') title='✅ Chamado aceito';
+        else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
+        else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
+        else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Peça recebida / atendimento retomado';
+        else if(newStatus==='completed') title='🟢 Chamado concluído';
+
+        notifyUser(
+          title,
+          `${x.title||'Chamado'} · ${labels[newStatus]||newStatus}`,
+          x.id
+        );
+      }
+    }
+
+    // ADMINISTRADOR: acompanha eventos relevantes de toda a organização.
+    if(profile.role==='admin'){
+      let title='🔔 Atualização de chamado';
+      if(isNew && newStatus==='open') title=x.priority==='urgent'?'🔴 Novo chamado urgente':'🆕 Novo chamado';
+      else if(newStatus==='accepted') title='🔧 Chamado aceito';
+      else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
+      else if(newStatus==='waiting_parts') title='📦 Chamado aguardando peça';
+      else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
+      else if(newStatus==='completed') title='🟢 Chamado concluído';
+      else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
+
+      notifyUser(
+        title,
+        `${x.title||'Chamado'} · ${labels[newStatus]||newStatus}`,
+        x.id
+      );
+    }
+  }
+
+  // Solicitações de peças: administrador é avisado; mecânico não recebe aviso
+  // da própria solicitação, evitando duplicidade.
+  if(profile.role==='admin'){
+    const seenParts=new Set(
+      (JSON.parse(localStorage.getItem('maint_seen_parts')||'[]')||[])
+    );
+    const freshParts=parts.filter(p=>!seenParts.has(p.id) && p.status==='requested');
+    freshParts.slice(0,8).forEach(p=>{
+      notifyUser(
+        '📦 Solicitação de peça',
+        `${p.part_name} · quantidade ${p.quantity}`,
+        p.work_order_id
+      );
+    });
+    localStorage.setItem(
+      'maint_seen_parts',
+      JSON.stringify(parts.map(p=>p.id).slice(0,80))
+    );
+  }
+
+  await loadTickets();
+}
+
+function startNotificationPolling(){
+  clearInterval(notificationTimer);
+  checkNotifications();
+  notificationTimer=setInterval(checkNotifications,30000);
+}
+
+const labels={open:'Aberto',accepted:'Aceito',in_progress:'Em atendimento',waiting_parts:'Aguardando peça',completed:'Concluído',cancelled:'Cancelado'};
+const plabels={urgent:'Urgente',high:'Alta',normal:'Normal',low:'Baixa'};
+function notice(el,t,ok=false){el.textContent=t;el.className='notice '+(ok?'ok':'error');el.classList.remove('hidden')}
+function fmt(d){return d?new Date(d).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):''}
+function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').textContent=t==='light'?'🌙':'☀️'}
+$('notifyBtn').onclick=()=>{
+  if($('notifyPanel').classList.contains('hidden')) $('notifyPanel').classList.remove('hidden');
+  else $('notifyPanel').classList.add('hidden');
+};
+$('markNotificationsRead').onclick=(ev)=>{
+  ev.stopPropagation();
+  appNotifications.forEach(x=>x.read=true);
+  saveLocalNotifications();
+};
+document.addEventListener('click',function(ev){
+  const item=ev.target.closest('.notificationitem');
+  if(item){
+    const i=Number(item.dataset.notificationIndex);
+    const n=appNotifications[i];
+    if(n) openNotificationByCall(n.callId);
+    return;
+  }
+  if(!ev.target.closest('.notifywrap')) $('notifyPanel')?.classList.add('hidden');
+});
+$('themeBtn').onclick=()=>{localStorage.setItem('maint_theme',(localStorage.getItem('maint_theme')||'dark')==='dark'?'light':'dark');theme()};theme();
+loadLocalNotifications();
+if($('notificationScope')) $('notificationScope').textContent='As notificações exibidas aqui são filtradas pelo seu perfil.';
+function showError(e,prefix='Erro'){const msg=e?.message||String(e);alert(prefix+': '+msg);console.error(prefix,e)}
+async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).single();if(r.error)throw r.error;profile=r.data;if(!profile.active)throw new Error('Usuário inativo.')}
+async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error){console.error(r.error);return}equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
+window.loadAdminUsers=async function loadAdminUsers(){
+ if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
+ $('usersPanel').classList.remove('hidden');
+ $('usersList').innerHTML='<div class="empty">Carregando usuários...</div>';
+ const [pr,sr]=await Promise.all([
+  sb.from('profiles').select('id,full_name,role,active,sector_id,created_at').eq('organization_id',profile.organization_id).order('full_name'),
+  sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+ ]);
+ if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
+ const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
+ const rows=pr.data||[];
+ if(!rows.length){$('usersList').innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return}
+ const roleLabel={admin:'👨‍💼 Administrador',mechanic:'🔧 Mecânico',sector:'🏢 Setor'};
+ $('usersList').innerHTML=rows.map(u=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||'')}</div></div><div class="tags"><span class="tag ${u.active?'s-completed':'s-cancelled'}">${u.active?'Ativo':'Inativo'}</span></div></div><div class="small" style="margin-top:8px">${u.role==='sector'?'Setor: '+escapeHtml(sectors[u.sector_id]||'Não vinculado'):u.role==='mechanic'?'Atuação: Manutenção':'Acesso total da organização'}</div></div>`).join('');
+}
+
+async function loadAdminOverview(){
+ if(profile?.role!=='admin'){ $('adminPanel').classList.add('hidden'); return; }
+ $('adminPanel').classList.remove('hidden');
+ const org=profile.organization_id;
+ const [u,s,e,w]=await Promise.all([
+  sb.from('profiles').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
+  sb.from('sectors').select('id',{count:'exact',head:true}).eq('organization_id',org),
+  sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
+  sb.from('work_orders').select('id',{count:'exact',head:true}).eq('organization_id',org)
+ ]);
+ $('aUsers').textContent=u.error?'—':(u.count||0);
+ $('aSectors').textContent=s.error?'—':(s.count||0);
+ $('aEquipment').textContent=e.error?'—':(e.count||0);
+ $('aOrders').textContent=w.error?'—':(w.count||0);
+}
+async function loadTickets(){
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
+  const allRows=r.data||[];
+  let open=0,urgent=0,prog=0,parts=0,done=0;
+  allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.status==='waiting_parts')parts++;if(x.status==='completed')done++});
+  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'||x.status==='accepted'); else rows=allRows.filter(x=>x.status===f);
+  $('kOpen').textContent=open;$('kUrgent').textContent=urgent;$('kProgress').textContent=prog;$('kParts').textContent=parts;$('kDone').textContent=done;
+  if(!rows.length){$('tickets').innerHTML='<div class="empty">Nenhum chamado encontrado.</div>';return}
+  $('tickets').innerHTML=rows.map(x=>{
+    const mine=x.mechanic_id===session.user.id;
+    let actions='';
+    if(x.status==='open') actions+=`<button class="btn primary" onclick="acceptTicket('${x.id}')">Aceitar chamado</button>`;
+    if(mine&&x.status==='accepted') actions+=`<button class="btn primary" onclick="startTicket('${x.id}')">Iniciar atendimento</button>`;
+    if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')">Registrar serviço</button>`;
+    if(mine&&x.status==='waiting_parts') actions+=`<button class="btn primary" onclick="resumeTicket('${x.id}')">Retomar atendimento</button>`;
+    actions+=`<button class="btn secondary" onclick="details('${x.id}')">Ver detalhes</button>`;
+    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</div></div><div class="tags"><span class="tag s-${x.status}">${labels[x.status]||x.status}</span><span class="tag p-${x.priority}">${plabels[x.priority]||x.priority}</span></div></div><div class="desc">${escapeHtml(x.description||'Sem descrição')}</div><div class="small">Aberto: ${fmt(x.opened_at||x.created_at)} ${x.mechanic?.full_name?'· Mecânico: '+escapeHtml(x.mechanic.full_name):''}</div><div class="actions">${actions}</div></article>`;
+  }).join('')
+}
+async function updateStatus(id,status,extra={}){
+  try{
+    const r=await sb.from('work_orders').update({status,...extra}).eq('id',id).select('id,status,mechanic_id').single();
+    if(r.error)throw r.error;
+    if(!r.data)throw new Error('Nenhum chamado foi alterado. Verifique as permissões do usuário.');
+    await loadTickets();return true;
+  }catch(e){showError(e,'Não foi possível alterar o chamado');return false}
+}
+window.acceptTicket=async id=>{if(!confirm('Aceitar este chamado?'))return;await updateStatus(id,'accepted',{mechanic_id:session.user.id})};
+window.startTicket=async id=>{if(!confirm('Iniciar atendimento deste chamado?'))return;await updateStatus(id,'in_progress')};
+window.resumeTicket=async id=>{if(!confirm('Retomar o atendimento?'))return;await updateStatus(id,'in_progress')};
+window.partTicket=async id=>{
+  const part=prompt('Nome da peça necessária:');if(!part)return;
+  const qty=parseInt(prompt('Quantidade:','1')||'1',10);if(!Number.isFinite(qty)||qty<1)return alert('Quantidade inválida.');
+  try{const r=await sb.from('part_requests').insert({organization_id:profile.organization_id,work_order_id:id,requested_by:session.user.id,part_name:part.trim(),quantity:qty}).select('id,status').single();if(r.error)throw r.error;await loadTickets();alert('Peça solicitada com sucesso. O chamado deve ficar como Aguardando peça.')}catch(e){showError(e,'Não foi possível solicitar a peça')}
+};
+function equipmentOptions(selected=''){return '<option value="">Selecione um equipamento</option>'+equipment.map(e=>`<option value="${e.id}" ${e.id===selected?'selected':''}>${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
+window.reportTicket=async id=>{
+  try{
+    const woR=await sb.from('work_orders').select('id,equipment_id,title').eq('id',id).single();if(woR.error)throw woR.error;
+    let eqId=woR.data.equipment_id||'';
+    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEquipment">${equipmentOptions(eqId)}</select></div><div class="field"><label>Diagnóstico</label><textarea id="reportDiagnosis" placeholder="O que foi encontrado?"></textarea></div><div class="field"><label>Serviço realizado</label><textarea id="reportWork" placeholder="O que foi feito?"></textarea></div><div class="field"><label>Peças utilizadas</label><input id="reportParts" placeholder="Nenhuma"></div><div class="actions"><button class="btn primary" id="confirmReport">Registrar serviço</button><button class="btn secondary" id="cancelReport">Cancelar</button></div>`;
+    $('modal').classList.remove('hidden');
+    $('cancelReport').onclick=()=>$('modal').classList.add('hidden');
+    $('confirmReport').onclick=async()=>{
+      const eq=$('reportEquipment').value,diagnosis=$('reportDiagnosis').value.trim(),work=$('reportWork').value.trim(),parts=$('reportParts').value.trim()||'Nenhuma';
+      if(!eq)return alert('Selecione o equipamento.');if(!diagnosis||!work)return alert('Preencha diagnóstico e serviço realizado.');
+      const btn=$('confirmReport');btn.disabled=true;btn.textContent='Salvando...';
+      try{
+        if(!woR.data.equipment_id){const ur=await sb.from('work_orders').update({equipment_id:eq}).eq('id',id).select('id').single();if(ur.error)throw ur.error}
+        const r=await sb.from('maintenance_reports').insert({organization_id:profile.organization_id,work_order_id:id,mechanic_id:session.user.id,equipment_id:eq,diagnosis,work_performed:work,parts_used:parts}).select('id').single();if(r.error)throw r.error;
+        $('modal').classList.add('hidden');await loadTickets();if(confirm('Serviço registrado. Finalizar o chamado agora?')){await updateStatus(id,'completed')}else{alert('Serviço registrado com sucesso.')}
+      }catch(e){showError(e,'Não foi possível registrar o serviço')}finally{if($('confirmReport')){$('confirmReport').disabled=false;$('confirmReport').textContent='Registrar serviço'}}
+    };
+  }catch(e){showError(e,'Não foi possível abrir o registro de serviço')}
+};
+window.details=async id=>{
+ try{
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').eq('id',id).single();if(r.error)throw r.error;const x=r.data;if(!x)throw new Error('Chamado não encontrado.');
+  const [rep,parts,photos,events]=await Promise.all([
+   sb.from('maintenance_reports').select('diagnosis,work_performed,parts_used,created_at').eq('work_order_id',id).order('created_at',{ascending:false}).limit(1),
+   sb.from('part_requests').select('part_name,quantity,status,requested_at').eq('work_order_id',id).order('requested_at',{ascending:true}),
+   sb.from('maintenance_photos').select('photo_path,photo_type,description,created_at').eq('work_order_id',id).order('created_at',{ascending:true}),
+   sb.from('work_order_events').select('event_type,description,created_at').eq('work_order_id',id).order('created_at',{ascending:true})
+  ]);
+  if(rep.error)throw rep.error;if(parts.error)throw parts.error;if(photos.error)throw photos.error;if(events.error)throw events.error;
+  const mr=rep.data?.[0]||{};const partText=(parts.data||[]).map(p=>`${p.part_name} (qtd: ${p.quantity}) — ${labels[p.status]||p.status}`).join(', ')||'Nenhuma';
+  let time='Não iniciado';if(x.started_at){const end=x.completed_at?new Date(x.completed_at):new Date();const mins=Math.max(0,Math.floor((end-new Date(x.started_at))/60000));time=`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')}`}
+  let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" src="${sr.data.signedUrl}" alt="Foto do problema">`}
+  let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<div class="historyitem"><b>${escapeHtml(ph.photo_type||'Foto')}:</b> ${escapeHtml(ph.description||'')}<img class="photo" src="${sr.data.signedUrl}" alt="Foto da manutenção"></div>`}
+  const timeline=(events.data||[]).map(e=>`<div class="historyitem"><b>${fmt(e.created_at)}</b> — ${escapeHtml(e.description||e.event_type||'Evento')}</div>`).join('');
+  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>📷 Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>📷 Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>🕒 Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
+ }catch(e){showError(e,'Não foi possível abrir os detalhes')}
+};
+$('closeModal').onclick=()=>$('modal').classList.add('hidden');$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
+$('newBtn').onclick=()=>{
+  $('newCard').classList.remove('hidden');
+  $('newCard').scrollIntoView({behavior:'smooth',block:'start'});
+  $('title').focus();
+};
+$('refreshBtn').onclick=async()=>{if(!session)return;try{await Promise.all([loadTickets(),loadEquipment(),loadAdminOverview()])}catch(e){showError(e,'Atualização falhou')}};
+$('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
+$('saveBtn').onclick=async()=>{
+ const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
+ $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
+ try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`;const up=await sb.storage.from('maintenance-photos').upload(path,f,{contentType:f.type,upsert:false});if(up.error)throw up.error;photo_path=path}
+ const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;
+ notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('equipment').value='';await loadTickets()
+ }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
+};
+$('loginBtn').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return notice($('loginMsg'),'Não foi possível entrar: '+error.message);await showApp()};
+$('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
+$('logoutBtn').onclick=async()=>{await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
+function applyTicketFilter(status){
+  window.ticketFilter=status||'open';
+  document.querySelectorAll('.ticket-filter').forEach(b=>b.classList.toggle('active',b.dataset.status===(window.ticketFilter||'open')));
+  if(typeof loadTickets==='function') loadTickets();
+}
+async function showApp(){const s=await sb.auth.getSession();session=s.data.session;if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}try{await getProfile();if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');$('login').classList.add('hidden');$('app').classList.remove('hidden');$('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];$('profile').textContent=info[0]+' '+info[1]+' · '+info[2];$('roleNotice').textContent=info[0]+' '+info[1]+' — acesso conforme seu perfil.';$('roleNotice').className='notice ok';const isSector=profile.role==='sector';$('newBtn').classList.toggle('hidden',!isSector);$('newCard').classList.add('hidden');if(profile.role==='admin'){$('ticketsTitle').textContent='📋 Todos os chamados';$('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><div>🏢 Setores</div><div>⚙️ Equipamentos</div><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><div>📦 Peças</div><div>🗓️ Manutenção preventiva</div>'; }else if(profile.role==='mechanic'){$('ticketsTitle').textContent='🔧 Chamados para atendimento';$('shortcuts').innerHTML='<div>⚙️ Equipamentos</div><div>📋 Histórico de manutenção</div><div>📦 Solicitações de peças</div><div>🗓️ Manutenção preventiva</div>'}else{$('ticketsTitle').textContent='🏢 Chamados do meu setor';$('shortcuts').innerHTML='<div>⚙️ Equipamentos do setor</div><div>📋 Histórico de manutenção</div><div>🗓️ Manutenção preventiva</div>'}await loadEquipment();await loadTickets();await loadAdminOverview();startNotificationPolling()}catch(e){$('app').classList.add('hidden');$('login').classList.remove('hidden');notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)}}
+document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
+document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
+document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
+document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files;document.getElementById('photoName').textContent='Foto da câmera: '+f.name;}});
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v10.js').catch(e=>console.warn('Service Worker:',e)); }
+sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});showApp();
+
+async function openNewUserPanel(){
+  if(profile?.role!=='admin') return;
+  const panel=document.getElementById('newUserPanel');
+  if(!panel) return;
+  panel.classList.remove('hidden');
+  const sr=await sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name');
+  const sel=document.getElementById('newUserSector');
+  if(sr.error){ sel.innerHTML='<option value="">Erro ao carregar setores</option>'; }
+  else { sel.innerHTML=(sr.data||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('') || '<option value="">Nenhum setor cadastrado</option>'; }
+  updateNewUserRoleUI();
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function updateNewUserRoleUI(){
+  const role=document.getElementById('newUserRole')?.value;
+  const wrap=document.getElementById('newUserSectorWrap');
+  if(wrap) wrap.classList.toggle('hidden',role!=='sector');
+}
+function closeNewUserPanel(){
+  const panel=document.getElementById('newUserPanel');
+  if(panel) panel.classList.add('hidden');
+  const msg=document.getElementById('newUserMsg');
+  if(msg){msg.className='notice hidden';msg.textContent='';}
+}
+function showNewUserMessage(msg,ok=false){
+  const el=document.getElementById('newUserMsg'); if(!el)return;
+  el.textContent=msg; el.className='notice '+(ok?'ok':'');
+}
+async function submitNewUser(){
+  if(profile?.role!=='admin') return;
+  const name=document.getElementById('newUserName').value.trim();
+  const email=document.getElementById('newUserEmail').value.trim();
+  const role=document.getElementById('newUserRole').value;
+  const sector=document.getElementById('newUserSector').value || null;
+  if(!name || !email) return showNewUserMessage('Preencha nome e e-mail.');
+  if(role==='sector' && !sector) return showNewUserMessage('Selecione o setor.');
+  showNewUserMessage('Formulário pronto. A criação segura da conta de acesso será conectada ao servidor na próxima etapa.');
+}
+
+$('closeHistoryBtn').onclick=()=>closeHistoryPanel();
+$('historyShortcut')?.addEventListener('click',openHistoryPanel);
+$('applyHistoryBtn').onclick=()=>renderAdminHistory();
+$('clearHistoryBtn').onclick=()=>{ $('historyEquipment').value='';$('historyType').value='';$('historyStart').value='';$('historyEnd').value='';renderAdminHistory() };
+
+function openUsersPanel(){
+  const panel=document.getElementById('usersPanel');
+  if(!panel) return;
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  if(typeof window.loadAdminUsers==='function') window.loadAdminUsers();
+}
+document.addEventListener('click',function(ev){
+  const btn=ev.target.closest('#usersShortcut');
+  if(btn){ ev.preventDefault(); openUsersPanel(); }
+  const newUser=ev.target.closest('#newUserBtn');
+  if(newUser){ ev.preventDefault(); openNewUserPanel(); }
+  const cancelNew=ev.target.closest('#cancelNewUserBtn');
+  if(cancelNew){ ev.preventDefault(); closeNewUserPanel(); }
+  const saveNew=ev.target.closest('#saveNewUserBtn');
+  if(saveNew){ ev.preventDefault(); submitNewUser(); }
+  const close=ev.target.closest('#closeUsersBtn');
+  if(close){ ev.preventDefault(); const p=document.getElementById('usersPanel'); if(p) p.classList.add('hidden'); }
+});
+document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole') updateNewUserRoleUI(); });
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .then(()=>console.log('PWA: service worker registrado'))
+      .catch(e=>console.warn('PWA: falha ao registrar service worker',e));
+  });
+}
+</script>
+</body></html>
