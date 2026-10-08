@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<title>Entrar — Sistema de Manutenção</title>
+<title>Entrar — Sistema de Manutenção v2</title>
 <style>
 body{margin:0;background:#0b1220;color:#f8fafc;font-family:Arial,sans-serif;padding:20px}
 .box{max-width:460px;margin:8vh auto;background:#111a2b;border:1px solid #26344d;border-radius:18px;padding:24px}
@@ -13,7 +13,7 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 </head>
 <body>
 <div class="box">
-<h1>🔐 Acesso ao sistema</h1>
+<h1>🔐 Acesso ao sistema</h1><div style="font-size:13px;opacity:.7">Login v2</div>
 <p>Entre com seu usuário do Supabase.</p>
 <div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="username" placeholder="seu e-mail"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
@@ -22,7 +22,6 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 const msg=document.getElementById('msg'),btn=document.getElementById('btn');
 function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
@@ -32,7 +31,7 @@ btn.onclick=async()=>{
  btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
  try{
   if(!window.supabase)throw new Error('Biblioteca de acesso não carregou. Verifique a internet e tente novamente.');
-  const sb=window.supabase.createClient(SUPABASE_URL,KEY);
+  const sb=window.supabase.createClient('https://aijkbluzpmffmnflhjyv.supabase.co',KEY);
   const r=await sb.auth.signInWithPassword({email,password});
   if(r.error)throw r.error;
   if(!r.data||!r.data.session)throw new Error('Login aceito, mas a sessão não foi criada.');
