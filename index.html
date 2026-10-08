@@ -50,7 +50,7 @@ body:has(#login:not(.hidden)) .top{display:none}
 <header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="topbtn" id="themeBtn" title="Tema">☀️</button><div class="notifywrap">
 <button class="topbtn" id="notifyBtn" title="Ativar notificações">🔔<span id="notifyBadge" class="notifybadge hidden">0</span></button>
 <div id="notifyPanel" class="notifypanel hidden">
-  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
+  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type="button" id="enablePushBtn" style="margin:10px">🔔 Ativar notificações no aparelho</button><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
   <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
 </div>
 </div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button></div></header>
@@ -170,6 +170,36 @@ function notifyUser(title,body,tag){
     const n=new Notification(title,{body,tag,icon:'icon-192-v10.png',badge:'icon-192-v10.png'});
     n.onclick=()=>{window.focus();n.close();openNotificationByCall(tag)};
   }catch(e){console.warn(e)}
+}
+const PUSH_VAPID_PUBLIC_KEY='BLs_iN6k2Bwpwl21eo6YhCTc8jc_bEjrWpCdbcyW2t-eJYjfoobw4RqtA17nzy7Rhahb9Npt5Gjb83vHQxAXcA4';
+function urlBase64ToUint8Array(base64String){
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(base64);const out=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out;
+}
+async function registerPushOnDevice(){
+  const btn=$('enablePushBtn');
+  try{
+    if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)){
+      throw new Error('Este navegador não oferece Push. Instale o sistema como aplicativo no Android e tente novamente.');
+    }
+    const permission=await Notification.requestPermission();
+    if(permission!=='granted') throw new Error('Permissão de notificações não concedida.');
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(PUSH_VAPID_PUBLIC_KEY)});
+    const j=sub.toJSON();
+    const endpoint=j.endpoint, p256dh=j.keys?.p256dh, auth=j.keys?.auth;
+    if(!endpoint||!p256dh||!auth) throw new Error('O navegador não retornou os dados da assinatura.');
+    const r=await sb.from('push_subscriptions').upsert({user_id:session.user.id,endpoint,p256dh,auth},{onConflict:'endpoint'});
+    if(r.error)throw r.error;
+    if(btn){btn.textContent='✅ Notificações do aparelho ativadas';btn.disabled=true;}
+    alert('Notificações ativadas neste aparelho. O mecânico poderá receber novos chamados mesmo fora da tela do sistema.');
+  }catch(e){
+    if(btn)btn.disabled=false;
+    alert('Não foi possível ativar as notificações: '+(e?.message||e));
+  }
 }
 function openNotificationByCall(callId){
   const item=appNotifications.find(x=>x.callId===callId);
@@ -360,6 +390,7 @@ $('notifyBtn').onclick=()=>{
   if($('notifyPanel').classList.contains('hidden')) $('notifyPanel').classList.remove('hidden');
   else $('notifyPanel').classList.add('hidden');
 };
+$('enablePushBtn').onclick=registerPushOnDevice;
 $('markNotificationsRead').onclick=(ev)=>{
   ev.stopPropagation();
   appNotifications.forEach(x=>x.read=true);
@@ -513,7 +544,7 @@ $('saveBtn').onclick=async()=>{
  const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
  $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
  try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`;const up=await sb.storage.from('maintenance-photos').upload(path,f,{contentType:f.type,upsert:false});if(up.error)throw up.error;photo_path=path}
- const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;
+ const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;\n await sb.functions.invoke('send-push',{body:{work_order_id:r.data.id}}).catch(e=>console.warn('Push:',e));
  notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
