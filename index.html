@@ -98,12 +98,9 @@ window.__directLogin=async function(){
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
     if(!data.access_token||!data.refresh_token)throw new Error('O Supabase não retornou uma sessão.');
-    if(!window.supabase?.createClient)throw new Error('Biblioteca de acesso não carregou. Recarregue a página e tente novamente.');
-    const client=window.supabase.createClient('https://aijkbluzpmffmnflhjyv.supabase.co','sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw');
-    const sr=await client.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
+    if(!window.supabase?.createClient||!sb)throw new Error('Biblioteca de acesso não carregou. Recarregue a página e tente novamente.');
+    const sr=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
     if(sr.error)throw sr.error;
-    localStorage.setItem('sb-access-token',data.access_token);
-    localStorage.setItem('sb-refresh-token',data.refresh_token);
     if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
     if(typeof showApp==='function'){
       await showApp();
