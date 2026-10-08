@@ -576,15 +576,21 @@ $('saveBtn').onclick=async()=>{
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
 $('loginBtn').onclick=async()=>{
-  if(!sb){ return window.__directLogin(); }
   const email=$('email').value.trim(),password=$('password').value;
   if(!email||!password)return notice($('loginMsg'),'Digite o e-mail e a senha.');
   const btn=$('loginBtn');btn.disabled=true;btn.textContent='Entrando...';
   $('loginMsg').className='notice';$('loginMsg').textContent='Verificando acesso...';
   try{
-    const r=await sb.auth.signInWithPassword({email,password});
-    if(r.error)throw r.error;
-    if(!r.data?.session)throw new Error('O Supabase não criou a sessão de acesso.');
+    const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
+    if(!data.access_token||!data.refresh_token)throw new Error('O Supabase não retornou uma sessão.');
+    const sr=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
+    if(sr.error)throw sr.error;
     await showApp();
   }catch(e){
     notice($('loginMsg'),'Não foi possível entrar: '+(e?.message||'Erro desconhecido'));
