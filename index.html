@@ -104,7 +104,11 @@ window.__directLogin=async function(){
     if(error) throw error;
     if(!data?.session) throw new Error('O Supabase autenticou, mas não criou a sessão.');
     if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
-    await showApp();
+    if(typeof showApp==='function'){
+      await showApp();
+    }else{
+      location.replace('./?v='+Date.now());
+    }
   }catch(e){
     if(msg){msg.className='notice error';msg.textContent='Erro no login: '+(e?.message||e);}
     if(btn){btn.disabled=false;btn.textContent='Entrar';}
