@@ -22,7 +22,7 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const URL='https://aijkbluzpmffmnflhjyv.supabase.co';
+const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 const msg=document.getElementById('msg'),btn=document.getElementById('btn');
 function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
@@ -32,7 +32,7 @@ btn.onclick=async()=>{
  btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
  try{
   if(!window.supabase)throw new Error('Biblioteca de acesso não carregou. Verifique a internet e tente novamente.');
-  const sb=window.supabase.createClient(URL,KEY);
+  const sb=window.supabase.createClient(SUPABASE_URL,KEY);
   const r=await sb.auth.signInWithPassword({email,password});
   if(r.error)throw r.error;
   if(!r.data||!r.data.session)throw new Error('Login aceito, mas a sessão não foi criada.');
