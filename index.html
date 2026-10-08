@@ -91,20 +91,33 @@ window.__directLogin=async function(){
   if(msg){msg.className='notice';msg.textContent='Verificando acesso...';}
   try{
     const res=await fetch('https://aijkbluzpmffmnflhjyv.supabase.co/auth/v1/token?grant_type=password',{
-      method:'POST',headers:{'apikey':'sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw','Content-Type':'application/json'},
+      method:'POST',
+      headers:{'apikey':'sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw','Content-Type':'application/json'},
       body:JSON.stringify({email,password})
     });
-    const data=await res.json();
+    const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
-    localStorage.setItem('sb-access-token',data.access_token||'');
-    localStorage.setItem('sb-refresh-token',data.refresh_token||'');
+    if(!data.access_token||!data.refresh_token)throw new Error('O Supabase não retornou uma sessão.');
+    if(!window.supabase?.createClient)throw new Error('Biblioteca de acesso não carregou. Recarregue a página e tente novamente.');
+    const client=window.supabase.createClient('https://aijkbluzpmffmnflhjyv.supabase.co','sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw');
+    const sr=await client.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
+    if(sr.error)throw sr.error;
+    localStorage.setItem('sb-access-token',data.access_token);
+    localStorage.setItem('sb-refresh-token',data.refresh_token);
     if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
-    location.replace('./?v='+Date.now());
+    if(typeof showApp==='function'){
+      await showApp();
+    }else{
+      location.replace('./?v='+Date.now());
+    }
   }catch(e){
     if(msg){msg.className='notice';msg.textContent='Erro no login: '+(e?.message||e);}
     if(btn){btn.disabled=false;btn.textContent='Entrar';}
   }
 };
+</script>
+<script>
+
 </script>
 <script>
 document.getElementById('loginBtn')?.addEventListener('click',()=>window.__directLogin?.());
@@ -579,29 +592,7 @@ $('saveBtn').onclick=async()=>{
  notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
-$('loginBtn').onclick=async()=>{
-  const email=$('email').value.trim(),password=$('password').value;
-  if(!email||!password)return notice($('loginMsg'),'Digite o e-mail e a senha.');
-  const btn=$('loginBtn');btn.disabled=true;btn.textContent='Entrando...';
-  $('loginMsg').className='notice';$('loginMsg').textContent='Verificando acesso...';
-  try{
-    const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
-      method:'POST',
-      headers:{'apikey':SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({email,password})
-    });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
-    if(!data.access_token||!data.refresh_token)throw new Error('O Supabase não retornou uma sessão.');
-    const sr=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
-    if(sr.error)throw sr.error;
-    await showApp();
-  }catch(e){
-    notice($('loginMsg'),'Não foi possível entrar: '+(e?.message||'Erro desconhecido'));
-  }finally{
-    btn.disabled=false;btn.textContent='Entrar';
-  }
-};
+
 $('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
 function applyTicketFilter(status){
