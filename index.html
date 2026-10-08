@@ -547,12 +547,12 @@ async function showApp(){
       $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';
     }else if(profile.role==='mechanic'){
       $('ticketsTitle').textContent='🔧 Chamados para atendimento';
-      $('shortcuts').innerHTML='';
-      const sc=$('shortcutsCard');if(sc)sc.remove();
+      const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
+      const sc=$('shortcutsCard');if(sc)sc.classList.add('hidden');
     }else{
       $('ticketsTitle').textContent='🏢 Chamados do meu setor';
-      $('shortcuts').innerHTML='';
-      const sc=$('shortcutsCard');if(sc)sc.remove();
+      const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
+      const sc=$('shortcutsCard');if(sc)sc.classList.add('hidden');
     }
     await loadEquipment();
     await loadTickets();
