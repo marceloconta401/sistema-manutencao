@@ -20,8 +20,33 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 <button id="btn" type="button" onclick="loginNow()">Entrar</button>
 <div id="msg" class="msg">Digite seus dados e toque em Entrar.</div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
+<script>
+const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
+const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
+const msg=document.getElementById('msg'),btn=document.getElementById('btn');
+function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
+async function loginNow(){
+ const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
+ if(!email||!password)return show('Digite o e-mail e a senha.',true);
+ btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
+ try{
+  const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
+   method:'POST',
+   headers:{'apikey':KEY,'Content-Type':'application/json'},
+   body:JSON.stringify({email,password})
+  });
+  const data=await res.json();
+  if(!res.ok) throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
+  if(!data.access_token) throw new Error('O Supabase não retornou uma sessão.');
+  localStorage.setItem('sb-access-token',data.access_token);
+  localStorage.setItem('sb-refresh-token',data.refresh_token||'');
+  localStorage.setItem('sb-user',JSON.stringify(data.user||{}));
+  show('Login realizado! Abrindo o sistema...');
+  location.href='./index.html?v='+Date.now();
+ }catch(e){show('Erro no login: '+(e&&e.message?e.message:String(e)),true)}
+ finally{btn.disabled=false;btn.textContent='Entrar'}
+}
+</script>
 <script>
 const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 const msg=document.getElementById('msg'),btn=document.getElementById('btn');
