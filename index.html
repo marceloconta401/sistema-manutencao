@@ -126,16 +126,31 @@ function addAppNotification(title,body,callId){
   });
   saveLocalNotifications();
 }
-function playNotificationSound(){
+let notificationAudioCtx=null;
+async function unlockNotificationAudio(){
   try{
     const Ctx=window.AudioContext||window.webkitAudioContext;
-    if(!Ctx)return;
-    const ctx=new Ctx(),o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sine';o.frequency.value=880;g.gain.value=.045;
-    o.connect(g);g.connect(ctx.destination);o.start();
-    setTimeout(()=>{o.frequency.value=660},90);
-    setTimeout(()=>{o.stop();ctx.close()},190);
-  }catch(e){}
+    if(!Ctx)return false;
+    if(!notificationAudioCtx) notificationAudioCtx=new Ctx();
+    if(notificationAudioCtx.state==='suspended') await notificationAudioCtx.resume();
+    return notificationAudioCtx.state==='running';
+  }catch(e){console.warn('Áudio não pôde ser liberado',e);return false}
+}
+async function playNotificationSound(){
+  try{
+    const ok=await unlockNotificationAudio();
+    if(!ok)return;
+    const ctx=notificationAudioCtx;
+    const now=ctx.currentTime;
+    [880,660,880].forEach((freq,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain(),t=now+i*.18;
+      o.type='sine';o.frequency.setValueAtTime(freq,t);
+      g.gain.setValueAtTime(.0001,t);
+      g.gain.exponentialRampToValueAtTime(.12,t+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,t+.14);
+      o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.15);
+    });
+  }catch(e){console.warn('Erro no aviso sonoro',e)}
 }
 async function enableNotifications(){
   if(!('Notification' in window)) return alert('Este navegador não oferece notificações.');
@@ -340,6 +355,7 @@ function notice(el,t,ok=false){el.textContent=t;el.className='notice '+(ok?'ok':
 function fmt(d){return d?new Date(d).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):''}
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').textContent=t==='light'?'🌙':'☀️'}
+document.addEventListener('pointerdown',()=>{unlockNotificationAudio()},{once:true});
 $('notifyBtn').onclick=()=>{
   if($('notifyPanel').classList.contains('hidden')) $('notifyPanel').classList.remove('hidden');
   else $('notifyPanel').classList.add('hidden');
