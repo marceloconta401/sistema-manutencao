@@ -3,49 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1220">
-<title>Entrar — Sistema de Manutenção v2</title>
-<style>
-body{margin:0;background:#0b1220;color:#f8fafc;font-family:Arial,sans-serif;padding:20px}
-.box{max-width:460px;margin:8vh auto;background:#111a2b;border:1px solid #26344d;border-radius:18px;padding:24px}
-h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;margin-bottom:8px}input{width:100%;box-sizing:border-box;background:#172238;color:white;border:1px solid #26344d;border-radius:12px;padding:16px;font-size:18px}button{width:100%;border:0;border-radius:12px;padding:16px;background:#2563eb;color:white;font-weight:bold;font-size:18px;margin-top:8px}.msg{margin-top:14px;padding:12px;border-radius:10px;background:#172554;color:#bfdbfe}.err{background:#450a0a;color:#fecaca}
-</style>
-</head>
-<body>
-<div class="box">
-<h1>🔐 Acesso ao sistema</h1><div style="font-size:13px;opacity:.7">Login v2</div>
-<p>Entre com seu usuário do Supabase.</p>
-<div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="username" placeholder="seu e-mail"></div>
-<div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
-<button id="btn" type="button" onclick="loginNow()">Entrar</button>
-<div id="msg" class="msg">Digite seus dados e toque em Entrar.</div>
-</div>
+<meta http-equiv="refresh" content="0;url=./index.html">
+<title>Sistema de Manutenção</title>
 <script>
-const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
-const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
-const msg=document.getElementById('msg'),btn=document.getElementById('btn');
-function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
-async function loginNow(){
- const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
- if(!email||!password)return show('Digite o e-mail e a senha.',true);
- btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
- try{
-  const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
-   method:'POST',
-   headers:{'apikey':KEY,'Content-Type':'application/json'},
-   body:JSON.stringify({email,password})
-  });
-  const data=await res.json();
-  if(!res.ok) throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
-  if(!data.access_token) throw new Error('O Supabase não retornou uma sessão.');
-  localStorage.setItem('sb-access-token',data.access_token);
-  localStorage.setItem('sb-refresh-token',data.refresh_token||'');
-  localStorage.setItem('sb-user',JSON.stringify(data.user||{}));
-  show('Login realizado! Abrindo o sistema...');
-  location.href='./index.html?v='+Date.now();
- }catch(e){show('Erro no login: '+(e&&e.message?e.message:String(e)),true)}
- finally{btn.disabled=false;btn.textContent='Entrar'}
-}
+location.replace('./index.html');
 </script>
+</head>
+<body style="background:#0b1220;color:white;font-family:Arial,sans-serif;text-align:center;padding:40px">
+Abrindo o Sistema de Manutenção...
 </body>
 </html>
