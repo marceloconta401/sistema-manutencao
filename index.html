@@ -77,7 +77,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden
 </div></div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="(function(){var m=document.getElementById('loginMsg');if(m){m.textContent='Não foi possível carregar o sistema de login. Abra o endereço novamente e tente de novo.';m.className='notice error';}})()"></script>
 <script>
 const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
@@ -500,7 +500,22 @@ $('saveBtn').onclick=async()=>{
  notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
-$('loginBtn').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return notice($('loginMsg'),'Não foi possível entrar: '+error.message);await showApp()};
+$('loginBtn').onclick=async()=>{
+  const email=$('email').value.trim(),password=$('password').value;
+  if(!email||!password)return notice($('loginMsg'),'Digite o e-mail e a senha.');
+  const btn=$('loginBtn');btn.disabled=true;btn.textContent='Entrando...';
+  $('loginMsg').className='notice';$('loginMsg').textContent='Verificando acesso...';
+  try{
+    const r=await sb.auth.signInWithPassword({email,password});
+    if(r.error)throw r.error;
+    if(!r.data?.session)throw new Error('O Supabase não criou a sessão de acesso.');
+    await showApp();
+  }catch(e){
+    notice($('loginMsg'),'Não foi possível entrar: '+(e?.message||'Erro desconhecido'));
+  }finally{
+    btn.disabled=false;btn.textContent='Entrar';
+  }
+};
 $('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
 function applyTicketFilter(status){
