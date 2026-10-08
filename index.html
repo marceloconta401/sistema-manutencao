@@ -475,7 +475,22 @@ $('newBtn').onclick=()=>{
   $('newCard').scrollIntoView({behavior:'smooth',block:'start'});
   $('title').focus();
 };
-$('refreshBtn').onclick=()=>{location.reload();};
+$('refreshBtn').onclick=async()=>{
+  const b=$('refreshBtn'); if(b)b.disabled=true;
+  try{
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(reg=>reg.unregister()));
+    }
+    if(window.caches){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+  }catch(e){console.warn('Limpeza de cache:',e)}
+  const u=new URL(location.href);
+  u.searchParams.set('v',Date.now().toString());
+  location.replace(u.toString());
+};
 $('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
 $('saveBtn').onclick=async()=>{
  const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
@@ -493,7 +508,7 @@ function applyTicketFilter(status){
   document.querySelectorAll('.ticket-filter').forEach(b=>b.classList.toggle('active',b.dataset.status===(window.ticketFilter||'open')));
   if(typeof loadTickets==='function') loadTickets();
 }
-async function showApp(){const s=await sb.auth.getSession();session=s.data.session;if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}try{await getProfile();if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');$('login').classList.add('hidden');$('app').classList.remove('hidden');$('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];$('profile').textContent=info[0]+' '+info[1]+' · '+info[2];$('roleNotice').textContent='';$('roleNotice').className='notice hidden';const isSector=profile.role==='sector';$('newBtn').classList.toggle('hidden',!isSector);$('newCard').classList.add('hidden');$('shortcutsCard').classList.toggle('hidden',profile.role!=='admin');if(profile.role==='admin'){$('ticketsTitle').textContent='📋 Todos os chamados';$('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';}else if(profile.role==='mechanic'){$('ticketsTitle').textContent='🔧 Chamados para atendimento';$('shortcuts').innerHTML='';}else{$('ticketsTitle').textContent='🏢 Chamados do meu setor';$('shortcuts').innerHTML='';}await loadEquipment();await loadTickets();await loadAdminOverview();startNotificationPolling()}catch(e){$('app').classList.add('hidden');$('login').classList.remove('hidden');notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)}}
+async function showApp(){const s=await sb.auth.getSession();session=s.data.session;if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}try{await getProfile();if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');$('login').classList.add('hidden');$('app').classList.remove('hidden');$('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];$('profile').textContent=info[0]+' '+info[1]+' · '+info[2];$('roleNotice').textContent='';$('roleNotice').className='notice hidden';const isSector=profile.role==='sector';$('newBtn').classList.toggle('hidden',!isSector);$('newCard').classList.add('hidden');if(profile.role!=='admin'){const sc=$('shortcutsCard');if(sc)sc.remove();}else{$('ticketsTitle').textContent='📋 Todos os chamados';$('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';}else if(profile.role==='mechanic'){$('ticketsTitle').textContent='🔧 Chamados para atendimento';$('shortcuts').innerHTML='';}else{$('ticketsTitle').textContent='🏢 Chamados do meu setor';$('shortcuts').innerHTML='';}await loadEquipment();await loadTickets();await loadAdminOverview();startNotificationPolling()}catch(e){$('app').classList.add('hidden');$('login').classList.remove('hidden');notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)}}
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
 document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
@@ -709,12 +724,5 @@ document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole'
 </script>
 
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js')
-      .then(()=>console.log('PWA: service worker registrado'))
-      .catch(e=>console.warn('PWA: falha ao registrar service worker',e));
-  });
-}
 </script>
 </body></html>
