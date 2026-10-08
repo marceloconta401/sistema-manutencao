@@ -78,12 +78,38 @@ body:has(#login:not(.hidden)) .top{display:none}
 </div></div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.110.8/dist/umd/supabase.js"></script>
+<script>if(!window.supabase){document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.js"><\/script>')}</script>
+<script>
+window.__directLogin=async function(){
+  const email=document.getElementById('email')?.value.trim();
+  const password=document.getElementById('password')?.value||'';
+  const msg=document.getElementById('loginMsg');
+  const btn=document.getElementById('loginBtn');
+  if(!email||!password){if(msg){msg.className='notice';msg.textContent='Digite o e-mail e a senha.';}return;}
+  if(btn){btn.disabled=true;btn.textContent='Entrando...';}
+  if(msg){msg.className='notice';msg.textContent='Verificando acesso...';}
+  try{
+    const res=await fetch('https://aijkbluzpmffmnflhjyv.supabase.co/auth/v1/token?grant_type=password',{
+      method:'POST',headers:{'apikey':'sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw','Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
+    localStorage.setItem('sb-access-token',data.access_token||'');
+    localStorage.setItem('sb-refresh-token',data.refresh_token||'');
+    if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
+    location.replace('./?v='+Date.now());
+  }catch(e){
+    if(msg){msg.className='notice';msg.textContent='Erro no login: '+(e?.message||e);}
+    if(btn){btn.disabled=false;btn.textContent='Entrar';}
+  }
+};
+</script>
 <script>
 const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
 let session=null,profile=null,equipment=[];
 let notificationTimer=null,notificationBaseline=null;
