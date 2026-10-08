@@ -86,29 +86,21 @@ window.__directLogin=async function(){
   const password=document.getElementById('password')?.value||'';
   const msg=document.getElementById('loginMsg');
   const btn=document.getElementById('loginBtn');
-  if(!email||!password){if(msg){msg.className='notice';msg.textContent='Digite o e-mail e a senha.';}return;}
+  if(!email||!password){
+    if(msg){msg.className='notice';msg.textContent='Digite o e-mail e a senha.';}
+    return;
+  }
   if(btn){btn.disabled=true;btn.textContent='Entrando...';}
   if(msg){msg.className='notice';msg.textContent='Verificando acesso...';}
   try{
-    const res=await fetch('https://aijkbluzpmffmnflhjyv.supabase.co/auth/v1/token?grant_type=password',{
-      method:'POST',
-      headers:{'apikey':'sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw','Content-Type':'application/json'},
-      body:JSON.stringify({email,password})
-    });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok)throw new Error(data.error_description||data.msg||data.message||'E-mail ou senha inválidos.');
-    if(!data.access_token||!data.refresh_token)throw new Error('O Supabase não retornou uma sessão.');
-    if(!window.supabase?.createClient||!sb)throw new Error('Biblioteca de acesso não carregou. Recarregue a página e tente novamente.');
-    const sr=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
-    if(sr.error)throw sr.error;
+    if(!window.supabase?.createClient||!sb) throw new Error('Biblioteca do sistema não carregou. Atualize a página.');
+    const {data,error}=await sb.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    if(!data?.session) throw new Error('O Supabase autenticou, mas não criou a sessão.');
     if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
-    if(typeof showApp==='function'){
-      await showApp();
-    }else{
-      location.replace('./?v='+Date.now());
-    }
+    await showApp();
   }catch(e){
-    if(msg){msg.className='notice';msg.textContent='Erro no login: '+(e?.message||e);}
+    if(msg){msg.className='notice error';msg.textContent='Erro no login: '+(e?.message||e);}
     if(btn){btn.disabled=false;btn.textContent='Entrar';}
   }
 };
