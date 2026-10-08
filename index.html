@@ -475,7 +475,7 @@ $('newBtn').onclick=()=>{
   $('newCard').scrollIntoView({behavior:'smooth',block:'start'});
   $('title').focus();
 };
-$('refreshBtn').onclick=async()=>{if(!session)return;try{await Promise.all([loadTickets(),loadEquipment(),loadAdminOverview()])}catch(e){showError(e,'Atualização falhou')}};
+$('refreshBtn').onclick=()=>{location.reload();};
 $('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
 $('saveBtn').onclick=async()=>{
  const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
