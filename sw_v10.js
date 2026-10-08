@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-manutencao-v10';
+const CACHE_NAME = 'sistema-manutencao-v11';
 const APP_SHELL = [
   './',
   './manifest_v10.json',
