@@ -47,25 +47,5 @@ async function loginNow(){
  finally{btn.disabled=false;btn.textContent='Entrar'}
 }
 </script>
-<script>
-const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
-const msg=document.getElementById('msg'),btn=document.getElementById('btn');
-function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
-async function loginNow(){
- const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
- if(!email||!password)return show('Digite o e-mail e a senha.',true);
- btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
- try{
-  if(!window.supabase)throw new Error('Biblioteca de acesso não carregou. Verifique a internet e tente novamente.');
-  const sb=window.supabase.createClient('https://aijkbluzpmffmnflhjyv.supabase.co',KEY);
-  const r=await sb.auth.signInWithPassword({email,password});
-  if(r.error)throw r.error;
-  if(!r.data||!r.data.session)throw new Error('Login aceito, mas a sessão não foi criada.');
-  show('Login realizado! Abrindo o sistema...');
-  location.replace('./index.html?v='+Date.now());
- }catch(e){show('Erro no login: '+(e&&e.message?e.message:String(e)),true)}
- finally{btn.disabled=false;btn.textContent='Entrar'}
-}
-</script>
 </body>
 </html>
