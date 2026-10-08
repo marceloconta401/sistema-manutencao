@@ -576,6 +576,7 @@ $('saveBtn').onclick=async()=>{
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
 $('loginBtn').onclick=async()=>{
+  if(!sb){ return window.__directLogin(); }
   const email=$('email').value.trim(),password=$('password').value;
   if(!email||!password)return notice($('loginMsg'),'Digite o e-mail e a senha.');
   const btn=$('loginBtn');btn.disabled=true;btn.textContent='Entrando...';
