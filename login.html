@@ -17,7 +17,7 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 <p>Entre com seu usuário do Supabase.</p>
 <div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="username" placeholder="seu e-mail"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Sua senha"></div>
-<button id="btn">Entrar</button>
+<button id="btn" type="button" onclick="loginNow()">Entrar</button>
 <div id="msg" class="msg">Digite seus dados e toque em Entrar.</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,7 @@ h1{font-size:30px}.field{margin:16px 0}label{display:block;font-weight:bold;marg
 const KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 const msg=document.getElementById('msg'),btn=document.getElementById('btn');
 function show(t,e){msg.textContent=t;msg.className='msg'+(e?' err':'')}
-btn.onclick=async()=>{
+async function loginNow(){
  const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
  if(!email||!password)return show('Digite o e-mail e a senha.',true);
  btn.disabled=true;btn.textContent='Entrando...';show('Conectando...');
@@ -39,7 +39,7 @@ btn.onclick=async()=>{
   location.replace('./index.html?v='+Date.now());
  }catch(e){show('Erro no login: '+(e&&e.message?e.message:String(e)),true)}
  finally{btn.disabled=false;btn.textContent='Entrar'}
-};
+}
 </script>
 </body>
 </html>
