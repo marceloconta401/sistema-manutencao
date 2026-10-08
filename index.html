@@ -651,7 +651,7 @@ function closeHistoryPanel(){ $('historyPanel')?.classList.add('hidden'); }
 async function openHistoryPanel(){
   if(!adminOnly())return;
   const panel=$('historyPanel'); if(!panel)return;
-  panel.classList.remove('hidden'); panel.scrollIntoView({behavior:'smooth',block:'start');
+  panel.classList.remove('hidden'); panel.scrollIntoView({behavior:'smooth',block:'start'});
   const er=await sb.from('equipment').select('id,name,code').eq('organization_id',profile.organization_id).order('name');
   $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');
   $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças utilizadas</option>';
