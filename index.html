@@ -78,7 +78,8 @@ body:has(#login:not(.hidden)) .top{display:none}
 </div></div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="(function(){var m=document.getElementById('loginMsg');if(m){m.textContent='Não foi possível carregar o sistema de login. Abra o endereço novamente e tente de novo.';m.className='notice error';}})()"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
 <script>
 const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
