@@ -539,6 +539,148 @@ async function submitNewUser(){
   showNewUserMessage('Formulário pronto. A criação segura da conta de acesso será conectada ao servidor na próxima etapa.');
 }
 
+
+// ===== PAINÉIS DO ADMINISTRADOR =====
+function adminOnly(){ if(profile?.role!=='admin'){ alert('Acesso exclusivo do administrador.'); return false; } return true; }
+function openAdminModal(title,html){
+  if(!adminOnly()) return;
+  $('modalContent').innerHTML=`<h2>${title}</h2>${html}`;
+  $('modal').classList.remove('hidden');
+}
+async function openSectorsPanel(){
+  if(!adminOnly())return;
+  try{
+    const [sr,ur,er]=await Promise.all([
+      sb.from('sectors').select('id,name,created_at').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id),
+      sb.from('equipment').select('id,sector_id,active').eq('organization_id',profile.organization_id)
+    ]);
+    if(sr.error)throw sr.error;
+    const usersBy=Object.fromEntries((ur.data||[]).map(x=>[x.sector_id,(Object.values(Object.fromEntries([])).length)]));
+    const uc={},ec={}; (ur.data||[]).forEach(x=>{if(x.sector_id)uc[x.sector_id]=(uc[x.sector_id]||0)+1}); (er.data||[]).forEach(x=>{if(x.sector_id)ec[x.sector_id]=(ec[x.sector_id]||0)+1});
+    const rows=sr.data||[];
+    openAdminModal('🏢 Setores',`
+      <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
+      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket"><h3>${escapeHtml(s.name)}</h3><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div></div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
+      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
+    $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
+    $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
+    $('refreshSectorsAdmin').onclick=openSectorsPanel;
+    $('saveSectorAdmin').onclick=async()=>{
+      const name=$('newSectorAdminName').value.trim(); if(!name)return notice($('sectorAdminMsg'),'Informe o nome do setor.');
+      const x=await sb.from('sectors').insert({organization_id:profile.organization_id,name}).select('id').single();
+      if(x.error)return notice($('sectorAdminMsg'),x.error.message);
+      openSectorsPanel();
+    };
+  }catch(e){showError(e,'Não foi possível carregar os setores')}
+}
+async function openEquipmentPanel(){
+  if(!adminOnly())return;
+  try{
+    const [er,sr]=await Promise.all([
+      sb.from('equipment').select('id,name,code,location,sector_id,active,created_at').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+    ]);
+    if(er.error)throw er.error;
+    const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
+    const rows=er.data||[];
+    openAdminModal('⚙️ Equipamentos',`
+      <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div></div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
+      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
+    $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+    $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
+    $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden')};
+    $('refreshEquipmentAdmin').onclick=openEquipmentPanel;
+    $('saveEquipmentAdmin').onclick=async()=>{
+      const name=$('newEquipmentName').value.trim();if(!name)return notice($('equipmentAdminMsg'),'Informe o nome do equipamento.');
+      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true}).select('id').single();
+      if(x.error)return notice($('equipmentAdminMsg'),x.error.message);
+      openEquipmentPanel(); await loadEquipment(); await loadAdminOverview();
+    };
+  }catch(e){showError(e,'Não foi possível carregar os equipamentos')}
+}
+async function openPartsPanel(){
+  if(!adminOnly())return;
+  try{
+    const r=await sb.from('part_requests').select('id,work_order_id,part_name,quantity,status,requested_at,created_at,requested_by').order('created_at',{ascending:false}).limit(100);
+    if(r.error)throw r.error;
+    const rows=r.data||[];
+    openAdminModal('📦 Peças',`
+      <div class="actions"><button class="btn secondary" id="refreshPartsAdmin">↻ Atualizar</button></div>
+      <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidade: ${p.quantity||1} · Chamado: ${escapeHtml(p.work_order_id||'')}</div></div><span class="tag">${escapeHtml(p.status||'Sem status')}</span></div><div class="small" style="margin-top:8px">Solicitada em: ${fmt(p.requested_at||p.created_at)}</div></div>`).join(''):'<div class="empty">Nenhuma solicitação de peça encontrada.</div>'}</div>`);
+    $('refreshPartsAdmin').onclick=openPartsPanel;
+  }catch(e){showError(e,'Não foi possível carregar as solicitações de peças')}
+}
+async function openPreventivePanel(){
+  if(!adminOnly())return;
+  try{
+    const [er,sr]=await Promise.all([
+      sb.from('equipment').select('id,name,code,sector_id,active').eq('organization_id',profile.organization_id).eq('active',true).order('name'),
+      sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+    ]);
+    if(er.error)throw er.error;
+    const eqs=er.data||[], sectors=sr.data||[];
+    openAdminModal('🗓️ Manutenção preventiva',`
+      <p class="small">Crie um chamado preventivo para um equipamento e encaminhe-o ao setor responsável.</p>
+      <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_id||''}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}</select></div>
+      <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Descrição da preventiva</label><textarea id="preventiveDescription" placeholder="Ex.: inspeção, lubrificação, troca de filtros..."></textarea></div>
+      <div class="actions"><button class="btn primary" id="createPreventive">Criar chamado preventivo</button></div><div id="preventiveMsg" class="notice hidden"></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <h3>Últimos chamados preventivos</h3><div id="preventiveRecent" class="list"><div class="empty">Carregando...</div></div>`);
+    $('preventiveEquipment').onchange=()=>{const s=$('preventiveEquipment').selectedOptions[0]?.dataset.sector||'';if(s)$('preventiveSector').value=s};
+    $('createPreventive').onclick=async()=>{
+      const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=$('preventiveDescription').value.trim();
+      if(!eq||!sector||!desc)return notice($('preventiveMsg'),'Preencha equipamento, setor e descrição.');
+      const e=eqs.find(x=>x.id===eq);
+      const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq}).select('id').single();
+      if(x.error)return notice($('preventiveMsg'),x.error.message);
+      notice($('preventiveMsg'),'Chamado preventivo criado com sucesso.',true);$('preventiveDescription').value='';await loadTickets();
+      loadPreventiveRecent();
+    };
+    async function loadPreventiveRecent(){
+      const x=await sb.from('work_orders').select('id,title,status,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order('created_at',{ascending:false}).limit(10);
+      if(x.error){$('preventiveRecent').innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
+      $('preventiveRecent').innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.status} · ${fmt(w.created_at)}</div><div class="actions"><button class="btn secondary" onclick="details('${w.id}')">Ver detalhes</button></div></div>`).join('')||'<div class="empty">Nenhuma preventiva criada.</div>';
+    }
+    loadPreventiveRecent();
+  }catch(e){showError(e,'Não foi possível abrir a manutenção preventiva')}
+}
+function closeHistoryPanel(){ $('historyPanel')?.classList.add('hidden'); }
+async function openHistoryPanel(){
+  if(!adminOnly())return;
+  const panel=$('historyPanel'); if(!panel)return;
+  panel.classList.remove('hidden'); panel.scrollIntoView({behavior:'smooth',block:'start');
+  const er=await sb.from('equipment').select('id,name,code').eq('organization_id',profile.organization_id).order('name');
+  $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');
+  $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças utilizadas</option>';
+  await renderAdminHistory();
+}
+async function renderAdminHistory(){
+  if(profile?.role!=='admin')return;
+  const list=$('historyList'); if(!list)return; list.innerHTML='<div class="empty">Carregando histórico...</div>';
+  let q=sb.from('maintenance_reports').select('id,work_order_id,equipment_id,diagnosis,work_performed,parts_used,created_at').eq('organization_id',profile.organization_id).order('created_at',{ascending:false}).limit(200);
+  const eq=$('historyEquipment')?.value,start=$('historyStart')?.value,end=$('historyEnd')?.value,type=$('historyType')?.value;
+  if(eq)q=q.eq('equipment_id',eq);
+  if(start)q=q.gte('created_at',start+'T00:00:00');
+  if(end)q=q.lte('created_at',end+'T23:59:59');
+  const r=await q;if(r.error){list.innerHTML='<div class="empty">'+escapeHtml(r.error.message)+'</div>';return}
+  const rows=r.data||[];const ids=[...new Set(rows.map(x=>x.work_order_id).filter(Boolean))];
+  let titles={}; if(ids.length){const wr=await sb.from('work_orders').select('id,title').in('id',ids);titles=Object.fromEntries((wr.data||[]).map(x=>[x.id,x.title]))}
+  const filtered=rows.filter(x=>!type||(type==='diagnosis'?x.diagnosis:type==='work'?x.work_performed:x.parts_used));
+  list.innerHTML=filtered.map(x=>`<div class="historyrow"><h3>${escapeHtml(titles[x.work_order_id]||'Manutenção')}</h3><div class="historymeta"><span>${fmt(x.created_at)}</span></div><div class="historydetail"><b>Diagnóstico:</b> ${escapeHtml(x.diagnosis||'Não registrado')}<br><b>Serviço:</b> ${escapeHtml(x.work_performed||'Não registrado')}<br><b>Peças:</b> ${escapeHtml(x.parts_used||'Nenhuma')}</div><div class="historyactions"><button class="btn secondary" onclick="details('${x.work_order_id}')">Ver chamado</button></div></div>`).join('')||'<div class="empty">Nenhum registro encontrado.</div>';
+}
+
+// Atalhos administrativos
+document.addEventListener('click',function(ev){
+  const id=ev.target.closest('button')?.id;
+  if(id==='sectorsShortcut')openSectorsPanel();
+  if(id==='equipmentShortcut')openEquipmentPanel();
+  if(id==='partsShortcut')openPartsPanel();
+  if(id==='preventiveShortcut')openPreventivePanel();
+});
+
 $('closeHistoryBtn').onclick=()=>closeHistoryPanel();
 $('historyShortcut')?.addEventListener('click',openHistoryPanel);
 $('applyHistoryBtn').onclick=()=>renderAdminHistory();
