@@ -650,7 +650,7 @@ document.getElementById('galleryBtn')?.addEventListener('click',()=>document.get
 document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
 document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files;document.getElementById('photoName').textContent='Foto da câmera: '+f.name;}});
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v10.js').catch(e=>console.warn('Service Worker:',e)); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v15.js').catch(e=>console.warn('Service Worker:',e)); }
 (async()=>{try{const at=localStorage.getItem('sb-access-token'),rt=localStorage.getItem('sb-refresh-token');if(at&&rt)await sb.auth.setSession({access_token:at,refresh_token:rt});}catch(e){console.warn('Sessão local:',e)}})();
 sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});showApp();
 
