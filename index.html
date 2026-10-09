@@ -108,17 +108,10 @@ window.__loginNow=async function(){
     if(error)throw error;
     if(!data?.session)throw new Error('Login aceito, mas a sessão não foi criada.');
     show('Login realizado! Abrindo o sistema...','notice ok');
-    if(typeof window.showApp==='function'){
-      await window.showApp();
+    if(typeof showApp==='function'){
+      await showApp();
     }else{
-      let tries=0;
-      const wait=async()=>{
-        if(typeof window.showApp==='function') return window.showApp();
-        if(++tries>50) throw new Error('O sistema demorou para carregar.');
-        await new Promise(r=>setTimeout(r,100));
-        return wait();
-      };
-      await wait();
+      throw new Error('A função principal do sistema não carregou. Atualize a página.');
     }
   }catch(e){
     show('Erro no login: '+(e?.message||e),'notice error');
