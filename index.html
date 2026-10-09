@@ -85,32 +85,34 @@ window.__SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 window.__SUPABASE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 window.__supabaseClient=window.supabase?.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
 window.__loginNow=async function(){
-  try{
-    if(!window.__supabaseClient && window.supabase?.createClient){
-      window.__supabaseClient=window.supabase.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
-    }
-    if(!window.__supabaseClient){
-      const msg=document.getElementById('loginMsg');
-      if(msg){msg.textContent='Não foi possível carregar a conexão com o Supabase. Recarregue a página.';msg.className='notice error';}
-      return;
-    }
   const email=document.getElementById('email')?.value.trim();
   const password=document.getElementById('password')?.value||'';
   const msg=document.getElementById('loginMsg');
   const btn=document.getElementById('loginBtn');
   const show=(t,cls='notice')=>{if(msg){msg.textContent=t;msg.className=cls;}};
   if(!email||!password){show('Digite o e-mail e a senha.');return;}
-  if(!window.__supabaseClient){show('Erro: conexão com o Supabase não carregou. Atualize a página.','notice error');return;}
-  btn.disabled=true;btn.textContent='Entrando...';show('Verificando acesso...');
+  if(!window.__supabaseClient){
+    if(window.supabase?.createClient){
+      window.__supabaseClient=window.supabase.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
+    }
+  }
+  if(!window.__supabaseClient){
+    show('Não foi possível carregar a conexão com o Supabase. Recarregue a página.','notice error');
+    return;
+  }
+  btn.disabled=true;
+  btn.textContent='Entrando...';
+  show('Verificando acesso...');
   try{
     const {data,error}=await window.__supabaseClient.auth.signInWithPassword({email,password});
-    if(error) throw error;
-    if(!data?.session) throw new Error('Login aceito, mas a sessão não foi criada.');
+    if(error)throw error;
+    if(!data?.session)throw new Error('Login aceito, mas a sessão não foi criada.');
     show('Login realizado! Abrindo o sistema...','notice ok');
     setTimeout(()=>location.replace('./?login='+Date.now()),150);
   }catch(e){
     show('Erro no login: '+(e?.message||e),'notice error');
-    btn.disabled=false;btn.textContent='Entrar';
+    btn.disabled=false;
+    btn.textContent='Entrar';
   }
 };
 </script>
