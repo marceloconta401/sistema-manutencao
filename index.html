@@ -86,41 +86,6 @@ window.__SUPABASE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 window.__supabaseClient=window.supabase?.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
 </script>
 <script>
-window.__directLogin=async function(){
-  const email=document.getElementById('email')?.value.trim();
-  const password=document.getElementById('password')?.value||'';
-  const msg=document.getElementById('loginMsg');
-  const btn=document.getElementById('loginBtn');
-  if(!email||!password){
-    if(msg){msg.className='notice';msg.textContent='Digite o e-mail e a senha.';}
-    return;
-  }
-  if(btn){btn.disabled=true;btn.textContent='Entrando...';}
-  if(msg){msg.className='notice';msg.textContent='Verificando acesso...';}
-  try{
-    const client=window.__supabaseClient;
-    if(!client) throw new Error('Biblioteca do sistema não carregou. Atualize a página.');
-    const {data,error}=await client.auth.signInWithPassword({email,password});
-    if(error) throw error;
-    if(!data?.session) throw new Error('O Supabase autenticou, mas não criou a sessão.');
-    if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
-    if(typeof showApp==='function'){
-      await showApp();
-    }else{
-      location.replace('./?v='+Date.now());
-    }
-  }catch(e){
-    if(msg){msg.className='notice error';msg.textContent='Erro no login: '+(e?.message||e);}
-    if(btn){btn.disabled=false;btn.textContent='Entrar';}
-  }
-};
-</script>
-<script>
-
-</script>
-<script>
-document.getElementById('loginBtn')?.addEventListener('click',()=>window.__directLogin?.());
-document.getElementById('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.__directLogin?.()});
 </script>
 <script>
 const SUPABASE_URL=window.__SUPABASE_URL;
@@ -645,8 +610,29 @@ document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getE
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
 document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files;document.getElementById('photoName').textContent='Foto da câmera: '+f.name;}});
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v15.js').catch(e=>console.warn('Service Worker:',e)); }
-(async()=>{try{const at=localStorage.getItem('sb-access-token'),rt=localStorage.getItem('sb-refresh-token');if(at&&rt)await sb.auth.setSession({access_token:at,refresh_token:rt});}catch(e){console.warn('Sessão local:',e)}})();
-sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});showApp();
+sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});
+showApp();
+
+$('loginBtn')?.addEventListener('click',async()=>{
+  const email=$('email')?.value.trim();
+  const password=$('password')?.value||'';
+  const msg=$('loginMsg');
+  const btn=$('loginBtn');
+  if(!email||!password){notice(msg,'Digite o e-mail e a senha.');return;}
+  btn.disabled=true;btn.textContent='Entrando...';
+  notice(msg,'Verificando acesso...');
+  try{
+    const {data,error}=await sb.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    if(!data?.session)throw new Error('O Supabase autenticou, mas não criou a sessão.');
+    notice(msg,'Login realizado! Abrindo o sistema...',true);
+    await showApp();
+  }catch(e){
+    notice(msg,'Erro no login: '+(e?.message||e));
+    btn.disabled=false;btn.textContent='Entrar';
+  }
+});
+$('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn')?.click()});
 
 async function openNewUserPanel(){
   if(profile?.role!=='admin') return;
