@@ -1,0 +1,304 @@
+Quero que você faça uma revisão completa e finalize o meu Sistema de Manutenção. NÃO crie um sistema novo do zero e NÃO remova nenhuma função que já existe. Analise primeiro todo o projeto atual, todos os arquivos, banco Supabase, autenticação, chamados e sistema de notificações antes de fazer alterações.
+
+OBJETIVO PRINCIPAL
+
+Quero transformar o sistema atual em um sistema completo e profissional que funcione em:
+
+1. Web/PWA
+2. Android como aplicativo instalável APK
+3. Windows como aplicativo instalável EXE
+
+Todos devem usar o MESMO sistema, os MESMOS usuários e o MESMO banco de dados Supabase, para que as informações sejam sincronizadas entre celular, computador e navegador.
+
+FUNÇÕES QUE DEVEM SER PRESERVADAS
+
+Não remover nenhuma função existente, incluindo:
+
+- Login e autenticação pelo Supabase
+- Usuários e perfis
+- Administrador
+- Mecânicos
+- Setores
+- Equipamentos
+- Abertura de chamados
+- Aceitar chamados
+- Atendimento de chamados
+- Alteração de status
+- Histórico de manutenção
+- Peças
+- Manutenção preventiva
+- Central de notificações
+- Todas as funções administrativas já existentes
+- Banco de dados Supabase
+- Permissões e regras de acesso existentes
+
+LOGIN E AUTENTICAÇÃO
+
+Corrija qualquer problema existente de login, sessão ou carregamento do perfil.
+
+O usuário deve:
+- entrar com e-mail e senha;
+- permanecer autenticado;
+- entrar diretamente no sistema depois do login;
+- não voltar para a tela de login sem motivo;
+- carregar corretamente o perfil e a função do usuário;
+- respeitar as permissões de admin, mecânico e setor.
+
+Não altere o banco ou a estrutura de perfis sem necessidade.
+
+NOTIFICAÇÕES — PARTE MAIS IMPORTANTE
+
+As notificações atuais não estão como eu quero.
+
+Quero que elas funcionem como notificações de um aplicativo Android instalado, semelhantes às notificações do WhatsApp.
+
+NÃO quero apenas uma mensagem dentro do site.
+NÃO quero depender de JavaScript/AudioContext para tocar som.
+NÃO quero uma notificação que só funcione enquanto a página estiver aberta.
+
+Quero PUSH REAL recebido pelo sistema operacional.
+
+Quando houver um novo chamado ou atualização de chamado, o usuário responsável deve receber uma notificação.
+
+Eventos que devem gerar notificações:
+
+- Novo chamado aberto
+- Chamado aceito
+- Chamado iniciado/em atendimento
+- Alteração de status
+- Chamado aguardando peça
+- Chamado concluído
+- Chamado cancelado
+- Nova atualização relevante do chamado
+- Nova mensagem, caso exista essa função
+
+A notificação deve:
+
+- aparecer na central de notificações do Android;
+- tocar som;
+- vibrar;
+- aparecer com o aplicativo em segundo plano;
+- funcionar com a tela bloqueada quando permitido pelo Android;
+- funcionar sem a página Web estar aberta;
+- mostrar o nome "Sistema de Manutenção";
+- mostrar o número do chamado;
+- mostrar uma descrição do que aconteceu;
+- permitir tocar na notificação;
+- ao tocar, abrir diretamente o chamado correspondente;
+- permitir várias notificações;
+- não substituir notificações diferentes indevidamente.
+
+ANDROID
+
+Preparar o projeto como aplicativo Android REALMENTE INSTALÁVEL.
+
+Usar Capacitor ou outra tecnologia adequada para transformar o sistema em aplicativo Android.
+
+Quero um APK instalável.
+
+O aplicativo deve ter:
+
+- Nome: Sistema de Manutenção
+- Ícone próprio
+- Login Supabase
+- Todas as funções atuais
+- Push notifications reais
+- Som
+- Vibração
+- Notificações em segundo plano
+- Notificações com tela bloqueada quando permitido
+- Abertura direta do chamado ao tocar na notificação
+
+Criar um Notification Channel nativo do Android, por exemplo:
+
+"Systema de Manutenção - Chamados"
+
+O canal deve permitir som e vibração e aparecer nas configurações de notificações do Android.
+
+Se for necessário usar Firebase Cloud Messaging (FCM) ou outra tecnologia adequada para push nativo Android, implemente corretamente.
+
+Se usar FCM, configure a arquitetura necessária sem colocar chaves privadas ou segredos dentro do aplicativo.
+
+O usuário deve receber uma solicitação para permitir notificações.
+
+Cada dispositivo deve ser registrado para o usuário logado.
+
+Um mesmo usuário pode ter vários celulares/dispositivos.
+
+Cada dispositivo deve ter sua própria inscrição/token.
+
+Quando o usuário sair da conta, tratar corretamente a inscrição daquele dispositivo.
+
+SUPABASE
+
+Continuar usando o Supabase atual.
+
+Analise e aproveite o código existente de:
+
+- autenticação;
+- profiles;
+- chamados;
+- setores;
+- equipamentos;
+- notificações;
+- Service Worker;
+- Edge Functions;
+- push subscriptions.
+
+Se já existir código de Web Push, não duplique sem necessidade. Corrija e aproveite o que já existe.
+
+Criar/corrigir a estrutura necessária para armazenar as inscrições dos dispositivos no Supabase.
+
+As notificações devem ser direcionadas somente aos usuários corretos.
+
+Um usuário não pode receber notificações de chamados que não deveria receber.
+
+Nunca colocar no código do navegador, APK ou EXE:
+
+- Supabase Service Role Key
+- chave privada VAPID
+- chaves privadas do Firebase
+- qualquer outro segredo
+
+Segredos devem ficar em variáveis de ambiente/secrets no servidor ou Edge Functions.
+
+CENTRAL DE NOTIFICAÇÕES DENTRO DO SISTEMA
+
+Além das notificações do celular, manter uma central dentro do sistema.
+
+Criar/manter:
+
+- ícone de sino;
+- contador de não lidas;
+- lista de notificações;
+- marcar como lida;
+- histórico;
+- clicar na notificação e abrir o chamado correspondente.
+
+ANDROID — TESTE OBRIGATÓRIO
+
+Depois de implementar, faça um teste completo.
+
+Teste:
+
+1. Instalar o APK.
+2. Fazer login.
+3. Permitir notificações.
+4. Colocar o aplicativo em segundo plano.
+5. Bloquear a tela.
+6. Em outro usuário, criar um chamado.
+7. Confirmar que o celular recebe a notificação.
+8. Confirmar que aparece na central de notificações.
+9. Confirmar que toca som.
+10. Confirmar que vibra.
+11. Tocar na notificação.
+12. Confirmar que abre o chamado correto.
+13. Alterar o chamado.
+14. Confirmar que a atualização chega como nova notificação.
+15. Testar com mais de um usuário.
+16. Confirmar que cada usuário recebe somente o que deve receber.
+
+WINDOWS
+
+Também quero transformar o mesmo sistema em aplicativo instalável para Windows.
+
+Criar um aplicativo Windows com:
+
+- instalador .EXE;
+- nome "Sistema de Manutenção";
+- ícone próprio;
+- login Supabase;
+- todas as funções atuais;
+- sincronização com o mesmo banco Supabase;
+- notificações do Windows;
+- notificações com som;
+- notificações quando houver novo chamado;
+- notificações quando houver atualização;
+- clicar na notificação e abrir o chamado correto.
+
+Se for necessário usar Electron, Tauri ou outra tecnologia adequada, escolha a melhor opção e explique brevemente.
+
+Quero o arquivo instalável .EXE no final, pronto para instalar em outro computador.
+
+WEB/PWA
+
+Manter também a versão Web/PWA funcionando.
+
+Não remover a versão Web.
+
+Ela deve continuar usando o mesmo Supabase e os mesmos dados.
+
+SINCRONIZAÇÃO
+
+Quero que tudo seja sincronizado.
+
+Exemplo:
+
+Usuário A abre um chamado no celular.
+
+O usuário B recebe a notificação no celular.
+
+O mecânico aceita o chamado.
+
+O usuário A recebe a atualização.
+
+Depois o mecânico altera o status.
+
+A alteração deve aparecer no celular, Windows e Web.
+
+Não criar bancos separados para Android, Windows e Web.
+
+Todos devem usar o mesmo Supabase.
+
+SEGURANÇA
+
+Não expor nenhuma chave secreta.
+
+Manter as regras de segurança do Supabase.
+
+Verificar RLS e permissões antes de liberar dados.
+
+Usuários comuns não podem acessar dados administrativos indevidamente.
+
+Não colocar Service Role Key no frontend.
+
+ENTREGÁVEIS
+
+No final quero:
+
+1. Sistema Web funcionando.
+2. PWA funcionando.
+3. APK Android instalável.
+4. Projeto Android completo.
+5. EXE Windows instalável.
+6. Projeto Windows completo.
+7. Sistema de notificações push funcionando.
+8. Notificações com som e vibração no Android.
+9. Notificações do Windows com som.
+10. Central de notificações dentro do sistema.
+11. Instruções simples para instalar o APK em outro celular.
+12. Instruções simples para instalar o EXE em outro computador.
+
+IMPORTANTE
+
+Antes de alterar qualquer coisa:
+
+- analise todo o projeto;
+- encontre os problemas existentes;
+- preserve as funções atuais;
+- não recrie o sistema do zero;
+- não remova funcionalidades;
+- não troque o Supabase sem minha autorização;
+- não altere desnecessariamente o banco de dados;
+- não coloque segredos no frontend.
+
+Depois faça as alterações, teste tudo e me informe claramente:
+
+- o que foi corrigido;
+- o que foi criado;
+- como testar;
+- onde baixar o APK;
+- onde baixar o EXE;
+- como instalar cada um.
+
+Se alguma parte não puder ser gerada diretamente pelo Replit, não substitua por outra solução sem me avisar. Explique exatamente qual etapa falta e gere todos os arquivos necessários para concluir a instalação.
