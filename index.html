@@ -59,7 +59,7 @@ body:has(#login:not(.hidden)) .top{display:none}
 <h1>🔐 Acesso ao sistema</h1><p class="small">Entre com seu usuário do Supabase.</p>
 <div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="off" placeholder="seu e-mail"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
-<button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
+<button class="btn primary full" id="loginBtn" type="button" onclick="if(window.__loginNow){window.__loginNow()}else{alert('O sistema ainda está carregando. Atualize a página e tente novamente.')}">Entrar</button><button class="btn secondary full" id="forgotBtn" type="button">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
 </section>
 <section id="app" class="hidden">
 <div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
@@ -85,6 +85,15 @@ window.__SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 window.__SUPABASE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 window.__supabaseClient=window.supabase?.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
 window.__loginNow=async function(){
+  try{
+    if(!window.__supabaseClient && window.supabase?.createClient){
+      window.__supabaseClient=window.supabase.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
+    }
+    if(!window.__supabaseClient){
+      const msg=document.getElementById('loginMsg');
+      if(msg){msg.textContent='Não foi possível carregar a conexão com o Supabase. Recarregue a página.';msg.className='notice error';}
+      return;
+    }
   const email=document.getElementById('email')?.value.trim();
   const password=document.getElementById('password')?.value||'';
   const msg=document.getElementById('loginMsg');
