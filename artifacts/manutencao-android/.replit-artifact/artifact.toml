@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Sistema de Manutenção"
+description = "Sistema web de manutenção preventiva e chamados para equipes de manutenção e operações. Inclui autenticação e banco Supabase, painéis por perfil, gestão de chamados, equipamentos, peças, histórico e instalação como PWA no Android."
+version = "1.0.0"
+id = "artifacts/manutencao-android"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24202
+
+[services.development]
+run = "pnpm --filter @workspace/manutencao-android run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/manutencao-android", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/manutencao-android/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24202"
+BASE_PATH = "/"
