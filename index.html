@@ -108,7 +108,18 @@ window.__loginNow=async function(){
     if(error)throw error;
     if(!data?.session)throw new Error('Login aceito, mas a sessão não foi criada.');
     show('Login realizado! Abrindo o sistema...','notice ok');
-    setTimeout(()=>location.replace('./?login='+Date.now()),150);
+    if(typeof window.showApp==='function'){
+      await window.showApp();
+    }else{
+      let tries=0;
+      const wait=async()=>{
+        if(typeof window.showApp==='function') return window.showApp();
+        if(++tries>50) throw new Error('O sistema demorou para carregar.');
+        await new Promise(r=>setTimeout(r,100));
+        return wait();
+      };
+      await wait();
+    }
   }catch(e){
     show('Erro no login: '+(e?.message||e),'notice error');
     btn.disabled=false;
@@ -597,6 +608,7 @@ function applyTicketFilter(status){
 }
 async function showApp(){
   const s=await sb.auth.getSession();
+  if(s.error) throw s.error;
   session=s.data.session;
   if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
   try{
