@@ -185,7 +185,7 @@ async function enableNotifications(){
   const p=await Notification.requestPermission();
   if(p==='granted'){
     $('notifyBtn').firstChild.textContent='🔔';
-    alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. A base PWA já está preparada; o Push com o sistema fechado será ligado na próxima etapa ao servidor.');
+     alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. Para receber avisos com o sistema fechado, ative também as notificações do aparelho.');
   }else if(p==='denied'){
     alert('As notificações foram bloqueadas. Ative-as nas configurações do navegador.');
   }
@@ -195,7 +195,7 @@ function notifyUser(title,body,tag){
   playNotificationSound();
   if(!('Notification' in window)||Notification.permission!=='granted') return;
   try{
-    const n=new Notification(title,{body,tag,icon:'icon-192-v10.png',badge:'icon-192-v10.png'});
+     const n=new Notification(title,{body,tag:tag?'work-order-'+tag:undefined,icon:'icon-192-v10.png',badge:'icon-192-v10.png'});
     n.onclick=()=>{window.focus();n.close();openNotificationByCall(tag)};
   }catch(e){console.warn(e)}
 }
@@ -205,6 +205,14 @@ function urlBase64ToUint8Array(base64String){
   const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
   const raw=atob(base64);const out=new Uint8Array(raw.length);
   for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out;
+}
+async function triggerPush(workOrderId,eventType){
+  try{
+    const {data,error}=await sb.functions.invoke('send-push',{body:{work_order_id:workOrderId,event_type:eventType}});
+    if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||'A função de notificações recusou o envio.');
+    if(data?.sent===0)console.info('Push sem dispositivos inscritos para este evento:',eventType);
+  }catch(e){console.warn('Push:',e?.message||e)}
 }
 async function registerPushOnDevice(){
   const btn=$('enablePushBtn');
@@ -223,7 +231,7 @@ async function registerPushOnDevice(){
     const r=await sb.from('push_subscriptions').upsert({user_id:session.user.id,endpoint,p256dh,auth},{onConflict:'endpoint'});
     if(r.error)throw r.error;
     if(btn){btn.textContent='✅ Notificações do aparelho ativadas';btn.disabled=true;}
-    alert('Notificações ativadas neste aparelho. O mecânico poderá receber novos chamados mesmo fora da tela do sistema.');
+     alert('Este aparelho foi inscrito para receber novos chamados e atualizações. O envio em segundo plano depende da função Push e das chaves estarem configuradas no Supabase.');
   }catch(e){
     if(btn)btn.disabled=false;
     alert('Não foi possível ativar as notificações: '+(e?.message||e));
@@ -496,6 +504,7 @@ async function updateStatus(id,status,extra={}){
     const r=await sb.from('work_orders').update({status,...extra}).eq('id',id).select('id,status,mechanic_id').single();
     if(r.error)throw r.error;
     if(!r.data)throw new Error('Nenhum chamado foi alterado. Verifique as permissões do usuário.');
+     await triggerPush(id,'updated');
     await loadTickets();return true;
   }catch(e){showError(e,'Não foi possível alterar o chamado');return false}
 }
@@ -573,7 +582,7 @@ $('saveBtn').onclick=async()=>{
  $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
  try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`;const up=await sb.storage.from('maintenance-photos').upload(path,f,{contentType:f.type,upsert:false});if(up.error)throw up.error;photo_path=path}
  const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;
- await sb.functions.invoke('send-push',{body:{work_order_id:r.data.id}}).catch(e=>console.warn('Push:',e));
+ await triggerPush(r.data.id,'created');
  notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
@@ -618,7 +627,14 @@ async function showApp(){
     await loadEquipment();
     await loadTickets();
     await loadAdminOverview();
-    startNotificationPolling()
+     startNotificationPolling();
+     const callId=new URLSearchParams(window.location.search).get('call');
+     if(callId){
+       const cleanUrl=new URL(window.location.href);
+       cleanUrl.searchParams.delete('call');
+       history.replaceState({},'',cleanUrl);
+       await details(callId);
+     }
   }catch(e){
     $('app').classList.add('hidden');
     $('login').classList.remove('hidden');
@@ -791,6 +807,7 @@ async function openPreventivePanel(){
       const e=eqs.find(x=>x.id===eq);
       const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq}).select('id').single();
       if(x.error)return notice($('preventiveMsg'),x.error.message);
+       await triggerPush(x.data.id,'created');
       notice($('preventiveMsg'),'Chamado preventivo criado com sucesso.',true);$('preventiveDescription').value='';await loadTickets();
       loadPreventiveRecent();
     };

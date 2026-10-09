@@ -166,6 +166,17 @@ for (const fileName of ["index.html", "app.html"]) {
     assert.match(harness.elements.loginMsg.textContent, /Senha inválida/);
     assert.equal(harness.elements.loginBtn.disabled, false);
   });
+
+  test(`${fileName}: new calls and status changes trigger server push`, async () => {
+    const html = await readAppFile(fileName);
+    const script = getInlineScripts(html).join("\n");
+
+    assert.match(script, /event_type:eventType/);
+    assert.match(script, /triggerPush\(id,'updated'\)/);
+    assert.match(script, /triggerPush\(r\.data\.id,'created'\)/);
+    assert.match(script, /triggerPush\(x\.data\.id,'created'\)/);
+    assert.match(script, /URLSearchParams\(window\.location\.search\)\.get\('call'\)/);
+  });
 }
 
 test("Android install button provides Chrome instructions without a prompt", async () => {
@@ -224,9 +235,24 @@ test("PWA manifest is installable as a standalone Android app", async () => {
 
 test("service worker only caches same-origin app-shell resources", async () => {
   const serviceWorker = await readAppFile("sw_v16.js");
+  const publicServiceWorker = await readAppFile("public/sw_v16.js");
 
   assert.doesNotThrow(() => new vm.Script(serviceWorker));
   assert.match(serviceWorker, /requestUrl\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /const isAppShellAsset = APP_SHELL/);
-  assert.match(serviceWorker, /sistema-manutencao-v16/);
+  assert.match(serviceWorker, /sistema-manutencao-v17/);
+  assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
+  assert.equal(publicServiceWorker, serviceWorker);
+});
+
+test("push Edge Function handles CORS, validates users, and routes status updates", async () => {
+  const edgeFunction = await readAppFile("supabase/functions/send-push/index.ts");
+
+  assert.match(edgeFunction, /req\.method === "OPTIONS"/);
+  assert.match(edgeFunction, /auth\.getUser\(bearerMatch\[1\]\)/);
+  assert.match(edgeFunction, /eventType !== "updated"/);
+  assert.match(edgeFunction, /profile\.role === "admin"/);
+  assert.match(edgeFunction, /profile\.role === "sector"/);
+  assert.match(edgeFunction, /profile\.role === "mechanic"/);
+  assert.match(edgeFunction, /from\("push_subscriptions"\)/);
 });

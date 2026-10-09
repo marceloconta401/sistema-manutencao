@@ -1,4 +1,4 @@
-const CACHE_NAME = "sistema-manutencao-v16";
+const CACHE_NAME = "sistema-manutencao-v17";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -112,14 +112,17 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const target = event.notification.data?.url || "./";
-  event.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true }).then(
-      (list) => {
-        for (const client of list) {
-          if ("focus" in client) return client.focus();
-        }
-        return clients.openWindow(target);
-      },
-    ),
-  );
+  event.waitUntil((async () => {
+    const targetUrl = new URL(target, self.registration.scope).href;
+    const appOrigin = new URL(self.registration.scope).origin;
+    const list = await clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const client of list) {
+      if (new URL(client.url).origin !== appOrigin) continue;
+      if ("navigate" in client) {
+        try { await client.navigate(targetUrl); } catch { /* Keep focusing the open app. */ }
+      }
+      return client.focus();
+    }
+    return clients.openWindow(targetUrl);
+  })());
 });
