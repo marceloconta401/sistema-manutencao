@@ -84,6 +84,26 @@ body:has(#login:not(.hidden)) .top{display:none}
 window.__SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 window.__SUPABASE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
 window.__supabaseClient=window.supabase?.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
+window.__loginNow=async function(){
+  const email=document.getElementById('email')?.value.trim();
+  const password=document.getElementById('password')?.value||'';
+  const msg=document.getElementById('loginMsg');
+  const btn=document.getElementById('loginBtn');
+  const show=(t,cls='notice')=>{if(msg){msg.textContent=t;msg.className=cls;}};
+  if(!email||!password){show('Digite o e-mail e a senha.');return;}
+  if(!window.__supabaseClient){show('Erro: conexão com o Supabase não carregou. Atualize a página.','notice error');return;}
+  btn.disabled=true;btn.textContent='Entrando...';show('Verificando acesso...');
+  try{
+    const {data,error}=await window.__supabaseClient.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    if(!data?.session) throw new Error('Login aceito, mas a sessão não foi criada.');
+    show('Login realizado! Abrindo o sistema...','notice ok');
+    setTimeout(()=>location.replace('./?login='+Date.now()),150);
+  }catch(e){
+    show('Erro no login: '+(e?.message||e),'notice error');
+    btn.disabled=false;btn.textContent='Entrar';
+  }
+};
 </script>
 <script>
 </script>
@@ -613,26 +633,8 @@ if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v15.js'
 sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});
 showApp();
 
-$('loginBtn')?.addEventListener('click',async()=>{
-  const email=$('email')?.value.trim();
-  const password=$('password')?.value||'';
-  const msg=$('loginMsg');
-  const btn=$('loginBtn');
-  if(!email||!password){notice(msg,'Digite o e-mail e a senha.');return;}
-  btn.disabled=true;btn.textContent='Entrando...';
-  notice(msg,'Verificando acesso...');
-  try{
-    const {data,error}=await sb.auth.signInWithPassword({email,password});
-    if(error)throw error;
-    if(!data?.session)throw new Error('O Supabase autenticou, mas não criou a sessão.');
-    notice(msg,'Login realizado! Abrindo o sistema...',true);
-    await showApp();
-  }catch(e){
-    notice(msg,'Erro no login: '+(e?.message||e));
-    btn.disabled=false;btn.textContent='Entrar';
-  }
-});
-$('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn')?.click()});
+$('loginBtn')?.addEventListener('click',()=>window.__loginNow?.());
+$('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.__loginNow?.()});
 
 async function openNewUserPanel(){
   if(profile?.role!=='admin') return;
