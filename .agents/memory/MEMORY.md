@@ -1,0 +1,1 @@
+- [Preservar funções e analisar antes de mudanças](preservacao-e-analise.md) — não remova funções; revise todos os arquivos e dependências antes de alterar a estrutura.
