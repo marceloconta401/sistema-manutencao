@@ -641,6 +641,7 @@ async function showApp(){
     notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)
   }
 }
+window.showApp=showApp;
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
 document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
