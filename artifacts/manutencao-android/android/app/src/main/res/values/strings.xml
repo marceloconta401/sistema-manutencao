@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sistema de Manutenção</string>
+    <string name="title_activity_main">Sistema de Manutenção</string>
+    <string name="package_name">com.sistemamanutencao.app</string>
+    <string name="custom_url_scheme">com.sistemamanutencao.app</string>
+</resources>
