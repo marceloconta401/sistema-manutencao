@@ -8,9 +8,15 @@
     "build": "PORT=${PORT:-5000} BASE_PATH=${BASE_PATH:-/} vite build --config vite.config.ts",
     "serve": "PORT=${PORT:-5000} BASE_PATH=${BASE_PATH:-/} vite preview --config vite.config.ts --host 0.0.0.0",
     "test": "node --test tests/*.test.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "android:sync": "pnpm run build && cap sync android",
+    "android:apk": "node scripts/build-android.mjs --apk",
+    "windows:exe": "node scripts/build-windows.mjs",
+    "desktop:dev": "pnpm run build && electron desktop/main.cjs"
   },
+  "main": "desktop/main.cjs",
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-alert-dialog": "^1.1.7",
@@ -54,6 +60,8 @@
     "clsx": "catalog:",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "catalog:",
     "input-otp": "^1.4.2",
@@ -74,5 +82,12 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/push-notifications": "^8.1.3"
   }
 }

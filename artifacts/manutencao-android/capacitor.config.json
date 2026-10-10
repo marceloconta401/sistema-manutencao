@@ -1,0 +1,10 @@
+{
+  "appId": "com.sistemamanutencao.app",
+  "appName": "Sistema de Manutenção",
+  "webDir": "dist/public",
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["alert", "sound"]
+    }
+  }
+}
