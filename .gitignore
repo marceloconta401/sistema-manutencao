@@ -53,6 +53,7 @@ Thumbs.db
 /artifacts/manutencao-android/android/.gradle/
 /artifacts/manutencao-android/android/**/build/
 /artifacts/manutencao-android/android/app/google-services.json
+/attached_assets/google-services*.json
 /artifacts/manutencao-android/android/*.jks
 /artifacts/manutencao-android/android/*.keystore
 /artifacts/manutencao-android/*.env

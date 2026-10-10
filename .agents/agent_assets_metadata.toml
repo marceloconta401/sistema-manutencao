@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "76h06KpekiMsWDYO4KVUf"
+uri = "file://artifacts/manutencao-android/release/Sistema-de-Manutencao-debug.apk"
+type = "unspecified"
+title = "Sistema de Manutenção — APK Android para teste"
+description = "APK 1.0 com configuração Firebase integrada, ícone oficial e componentes de notificações nativas. Assinatura debug verificada; não é versão para publicação na Play Store. Push real ainda depende da configuração do servidor Supabase/FCM e teste em aparelho."
+logical_id = "dc314f6d-4b65-45a9-8cf5-ef92c47d2fce"
+content_hash = "sha256:7555009bff9c78edd606d620420a682f615ee5c7a001d0a8883518afce2e332c"
+size = 31752807
+mtime_ms = 1791634934270
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:e696ccaa-bbb5-484a-81c5-11f987c7254c/dc314f6d-4b65-45a9-8cf5-ef92c47d2fce/d613cb36-8fd6-4a63-8ce7-7720f80abc8d"
+storage_version_token = "1791635009591860"
+content_type = "application/octet-stream"

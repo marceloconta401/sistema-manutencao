@@ -7,3 +7,4 @@
 /artifacts/manutencao-android/android/.gradle/
 /artifacts/manutencao-android/android/**/build/
 /artifacts/manutencao-android/android/app/google-services.json
+/attached_assets/google-services*.json

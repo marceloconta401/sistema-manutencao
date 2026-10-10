@@ -45,7 +45,11 @@ Os arquivos de instalação são gravados em `artifacts/manutencao-android/relea
 
 O workflow manual `.github/workflows/native-builds.yml` permite compilar Windows em um runner Windows e Android em um runner com SDK/JDK, quando o repositório estiver no GitHub. Para Android, configure o secret `GOOGLE_SERVICES_JSON_BASE64` com o arquivo Firebase do aplicativo codificado em base64. Esse arquivo não contém a chave privada da conta de serviço FCM; essa chave continua somente no Supabase.
 
-O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa de finalizar NSIS com Wine também foi bloqueada pelos serviços RPCSS do container. Por isso nenhum APK ou instalador final foi validado aqui: use o workflow ou uma máquina com as ferramentas exigidas e execute os testes em aparelho/Windows reais.
+O APK debug foi compilado neste ambiente após instalar JDK 21 e as ferramentas oficiais Android, com SDK em armazenamento temporário. O arquivo Firebase do aplicativo foi integrado sem entrar no Git. A assinatura APK v2, pacote, nome, recursos de ícone e componentes FCM foram conferidos no binário. Isso não substitui instalação e teste de Push em celular real.
+
+O SDK temporário pode desaparecer ao recriar o ambiente; configure `ANDROID_HOME` para um SDK instalado antes de futuras compilações. A configuração do secret de compilação no GitHub depende de um token com permissão de repositório **Secrets: Read and write**; a tentativa com o token disponível foi negada (HTTP 403), portanto o secret ainda não foi confirmado.
+
+A finalização NSIS com Wine permanece bloqueada pelos serviços RPCSS do container. Use Windows para compilar e validar o instalador.
 
 ## Verificação
 
