@@ -6,6 +6,7 @@
 <link rel="icon" type="image/x-icon" href="./favicon-v11.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-v11.png">
 <script>
+window.__maintenanceAuthLinkType=new URLSearchParams(location.hash.slice(1)).get('type')||new URLSearchParams(location.search).get('type');
 const pwaBase=new URL("./",document.baseURI);
 document.querySelector('link[rel="manifest"]').href=new URL("manifest_v11.json",pwaBase).href;
 document.querySelector('link[rel="icon"][sizes="32x32"]').href=new URL("favicon-v11.png",pwaBase).href;
@@ -512,7 +513,7 @@ loadLocalNotifications();
 if($('notificationScope')) $('notificationScope').textContent='As notificações exibidas aqui são filtradas pelo seu perfil.';
 function showError(e,prefix='Erro'){const msg=e?.message||String(e);alert(prefix+': '+msg);console.error(prefix,e)}
 async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Não foi possível encontrar um perfil de usuário visível no Supabase. Confirme se há uma linha em public.profiles com o ID deste usuário e se as políticas RLS permitem a leitura.');profile=r.data;if(!profile.active)throw new Error('Usuário inativo.')}
-async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error){console.error(r.error);return}equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
+async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error)throw new Error('Não foi possível carregar equipamentos: '+r.error.message);equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
 window.loadAdminUsers=async function loadAdminUsers(){
  if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
  $('usersPanel').classList.remove('hidden');
@@ -710,7 +711,7 @@ async function showApp(){
   }catch(e){
     $('app').classList.add('hidden');
     $('login').classList.remove('hidden');
-    notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)
+    notice($('loginMsg'),'Erro ao abrir o sistema: '+e.message)
   }
 }
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
@@ -970,4 +971,5 @@ document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole'
 <script>
 </script>
 <script type="module" src="./src/native-push.ts"></script>
+<script type="module" src="./src/auth-links.ts"></script>
 </body></html>

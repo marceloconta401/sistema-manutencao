@@ -27,15 +27,16 @@ try {
 }
 
 const run = (command, args, options = {}) => {
-  const result = spawnSync(command, args, { cwd: root, stdio: "inherit", ...options });
+  const executable = process.platform === "win32" && command === "pnpm" ? "pnpm.cmd" : command;
+  const result = spawnSync(executable, args, { cwd: root, stdio: "inherit", shell: process.platform === "win32", ...options });
   if (result.error || result.status !== 0) {
     fail(`${command} ${args.join(" ")} terminou com erro${result.status == null ? "" : ` (${result.status})`}.`);
   }
 };
 
-run("pnpm", ["run", "build"]);
+run("pnpm", ["exec", "node", "scripts/build-web.mjs", "--local"]);
 run("pnpm", ["exec", "cap", "sync", "android"]);
-run(path.join(android, "gradlew"), ["assembleDebug"], { cwd: android });
+run(path.join(android, process.platform === "win32" ? "gradlew.bat" : "gradlew"), ["assembleDebug"], { cwd: android });
 await access(apkPath).catch(() => fail("Gradle terminou sem produzir o APK de depuração esperado."));
 await mkdir(path.dirname(output), { recursive: true });
 await copyFile(apkPath, output);
