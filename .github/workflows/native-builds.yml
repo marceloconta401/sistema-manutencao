@@ -2,6 +2,9 @@ name: Build Sistema de Manutenção
 on:
   push:
     branches: ["native-builds/**"]
+    paths-ignore:
+      - "**/*.md"
+      - ".github/workflows/native-builds.yml"
   workflow_dispatch:
     inputs:
       platform:
@@ -55,6 +58,9 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools platforms;android-36 build-tools;36.0.0"
+          log-accepted-android-sdk-licenses: false
       - run: pnpm install --frozen-lockfile
       - name: Configure Firebase Android
         env:
