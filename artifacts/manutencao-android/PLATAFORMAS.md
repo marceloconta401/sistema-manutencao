@@ -45,9 +45,36 @@ Os arquivos de instalação são gravados em `artifacts/manutencao-android/relea
 
 O workflow manual `.github/workflows/native-builds.yml` permite compilar Windows em um runner Windows e Android em um runner com SDK/JDK, quando o repositório estiver no GitHub. Para Android, configure o secret `GOOGLE_SERVICES_JSON_BASE64` com o arquivo Firebase do aplicativo codificado em base64. Esse arquivo não contém a chave privada da conta de serviço FCM; essa chave continua somente no Supabase.
 
-Envios para branches `native-builds/**` executam somente a compilação Windows, sem depender do Firebase. Use uma branch separada para preparar os pacotes sem alterar a publicação existente do GitHub Pages. O resultado fica nos artifacts da execução do GitHub Actions; uma compilação bem-sucedida não substitui a instalação e os testes em Windows real.
+Envios de código para branches `native-builds/**` executam somente a compilação Windows, sem depender do Firebase. Alterações somente em documentos Markdown ou no arquivo do workflow não disparam essa compilação automática; nesses casos, use a execução manual com a plataforma desejada. Use uma branch separada para preparar os pacotes sem alterar a publicação existente do GitHub Pages. O resultado fica nos artifacts da execução do GitHub Actions; uma compilação bem-sucedida não substitui a instalação e os testes em Windows real.
 
-O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa de finalizar NSIS com Wine também foi bloqueada pelos serviços RPCSS do container. Por isso nenhum APK ou instalador final foi validado aqui: use o workflow ou uma máquina com as ferramentas exigidas e execute os testes em aparelho/Windows reais.
+O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa de finalizar NSIS com Wine também foi bloqueada pelos serviços RPCSS do container. O instalador NSIS e o APK debug foram posteriormente gerados com sucesso pelos runners do GitHub Actions; isso comprova a compilação, não a instalação nem o funcionamento com uma conta real.
+
+### APK Android gerado
+
+- [Baixar o artifact Android no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38053436871/artifacts/11670781911). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
+- Arquivo dentro do ZIP: `Sistema-de-Manutencao-debug.apk`.
+- SHA-256 do APK: `f3dcd054684fca656334b4a46b6d2d893b068d6bf3c878b5eb1714fd56a6d0d8`.
+- Conferidos no pacote: integridade ZIP, identificador `com.sistemamanutencao.app`, os 15 arquivos dos ícones do launcher idênticos aos originais e o som de notificação nativo idêntico ao original.
+- É um APK debug para testes, não uma release para distribuição pública ou Play Store.
+- Ainda não validado: instalação e ícone na tela inicial, login real, convites, CRUDs por perfil, histórico, registro FCM e recebimento/clique de Push em aparelho real.
+
+### Instalador Windows gerado
+
+- [Baixar o artifact Windows no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38049636020/artifacts/11669640222). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
+- Arquivo dentro do ZIP: `Sistema de Manutenção-1.0.0-x64.exe`.
+- SHA-256 do EXE: `1b373704954521cddb0309b15a51a631f777d6dcdd4274bb7308caa3d8fa0d79`.
+- Os 15 testes locais e o TypeScript passaram no runner Windows. As seis imagens do ícone oficial foram encontradas nos recursos do instalador gerado.
+- Ainda não validado: instalação, ícone do programa instalado, login real, convites, CRUDs, histórico e notificações no Windows. Não há assinatura de código para distribuição pública.
+
+### Configuração Firebase para o APK
+
+Registre no Firebase o aplicativo Android `com.sistemamanutencao.app`. A partir do `google-services.json` baixado, obtenha o base64 no seu computador:
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\caminho\google-services.json"))
+```
+
+Guarde o resultado como secret `GOOGLE_SERVICES_JSON_BASE64` no GitHub Actions ou no formulário seguro solicitado pelo agente. Não envie o resultado pelo chat. Para configurar esse secret por automação, o token GitHub precisa de permissão de leitura e escrita em **Secrets**, além de **Contents**, **Workflows** e **Actions**. O JSON do aplicativo não substitui a conta de serviço FCM nem os secrets das funções Supabase.
 
 ## Verificação
 
