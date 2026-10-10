@@ -1,3 +1,4 @@
 - [Preservar funções e analisar antes de mudanças](preservacao-e-analise.md) — não remova funções; revise todos os arquivos e dependências antes de alterar a estrutura.
 - [Empacotamento Windows neste ambiente](windows-container.md) — use runner Windows para finalizar NSIS; Wine do container não é prova de um instalador funcional.
 - [Compilação Android no container](android-container.md) — ausência inicial de SDK não impede APK local; JDK 21 e ferramentas oficiais funcionam com SDK temporário.
+- [Diagnóstico Supabase com token restrito](supabase-diagnostics.md) — consulte o projeto conhecido diretamente; logs usam endpoint novo e exigem analytics_logs_read.
