@@ -68,7 +68,9 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - Preservadas as credenciais VAPID existentes; o digest da chave pública configurada corresponde à chave pública utilizada no aplicativo.
 - Verificados nos endpoints reais, para as duas funções: preflight CORS com HTTP 200, método GET rejeitado com HTTP 405, ausência de credenciais e sessão inválida rejeitadas com HTTP 401.
 - Esses testes não criaram usuários, não enviaram convites e não geraram notificações. Ainda faltam validação autenticada por perfil e testes em aparelhos reais.
-- Pendente: configurar a conta de serviço do Firebase para envio FCM. O `google-services.json` usado na compilação identifica o aplicativo, mas não substitui essa credencial administrativa.
+- Configuradas as três credenciais FCM no Supabase a partir da conta de serviço, conferindo que o projeto corresponde ao Firebase do APK e que os digests dos valores configurados correspondem aos fornecidos pelo fluxo seguro.
+- A autorização OAuth e a requisição FCM HTTP v1 com o payload Android foram aceitas com HTTP 200. A requisição usou `validate_only: true`: nenhuma mensagem foi entregue, e esse resultado não comprova recebimento em um dispositivo.
+- O `google-services.json` usado na compilação identifica o aplicativo, mas não substitui a credencial administrativa FCM. Nenhuma chave privada foi incluída nos pacotes ou no repositório.
 - A URL de retorno de convites do Supabase Auth foi preservada. O funcionamento do convite e da definição de senha no endereço configurado ainda precisa ser validado.
 
 ### Instalador Windows gerado
@@ -91,4 +93,19 @@ Guarde o resultado como secret `GOOGLE_SERVICES_JSON_BASE64` no GitHub Actions o
 
 ## Verificação
 
-`pnpm --filter @workspace/manutencao-android test` e `typecheck` verificam o código local. A entrega FCM requer teste com um Android instalado, usuário inscrito e o app em primeiro plano e encerrado. Convites exigem testar uma conta administradora e confirmar o e-mail recebido. O Windows requer executar o instalador em uma máquina Windows para verificar atalhos, ícone e notificações.
+`pnpm --filter @workspace/manutencao-android test` e `typecheck` verificam o código local. A entrega FCM requer teste com um Android instalado, usuário inscrito e o app em primeiro plano, segundo plano e fechado pela lista de recentes. Não confunda esse último estado com **Forçar parada** nas configurações do Android: o sistema impede o recebimento de Push de um aplicativo forçado a parar até ele ser aberto novamente. Convites exigem testar uma conta administradora e confirmar o e-mail recebido. O Windows requer executar o instalador em uma máquina Windows para verificar atalhos, ícone e notificações.
+
+### Roteiro em aparelhos reais — ainda pendente
+
+Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique quaisquer registros criados para teste e não exclua nem altere chamados, usuários ou histórico reais.
+
+- [ ] Android: instalar o APK debug, conferir o ícone na tela inicial, entrar com uma conta mecânica ativa, permitir notificações e confirmar o registro do dispositivo.
+- [ ] Windows: instalar o EXE, conferir os ícones do instalador, atalhos e aplicativo, e entrar com uma conta autorizada.
+- [ ] Administrador: convidar uma conta de teste, confirmar o recebimento do e-mail, definir a senha pelo link e entrar com a nova senha.
+- [ ] Perfis: verificar criação, leitura, edição e exclusão onde permitidas pelas regras existentes; confirmar que operações proibidas são rejeitadas e que o histórico permanece correto.
+- [ ] Setor: criar um chamado identificado como teste e conferir a notificação no Android mecânico.
+- [ ] Mecânico: aceitar e atualizar o chamado, solicitar uma peça e conferir os avisos aos destinatários previstos.
+- [ ] Android: repetir os eventos relevantes com o aplicativo em segundo plano e fechado pela lista de recentes; conferir som, vibração e abertura do chamado ao tocar na notificação.
+- [ ] Windows: conferir notificações e abertura do chamado, inclusive com o programa minimizado na bandeja.
+
+Registre o resultado por etapa e eventuais mensagens de erro sem compartilhar senhas, tokens ou conteúdo privado. Compilação, inspeção dos recursos, testes estáticos e validação FCM sem entrega não substituem esse roteiro.
