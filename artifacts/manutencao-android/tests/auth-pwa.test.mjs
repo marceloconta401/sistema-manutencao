@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { test } from "node:test";
 import vm from "node:vm";
 
@@ -224,35 +224,76 @@ test("Android install button opens the native prompt and hides after install", a
 });
 
 test("PWA manifest is installable as a standalone Android app", async () => {
-  const manifest = JSON.parse(await readAppFile("manifest_v10.json"));
+  const manifest = JSON.parse(await readAppFile("manifest_v11.json"));
 
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.scope, "./");
   assert.equal(manifest.start_url, "./index.html?source=pwa");
   assert.ok(manifest.icons.some((icon) => icon.sizes === "192x192"));
-  assert.ok(manifest.icons.some((icon) => icon.sizes === "512x512"));
+  assert.ok(manifest.icons.some((icon) => icon.sizes === "512x512" && icon.purpose === "any"));
+  assert.ok(manifest.icons.some((icon) => icon.sizes === "512x512" && icon.purpose === "maskable"));
+  for (const asset of ["icon-192-v11.png", "icon-512-v11.png", "icon-512-v11-maskable.png", "favicon-v11.ico"]) {
+    await readAppFile(`public/${asset}`);
+  }
 });
 
 test("service worker only caches same-origin app-shell resources", async () => {
-  const serviceWorker = await readAppFile("sw_v16.js");
-  const publicServiceWorker = await readAppFile("public/sw_v16.js");
+  const serviceWorker = await readAppFile("sw_v17.js");
+  const publicServiceWorker = await readAppFile("public/sw_v17.js");
 
   assert.doesNotThrow(() => new vm.Script(serviceWorker));
   assert.match(serviceWorker, /requestUrl\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /const isAppShellAsset = APP_SHELL/);
-  assert.match(serviceWorker, /sistema-manutencao-v17/);
+  assert.match(serviceWorker, /sistema-manutencao-v18/);
+  assert.match(serviceWorker, /key\.startsWith\("sistema-manutencao-"\)/);
   assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
   assert.equal(publicServiceWorker, serviceWorker);
 });
 
-test("push Edge Function handles CORS, validates users, and routes status updates", async () => {
+test("Push Edge Function authenticates users and routes Web Push and Android FCM", async () => {
   const edgeFunction = await readAppFile("supabase/functions/send-push/index.ts");
 
   assert.match(edgeFunction, /req\.method === "OPTIONS"/);
   assert.match(edgeFunction, /auth\.getUser\(bearerMatch\[1\]\)/);
-  assert.match(edgeFunction, /eventType !== "updated"/);
+  assert.match(edgeFunction, /eventType !== "created".*eventType !== "part_requested"/s);
   assert.match(edgeFunction, /profile\.role === "admin"/);
   assert.match(edgeFunction, /profile\.role === "sector"/);
   assert.match(edgeFunction, /profile\.role === "mechanic"/);
   assert.match(edgeFunction, /from\("push_subscriptions"\)/);
+  assert.match(edgeFunction, /from\("native_push_devices"\)/);
+  assert.match(edgeFunction, /FCM_PROJECT_ID/);
+  assert.match(edgeFunction, /maintenance_calls_v1/);
+});
+
+test("Android FCM channel, token table and invitation function are present", async () => {
+  const nativePush = await readAppFile("src/native-push.ts");
+  const manifest = await readAppFile("android/app/src/main/AndroidManifest.xml");
+  const sound = await stat(new URL("android/app/src/main/res/raw/maintenance_notification.wav", artifactDir));
+  const migration = await readAppFile("supabase/native_push_devices.sql");
+  const inviteFunction = await readAppFile("supabase/functions/admin-create-user/index.ts");
+
+  assert.match(nativePush, /createChannel/);
+  assert.match(nativePush, /maintenance_calls_v1/);
+  assert.match(nativePush, /unregisterCurrentDevice/);
+  assert.match(manifest, /POST_NOTIFICATIONS/);
+  assert.match(manifest, /default_notification_icon/);
+  assert.ok(sound.size > 100);
+  assert.match(migration, /enable row level security/i);
+  assert.match(migration, /user_id = auth\.uid\(\)/);
+  assert.match(inviteFunction, /inviteUserByEmail/);
+  assert.match(inviteFunction, /actor\.role !== "admin"/);
+});
+
+test("Windows Electron entry points are packaged with an isolated renderer", async () => {
+  const main = await readAppFile("desktop/main.cjs");
+  const preload = await readAppFile("desktop/preload.cjs");
+  const config = await readAppFile("electron-builder.yml");
+
+  assert.match(main, /contextIsolation: true/);
+  assert.match(main, /nodeIntegration: false/);
+  assert.match(main, /setAppUserModelId/);
+  assert.match(main, /new Notification/);
+  assert.match(preload, /contextBridge\.exposeInMainWorld/);
+  assert.match(config, /target: nsis/);
+  assert.match(config, /installerIcon: desktop\/assets\/system-icon\.ico/);
 });

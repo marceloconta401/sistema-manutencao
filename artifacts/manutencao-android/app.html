@@ -727,7 +727,22 @@ async function submitNewUser(){
   const sector=document.getElementById('newUserSector').value || null;
   if(!name || !email) return showNewUserMessage('Preencha nome e e-mail.');
   if(role==='sector' && !sector) return showNewUserMessage('Selecione o setor.');
-  showNewUserMessage('Formulário pronto. A criação segura da conta de acesso será conectada ao servidor na próxima etapa.');
+  const button=document.getElementById('saveNewUserBtn');
+  if(button){button.disabled=true;button.textContent='Enviando convite...'}
+  showNewUserMessage('Enviando convite de acesso...');
+  try{
+    const {data,error}=await sb.functions.invoke('admin-create-user',{body:{full_name:name,email,role,sector_id:role==='sector'?sector:null}});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data?.error||'O servidor não confirmou a criação do usuário.');
+    showNewUserMessage(`Convite enviado para ${email}. O usuário concluirá o acesso pelo e-mail.`,true);
+    document.getElementById('newUserName').value='';
+    document.getElementById('newUserEmail').value='';
+    await loadAdminUsers();
+  }catch(e){
+    showNewUserMessage('Não foi possível criar o usuário: '+(e?.message||e));
+  }finally{
+    if(button){button.disabled=false;button.textContent='Salvar usuário'}
+  }
 }
 
 

@@ -181,6 +181,7 @@ async function registerAndroidDevice(): Promise<void> {
     throw new Error("A permissão de notificações do Android não foi concedida.");
   }
 
+  let cancelTokenWait: (error: Error) => void = () => {};
   const tokenPromise = new Promise<string>((resolve, reject) => {
     let settled = false;
     const finish = (callback: () => void) => {
@@ -191,6 +192,7 @@ async function registerAndroidDevice(): Promise<void> {
       callback();
     };
     const onToken = (token: string) => finish(() => resolve(token));
+    cancelTokenWait = (error) => finish(() => reject(error));
     const timeout = window.setTimeout(
       () => finish(() => reject(new Error("O Firebase não retornou o token do aparelho."))),
       30_000,
@@ -198,9 +200,15 @@ async function registerAndroidDevice(): Promise<void> {
     tokenWaiters.add(onToken);
   });
 
-  await PushNotifications.register();
-  const token = await tokenPromise;
-  await saveToken(token, userId);
+  try {
+    await PushNotifications.register();
+    const token = await tokenPromise;
+    await saveToken(token, userId);
+  } catch (error) {
+    cancelTokenWait(error instanceof Error ? error : new Error(String(error)));
+    void tokenPromise.catch(() => {});
+    throw error;
+  }
 }
 
 async function unregisterAndroidDevice(): Promise<void> {
