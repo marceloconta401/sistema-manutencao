@@ -56,3 +56,4 @@ Thumbs.db
 /artifacts/manutencao-android/android/*.jks
 /artifacts/manutencao-android/android/*.keystore
 /artifacts/manutencao-android/*.env
+/artifacts/manutencao-android/supabase/.temp/

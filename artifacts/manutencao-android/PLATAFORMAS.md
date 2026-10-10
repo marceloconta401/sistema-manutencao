@@ -8,11 +8,13 @@ O mesmo aplicativo e a mesma autenticação/banco Supabase são usados nas três
 2. Implante as funções `send-push` e `admin-create-user` com a Supabase CLI:
 
    ```sh
-   supabase functions deploy send-push
-   supabase functions deploy admin-create-user
+   supabase functions deploy send-push --use-api --no-verify-jwt --project-ref aijkbluzpmffmnflhjyv
+   supabase functions deploy admin-create-user --use-api --no-verify-jwt --project-ref aijkbluzpmffmnflhjyv
    ```
 
-3. Configure os secrets das Edge Functions no Supabase (Dashboard ou fluxo seguro da CLI): `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` e, opcionalmente, `VAPID_SUBJECT`; para Android, `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL` e `FCM_PRIVATE_KEY`. As chaves privadas ficam somente no Supabase, nunca no navegador nem no APK. A chave pública VAPID do site deve corresponder ao par configurado no Supabase.
+   As duas funções validam a sessão no servidor com `auth.getUser` e verificam o perfil e as permissões. Nesta configuração, a autenticação é feita pelas próprias funções, inclusive para JWTs com ES256: `--no-verify-jwt` desliga somente a checagem adicional do gateway, não a autenticação implementada nas funções. Não use esse parâmetro em funções que não validem suas próprias credenciais. `--use-api` permite empacotar pelo servidor sem Docker.
+
+3. Configure os secrets das Edge Functions no Supabase (Dashboard ou fluxo seguro da CLI): `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` e, opcionalmente, `VAPID_SUBJECT`; para Android, `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL` e `FCM_PRIVATE_KEY`. As chaves privadas ficam somente no Supabase, nunca no navegador nem no APK. A chave pública VAPID do site deve corresponder ao par configurado no Supabase. Se o projeto já usa Web Push, preserve o par VAPID existente em vez de gerar outro.
 4. No Firebase, habilite Firebase Cloud Messaging e a API HTTP v1. Registre o aplicativo Android com o identificador `com.sistemamanutencao.app`, baixe o `google-services.json` correspondente e coloque-o em `android/app/google-services.json`. Configure uma conta de serviço com permissão de envio FCM e guarde a chave privada nos secrets do Supabase.
 5. Configure no Supabase Auth o envio de convites por e-mail e a URL de redirecionamento usada pelos usuários convidados. A função `admin-create-user` valida o administrador e a organização no servidor; não usa a chave de serviço no cliente.
 
@@ -57,6 +59,17 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - Conferidos no pacote: integridade ZIP, identificador `com.sistemamanutencao.app`, os 15 arquivos dos ícones do launcher idênticos aos originais e o som de notificação nativo idêntico ao original.
 - É um APK debug para testes, não uma release para distribuição pública ou Play Store.
 - Ainda não validado: instalação e ícone na tela inicial, login real, convites, CRUDs por perfil, histórico, registro FCM e recebimento/clique de Push em aparelho real.
+
+### Backend configurado e verificado
+
+- Aplicados os scripts `native_push_devices.sql` e `push_subscriptions.sql` em uma transação, sem exclusão dos registros existentes.
+- As duas tabelas estão com RLS habilitada. A tabela Android tem as quatro políticas de acesso ao próprio dispositivo; a configuração Web Push existente foi preservada.
+- Implantadas e ativas as funções `send-push` e `admin-create-user`.
+- Preservadas as credenciais VAPID existentes; o digest da chave pública configurada corresponde à chave pública utilizada no aplicativo.
+- Verificados nos endpoints reais, para as duas funções: preflight CORS com HTTP 200, método GET rejeitado com HTTP 405, ausência de credenciais e sessão inválida rejeitadas com HTTP 401.
+- Esses testes não criaram usuários, não enviaram convites e não geraram notificações. Ainda faltam validação autenticada por perfil e testes em aparelhos reais.
+- Pendente: configurar a conta de serviço do Firebase para envio FCM. O `google-services.json` usado na compilação identifica o aplicativo, mas não substitui essa credencial administrativa.
+- A URL de retorno de convites do Supabase Auth foi preservada. O funcionamento do convite e da definição de senha no endereço configurado ainda precisa ser validado.
 
 ### Instalador Windows gerado
 
