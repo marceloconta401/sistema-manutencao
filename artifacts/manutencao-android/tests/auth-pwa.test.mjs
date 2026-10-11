@@ -262,7 +262,7 @@ test("Push Edge Function authenticates users and routes Web Push and Android FCM
   assert.match(edgeFunction, /from\("push_subscriptions"\)/);
   assert.match(edgeFunction, /from\("native_push_devices"\)/);
   assert.match(edgeFunction, /FCM_PROJECT_ID/);
-  assert.match(edgeFunction, /maintenance_calls_v1/);
+  assert.match(edgeFunction, /maintenance_calls_v2/);
 });
 
 test("Android FCM channel, token table and invitation function are present", async () => {
@@ -273,7 +273,7 @@ test("Android FCM channel, token table and invitation function are present", asy
   const inviteFunction = await readAppFile("supabase/functions/admin-create-user/index.ts");
 
   assert.match(nativePush, /createChannel/);
-  assert.match(nativePush, /maintenance_calls_v1/);
+  assert.match(nativePush, /maintenance_calls_v2/);
   assert.match(nativePush, /unregisterCurrentDevice/);
   assert.match(manifest, /POST_NOTIFICATIONS/);
   assert.match(manifest, /default_notification_icon/);

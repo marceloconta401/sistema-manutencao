@@ -70,6 +70,10 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - Preservadas as credenciais VAPID existentes; o digest da chave pública configurada corresponde à chave pública utilizada no aplicativo.
 - Verificados nos endpoints reais, para as duas funções: preflight CORS com HTTP 200, método GET rejeitado com HTTP 405, ausência de credenciais e sessão inválida rejeitadas com HTTP 401.
 - Esses testes não criaram usuários, não enviaram convites e não geraram notificações. Ainda faltam validação autenticada por perfil e testes em aparelhos reais.
+- No teste real em segundo plano, o usuário informou que não recebeu avisos de criação nem atualização de chamados, sem som. A investigação confirmou chamadas à função com HTTP 200, mas nenhum Android cadastrado como mecânico para receber novos chamados; o dispositivo existente estava associado ao perfil setor. O token desse dispositivo foi aceito na validação FCM sem entrega. Ainda é necessário confirmar o perfil aberto no aparelho e corrigir ou validar sua associação antes de repetir o teste.
+- O usuário esclareceu que utiliza dois celulares distintos: um como mecânico e outro como setor. Portanto, o cadastro do setor não comprova o registro do celular mecânico. Os registros consultados não mostraram erros de FCM ou de RLS; mostraram uma exclusão de cadastro de dispositivo seguida de registros do setor. A próxima etapa é ativar novamente as notificações no celular mecânico e confirmar seu cadastro no servidor.
+- O usuário relatou vibração sem som no setor e ausência de som/vibração no mecânico, sem confirmar o resultado da ativação neste último. Enviada uma única mensagem FCM identificada como “Teste técnico de notificação” ao único dispositivo do setor cadastrado: HTTP 200, sem mudanças nos chamados ou no banco. O recebimento físico e o áudio desse teste ainda não foram confirmados. O recurso WAV contém áudio PCM válido e o plugin instalado aceita seu nome com extensão; não foi identificada falha de nome do arquivo de som.
+- O usuário confirmou que a mensagem técnica chegou ao setor, sem som, e que a ativação no celular mecânico exibiu “Notificações Android ativadas”. A nova consulta ao servidor confirmou dois dispositivos distintos cadastrados: um mecânico e um setor. O recebimento de novos chamados no mecânico após essa ativação, as atualizações no setor e o áudio em ambos ainda precisam ser confirmados; verificar o som efetivamente selecionado nas configurações de cada canal Android.
 - Configuradas as três credenciais FCM no Supabase a partir da conta de serviço, conferindo que o projeto corresponde ao Firebase do APK e que os digests dos valores configurados correspondem aos fornecidos pelo fluxo seguro.
 - A autorização OAuth e a requisição FCM HTTP v1 com o payload Android foram aceitas com HTTP 200. A requisição usou `validate_only: true`: nenhuma mensagem foi entregue, e esse resultado não comprova recebimento em um dispositivo.
 - O `google-services.json` usado na compilação identifica o aplicativo, mas não substitui a credencial administrativa FCM. Nenhuma chave privada foi incluída nos pacotes ou no repositório.
@@ -83,7 +87,7 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - Os 18 testes locais e o TypeScript passaram no runner Windows. Os testes são controlados/estáticos e não substituem o login real.
 - Corrigido o User-Agent do Electron para usar somente ASCII. Os registros da versão anterior mostraram bytes Latin-1 do nome “Manutenção” sendo rejeitados durante a criação da sessão no Supabase. O nome visível, os ícones e a autenticação existente foram preservados.
 - Corrigidas as consultas de peças para usar o campo existente `requested_at`, sem alterar o banco. O alias usado pela interface foi validado no endpoint PostgREST com HTTP 200, sem consultar registros reais.
-- A instalação da versão anterior foi confirmada pelo usuário, mas o login falhou. Ainda precisa ser confirmada a instalação e o login da versão 1.0.1, além dos ícones, convites, CRUDs, histórico e notificações. Não há assinatura de código para distribuição pública.
+- A instalação da versão anterior foi confirmada pelo usuário, mas o login falhou. O usuário confirmou o login no Windows após instalar a versão 1.0.1. Ainda faltam confirmação dos ícones, convites, CRUDs, histórico e notificações. Não há assinatura de código para distribuição pública.
 - Antes de instalar a atualização, feche o programa pelo menu **Sair** na bandeja do Windows; o botão de fechar a janela apenas minimiza o aplicativo. Não é necessário redefinir senhas nem apagar os dados do sistema.
 
 ### Configuração Firebase para o APK
@@ -106,7 +110,8 @@ Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique 
 
 - [x] Android: instalar o APK debug e entrar com uma conta mecânica ativa; registro do dispositivo confirmado no servidor.
 - [ ] Android: conferir o ícone na tela inicial e as permissões e configurações de notificação do canal.
-- [ ] Windows: instalar o EXE, conferir os ícones do instalador, atalhos e aplicativo, e entrar com uma conta autorizada.
+- [x] Windows: instalar o EXE corrigido e entrar com uma conta autorizada; login confirmado pelo usuário.
+- [ ] Windows: conferir os ícones do instalador, atalhos e aplicativo.
 - [ ] Administrador: convidar uma conta de teste, confirmar o recebimento do e-mail, definir a senha pelo link e entrar com a nova senha.
 - [ ] Perfis: verificar criação, leitura, edição e exclusão onde permitidas pelas regras existentes; confirmar que operações proibidas são rejeitadas e que o histórico permanece correto.
 - [ ] Setor: criar um chamado identificado como teste e conferir a notificação no Android mecânico.

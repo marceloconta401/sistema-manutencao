@@ -35,3 +35,35 @@ test("Parts queries use requested_at while preserving the UI date alias", async 
     assert.equal(queries.filter(([, selection]) => selection.includes("created_at:requested_at")).length, 2);
   }
 });
+
+test("Android and FCM use the same new channel with the system ringtone", async () => {
+  const read = (name) => readFile(new URL(`../${name}`, import.meta.url), "utf8");
+  const [native, manifest, edge] = await Promise.all([
+    read("src/native-push.ts"),
+    read("android/app/src/main/AndroidManifest.xml"),
+    read("supabase/functions/send-push/index.ts"),
+  ]);
+  const channel = native.match(/const CHANNEL_ID = "([^"]+)"/)[1];
+  assert.equal(channel, "maintenance_calls_v2");
+  assert.ok(manifest.includes(`android:value="${channel}"`));
+  assert.ok(edge.includes(`const nativeChannelId = "${channel}"`));
+  const createChannel = native.match(/createChannel\(\{([\s\S]*?)\}\)/)[1];
+  assert.match(createChannel, /importance: 4/);
+  assert.match(createChannel, /vibration: true/);
+  assert.doesNotMatch(createChannel, /sound\s*:/);
+  assert.match(edge, /sound: "default"/);
+  assert.match(edge, /default_sound: true/);
+  assert.match(edge, /default_vibrate_timings: true/);
+});
+
+test("CI restores a stable debug certificate without putting keys in the APK assets", async () => {
+  const gradle = await readFile(new URL("../android/app/build.gradle", import.meta.url), "utf8");
+  const workflow = await readFile(new URL("../../../.github/workflows/native-builds.yml", import.meta.url), "utf8");
+  assert.match(gradle, /versionCode 2/);
+  assert.match(gradle, /versionName "1\.0\.1"/);
+  assert.match(gradle, /signingConfig signingConfigs\.persistentDebug/);
+  assert.match(gradle, /storeType 'PKCS12'/);
+  assert.match(workflow, /secrets\.ANDROID_DEBUG_KEYSTORE_BASE64/);
+  assert.match(workflow, /"android-signing"/);
+  assert.ok(workflow.indexOf("Restore persistent debug signing key") < workflow.indexOf("run android:apk"));
+});
