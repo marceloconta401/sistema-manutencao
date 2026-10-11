@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, Notification, Tray, nativeImage, shell } = require("electron");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const { asciiUserAgent } = require("./user-agent.cjs");
 
 const APP_ID = "com.sistemamanutencao.app";
 const iconPath = path.join(app.getAppPath(), "desktop", "assets", "system-icon.ico");
@@ -46,6 +47,9 @@ function createWindow() {
     if (/^https?:\/\//i.test(url)) void shell.openExternal(url);
     return { action: "deny" };
   });
+  mainWindow.webContents.setUserAgent(
+    asciiUserAgent(mainWindow.webContents.getUserAgent()),
+  );
   mainWindow.loadFile(indexPath);
   mainWindow.once("ready-to-show", () => mainWindow.show());
   mainWindow.on("close", (event) => {
