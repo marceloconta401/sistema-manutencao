@@ -58,7 +58,9 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - SHA-256 do APK: `f3dcd054684fca656334b4a46b6d2d893b068d6bf3c878b5eb1714fd56a6d0d8`.
 - Conferidos no pacote: integridade ZIP, identificador `com.sistemamanutencao.app`, os 15 arquivos dos ícones do launcher idênticos aos originais e o som de notificação nativo idêntico ao original.
 - É um APK debug para testes, não uma release para distribuição pública ou Play Store.
-- Ainda não validado: instalação e ícone na tela inicial, login real, convites, CRUDs por perfil, histórico, registro FCM e recebimento/clique de Push em aparelho real.
+- Instalação e login como mecânico confirmados pelo usuário em Android real. O servidor confirmou um dispositivo registrado nesse perfil.
+- Ainda não validado: ícone na tela inicial, convites, CRUDs por perfil, histórico e recebimento/clique de Push em aparelho real.
+- Este APK é anterior ao ajuste das consultas de peças para `requested_at`. A fonte e o instalador Windows abaixo já contêm esse ajuste; um novo APK com essa correção ainda não foi disponibilizado.
 
 ### Backend configurado e verificado
 
@@ -75,11 +77,14 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 
 ### Instalador Windows gerado
 
-- [Baixar o artifact Windows no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38049636020/artifacts/11669640222). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
-- Arquivo dentro do ZIP: `Sistema de Manutenção-1.0.0-x64.exe`.
-- SHA-256 do EXE: `1b373704954521cddb0309b15a51a631f777d6dcdd4274bb7308caa3d8fa0d79`.
-- Os 15 testes locais e o TypeScript passaram no runner Windows. As seis imagens do ícone oficial foram encontradas nos recursos do instalador gerado.
-- Ainda não validado: instalação, ícone do programa instalado, login real, convites, CRUDs, histórico e notificações no Windows. Não há assinatura de código para distribuição pública.
+- [Baixar o artifact Windows corrigido no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38179548855/artifacts/11716403857). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
+- Arquivo dentro do ZIP: `Sistema de Manutenção-1.0.1-x64.exe`.
+- SHA-256 do EXE: `3f4fda9a5aac9223e07d92782583a192a000813b54bbd41c1927c8e75ef4917e`.
+- Os 18 testes locais e o TypeScript passaram no runner Windows. Os testes são controlados/estáticos e não substituem o login real.
+- Corrigido o User-Agent do Electron para usar somente ASCII. Os registros da versão anterior mostraram bytes Latin-1 do nome “Manutenção” sendo rejeitados durante a criação da sessão no Supabase. O nome visível, os ícones e a autenticação existente foram preservados.
+- Corrigidas as consultas de peças para usar o campo existente `requested_at`, sem alterar o banco. O alias usado pela interface foi validado no endpoint PostgREST com HTTP 200, sem consultar registros reais.
+- A instalação da versão anterior foi confirmada pelo usuário, mas o login falhou. Ainda precisa ser confirmada a instalação e o login da versão 1.0.1, além dos ícones, convites, CRUDs, histórico e notificações. Não há assinatura de código para distribuição pública.
+- Antes de instalar a atualização, feche o programa pelo menu **Sair** na bandeja do Windows; o botão de fechar a janela apenas minimiza o aplicativo. Não é necessário redefinir senhas nem apagar os dados do sistema.
 
 ### Configuração Firebase para o APK
 
@@ -99,7 +104,8 @@ Guarde o resultado como secret `GOOGLE_SERVICES_JSON_BASE64` no GitHub Actions o
 
 Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique quaisquer registros criados para teste e não exclua nem altere chamados, usuários ou histórico reais.
 
-- [ ] Android: instalar o APK debug, conferir o ícone na tela inicial, entrar com uma conta mecânica ativa, permitir notificações e confirmar o registro do dispositivo.
+- [x] Android: instalar o APK debug e entrar com uma conta mecânica ativa; registro do dispositivo confirmado no servidor.
+- [ ] Android: conferir o ícone na tela inicial e as permissões e configurações de notificação do canal.
 - [ ] Windows: instalar o EXE, conferir os ícones do instalador, atalhos e aplicativo, e entrar com uma conta autorizada.
 - [ ] Administrador: convidar uma conta de teste, confirmar o recebimento do e-mail, definir a senha pelo link e entrar com a nova senha.
 - [ ] Perfis: verificar criação, leitura, edição e exclusão onde permitidas pelas regras existentes; confirmar que operações proibidas são rejeitadas e que o histórico permanece correto.
