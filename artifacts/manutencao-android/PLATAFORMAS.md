@@ -53,14 +53,15 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 
 ### APK Android gerado
 
-- [Baixar o artifact Android no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38053436871/artifacts/11670781911). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
+- [Baixar o novo artifact Android 1.0.1 no GitHub Actions](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38183785485/artifacts/11717644689). É necessário estar conectado ao GitHub; os artifacts seguem a retenção do repositório.
 - Arquivo dentro do ZIP: `Sistema-de-Manutencao-debug.apk`.
-- SHA-256 do APK: `f3dcd054684fca656334b4a46b6d2d893b068d6bf3c878b5eb1714fd56a6d0d8`.
-- Conferidos no pacote: integridade ZIP, identificador `com.sistemamanutencao.app`, os 15 arquivos dos ícones do launcher idênticos aos originais e o som de notificação nativo idêntico ao original.
+- SHA-256 do APK: `7873b165cb8863a3cf1b71b02912a1a757041db13e501047e61c199885ec8ff0`.
+- Validado: 20 testes controlados e TypeScript aprovados no runner Android, ZIP sem corrupção, `applicationId` correto, versão 1.0.1, novo canal no manifesto, 15/15 imagens PNG do launcher idênticas às fontes e certificado persistente presente. Nenhum arquivo privado de assinatura foi empacotado.
 - É um APK debug para testes, não uma release para distribuição pública ou Play Store.
-- Instalação e login como mecânico confirmados pelo usuário em Android real. O servidor confirmou um dispositivo registrado nesse perfil.
+- Na versão anterior, instalação e login como mecânico foram confirmados pelo usuário em Android real. O servidor confirmou os dispositivos dos perfis mecânico e setor, e o usuário confirmou o recebimento de novos chamados e atualizações, porém sem som nos dois aparelhos.
 - Ainda não validado: ícone na tela inicial, convites, CRUDs por perfil, histórico e recebimento/clique de Push em aparelho real.
-- Este APK é anterior ao ajuste das consultas de peças para `requested_at`. A fonte e o instalador Windows abaixo já contêm esse ajuste; um novo APK com essa correção ainda não foi disponibilizado.
+- Este novo APK inclui o ajuste das consultas de peças para `requested_at` e cria o canal `maintenance_calls_v2` com importância alta, vibração e som padrão do Android. O canal anterior e seus recursos foram preservados. A instalação e o áudio da nova versão ainda não foram testados em aparelho real.
+- A assinatura de debug agora é persistente e fica em um secret do GitHub Actions, fora do código. Como a chave da primeira compilação era temporária, o APK antigo pode precisar ser removido antes desta primeira atualização. Isso apaga a sessão e as preferências locais do aplicativo, não os dados no servidor; será necessário entrar e ativar as notificações novamente nos dois celulares. Futuras compilações utilizam a mesma assinatura protegida. Não desinstalar antes de concluir a publicação da função abaixo.
 
 ### Backend configurado e verificado
 
@@ -74,6 +75,7 @@ O ambiente Linux usado nesta revisão não possui Android SDK/JDK. A tentativa d
 - O usuário esclareceu que utiliza dois celulares distintos: um como mecânico e outro como setor. Portanto, o cadastro do setor não comprova o registro do celular mecânico. Os registros consultados não mostraram erros de FCM ou de RLS; mostraram uma exclusão de cadastro de dispositivo seguida de registros do setor. A próxima etapa é ativar novamente as notificações no celular mecânico e confirmar seu cadastro no servidor.
 - O usuário relatou vibração sem som no setor e ausência de som/vibração no mecânico, sem confirmar o resultado da ativação neste último. Enviada uma única mensagem FCM identificada como “Teste técnico de notificação” ao único dispositivo do setor cadastrado: HTTP 200, sem mudanças nos chamados ou no banco. O recebimento físico e o áudio desse teste ainda não foram confirmados. O recurso WAV contém áudio PCM válido e o plugin instalado aceita seu nome com extensão; não foi identificada falha de nome do arquivo de som.
 - O usuário confirmou que a mensagem técnica chegou ao setor, sem som, e que a ativação no celular mecânico exibiu “Notificações Android ativadas”. A nova consulta ao servidor confirmou dois dispositivos distintos cadastrados: um mecânico e um setor. O recebimento de novos chamados no mecânico após essa ativação, as atualizações no setor e o áudio em ambos ainda precisam ser confirmados; verificar o som efetivamente selecionado nas configurações de cada canal Android.
+- O usuário confirmou posteriormente a entrega do novo chamado ao mecânico e do aviso de chamado aceito ao setor, ambos sem som. Preparado o novo APK com canal de som padrão e o ajuste correspondente em `send-push`. A publicação da nova função foi recusada com HTTP 403 por falta de `edge_functions_write` no token atual; a função implantada anteriormente continua em uso. É necessário autorizar essa publicação e então validar o novo APK nos dois aparelhos.
 - Configuradas as três credenciais FCM no Supabase a partir da conta de serviço, conferindo que o projeto corresponde ao Firebase do APK e que os digests dos valores configurados correspondem aos fornecidos pelo fluxo seguro.
 - A autorização OAuth e a requisição FCM HTTP v1 com o payload Android foram aceitas com HTTP 200. A requisição usou `validate_only: true`: nenhuma mensagem foi entregue, e esse resultado não comprova recebimento em um dispositivo.
 - O `google-services.json` usado na compilação identifica o aplicativo, mas não substitui a credencial administrativa FCM. Nenhuma chave privada foi incluída nos pacotes ou no repositório.
