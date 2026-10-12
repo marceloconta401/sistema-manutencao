@@ -33,9 +33,19 @@ As funções usam os secrets do próprio Supabase; a chave de serviço não vai 
 - TypeScript, compilação Web e 34 testes controlados de regressão passaram. Os testes incluem análise de sintaxe das Edge Functions e bloqueio da interface por timer, retomada e falha de conexão.
 - Testes no banco real, com papel `authenticated`, passaram para bloqueio de primeiro acesso em 13 tabelas e duas views de histórico, isolamento por organização, proteção das três exclusões vinculadas, bloqueio de elevação de perfil, permissão administrativa, proteção da própria conta e do último administrador. A transação de teste foi revertida.
 - No navegador, em organização sintética isolada: cadastros Setor/Mecânico sem e-mail, troca obrigatória resistente a ESC/reload, acesso por perfil, chamado de teste, confirmação cancelada, exclusão de usuário sem vínculos, desativação dos três cadastros vinculados e reativação condicionada ao setor foram exercitados. A correção de revogação passou no caminho de foco/visibilidade, limpando os dados sem reload e sem restaurá-los depois. O reteste por timer foi interrompido antes de completar cinco segundos: esse prazo não foi confirmado no navegador; o callback periódico foi confirmado por teste controlado.
-- APK/NSIS 1.0.2 compilados em runners Android/Windows. Certificado público Android comparado ao APK anterior e preservado. Uma nova compilação inclui o bloqueio de interface após revogação; os links definitivos serão registrados após seu término.
+- APK/NSIS 1.0.2 compilados com o bloqueio de interface após revogação em runners Android/Windows. O certificado Android continua igual ao APK 1.0.1; applicationId e identidade do instalador foram preservados.
 - Pendentes: confirmar o prazo de revogação por timer em aparelho real, validar novos acessos/troca de senha nos aparelhos e os ícones Windows ainda não confirmados pelo usuário.
 - A Web pública já existente não foi substituída ou publicada automaticamente.
+- Contas sintéticas de teste tiveram acesso banido e sessões revogadas após a validação; credenciais temporárias foram removidas dos arquivos locais. Os registros sintéticos permanecem separados dos dados reais.
+
+## Downloads 1.0.2
+
+- [Android — APK debug](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38300072466/artifacts/11769519294)
+  - SHA-256: `b038c8d2c82bfdfa570607f83ef89c895f8dfd221f4f936a6ced0c73938f2671`
+- [Windows — instalador NSIS x64](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38299323202/artifacts/11769862938)
+  - SHA-256: `5e567674c13f1ed3122e34752e48e51fa580f1604723f9822d7ffbca45778100`
+
+Os downloads do GitHub contêm ZIPs; extrair antes de instalar. Atualizar por cima da versão anterior, sem desinstalar. O APK é de teste e o instalador Windows não tem assinatura comercial. Instalação e novos acessos em aparelhos reais ainda requerem confirmação.
 
 ## Roteiro seguro
 
