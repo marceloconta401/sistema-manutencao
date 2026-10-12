@@ -208,6 +208,11 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (actorError) throw actorError;
     if (!actor?.active) return jsonResponse({ ok: false, error: "Active user profile required" }, 403);
+    const { data: passwordRequired, error: passwordStatusError } = await admin.rpc("maintenance_account_status", {
+      p_user_id: authData.user.id,
+    });
+    if (passwordStatusError) throw passwordStatusError;
+    if (passwordRequired) return jsonResponse({ ok: false, error: "Troque a senha antes de continuar." }, 403);
 
     // Confirm that this user can read the work order under the app's RLS policies.
     const { data: visibleWorkOrder, error: accessError } = await caller
