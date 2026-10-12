@@ -178,7 +178,7 @@ function pauseVisibleData(): void {
   };
   app?.classList.add("hidden");
   modal?.classList.add("hidden");
-  document.getElementById("notificationPanel")?.classList.add("hidden");
+  document.getElementById("notifyPanel")?.classList.add("hidden");
 }
 async function freshnessCheck(force = false): Promise<void> {
   const ctx = typeof w.__maintenanceContext === "function" ? w.__maintenanceContext() : null;
@@ -221,6 +221,7 @@ async function freshnessCheck(force = false): Promise<void> {
   }
 }
 function resumeAccess(): void { pauseVisibleData(); void freshnessCheck(true); }
+window.addEventListener("maintenance-access-locked", () => { pausedUi = null; });
 window.setInterval(() => { void freshnessCheck(); }, 5000);
 window.addEventListener("focus", resumeAccess);
 document.addEventListener("visibilitychange", () => {

@@ -183,7 +183,9 @@ window.__maintenanceSuspend=function(){clearInterval(notificationTimer);notifica
 window.__maintenanceLock=async function(message,signOut){
   window.__maintenanceSuspend();
   $('modal')?.classList.add('hidden');
-  $('notificationPanel')?.classList.add('hidden');
+  $('notifyPanel')?.classList.add('hidden');
+  $('notifyBadge')?.classList.add('hidden');
+  window.dispatchEvent(new Event('maintenance-access-locked'));
   for(const id of ['tickets','historyList','usersList','modalContent','notificationList'])if($(id))$(id).replaceChildren();
   equipment=[];appNotifications=[];notificationBaseline=null;
   localStorage.removeItem(NOTIFY_LIST_KEY);localStorage.removeItem(NOTIFY_KEY);

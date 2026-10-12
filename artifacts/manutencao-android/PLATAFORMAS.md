@@ -122,7 +122,7 @@ Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique 
 - [x] Android: confirmar permissões e configurar o canal para alerta e som nos dois Samsung.
 - [x] Windows: instalar o EXE corrigido e entrar com uma conta autorizada; login confirmado pelo usuário.
 - [ ] Windows: conferir os ícones do instalador, atalhos e aplicativo.
-- [ ] Administrador: convidar uma conta de teste, confirmar o recebimento do e-mail, definir a senha pelo link e entrar com a nova senha.
+- [ ] Administrador/aparelhos: criar contas Setor/Mecânico por nome, login e senha, sem e-mail obrigatório, e concluir a troca de senha no primeiro acesso. O convite legado é opcional; o usuário substituiu o fluxo obrigatório por acesso sem e-mail.
 - [ ] Perfis: verificar criação, leitura, edição e exclusão onde permitidas pelas regras existentes; confirmar que operações proibidas são rejeitadas e que o histórico permanece correto.
 - [x] Setor: criar um chamado identificado como teste e conferir a notificação no Android mecânico.
 - [x] Mecânico: aceitar e atualizar o chamado, solicitar uma peça e conferir os avisos aos destinatários previstos.

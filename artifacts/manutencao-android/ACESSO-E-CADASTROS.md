@@ -1,6 +1,6 @@
 # Acesso por login e gestão de cadastros
 
-## Implementação preparada
+## Implementação
 
 - Cadastro padrão com nome, login e senha temporária, incluindo Setor e Mecânico. E-mail não é obrigatório.
 - Contas existentes continuam usando seu e-mail e senha. O convite por e-mail é preservado como opção legada.
@@ -10,6 +10,7 @@
 - Não é permitido remover/desativar a própria conta nem remover o último administrador ativo.
 - A desativação mantém identidade e históricos. Reativar uma conta Android exige ativar novamente suas notificações.
 - Setores e equipamentos inativos não devem ser selecionados para novos registros. Continuam disponíveis para consulta de histórico.
+- Sessões abertas verificam o acesso a cada 5 segundos quando visíveis. Ao retomar Web/Windows/Android, ocultam dados até revalidar; revogação limpa a tela e notificações locais. Falhas de verificação bloqueiam a interface em vez de mostrar dados desatualizados.
 
 ## Integração
 
@@ -27,11 +28,13 @@ As funções usam os secrets do próprio Supabase; a chave de serviço não vai 
 
 ## Estado de validação
 
-- Interface e funções preparadas no código; não considerar isso ativação no servidor.
-- TypeScript, compilação Web e 25 testes controlados de regressão passaram localmente. A tela pública de login foi conferida na prévia, sem erro de execução. Isso não substitui testes de login e RLS reais.
-- A tentativa de migração foi recusada pelo Supabase porque a credencial atual só permite consultas. Nenhuma alteração dessa migração foi aplicada.
-- As funções publicadas e os instaladores anteriores continuam inalterados. Não publicar funções dependentes da migração antes de ela ser aplicada.
-- Pendentes: aplicar a migração, publicar as funções, testar as jornadas autenticadas e permissões no Supabase, gerar novos APK/EXE com a assinatura Android existente e validar os novos acessos nos aparelhos.
+- Migração aplicada no Supabase após receber a credencial com permissão de escrita; nenhum cadastro existente foi removido ou migrado.
+- Cinco funções publicadas; inicialização e rejeição de acesso anônimo verificadas. `scripts/deploy-access.mjs` oferece a API oficial de fonte única como alternativa à publicação multipart. Aplicar a migração antes de executar esse comando.
+- TypeScript, compilação Web e 31 testes controlados de regressão passaram. Os testes incluem análise de sintaxe das Edge Functions.
+- Testes no banco real, com papel `authenticated`, passaram para bloqueio de primeiro acesso em 13 tabelas e duas views de histórico, isolamento por organização, proteção das três exclusões vinculadas, bloqueio de elevação de perfil, permissão administrativa, proteção da própria conta e do último administrador. A transação de teste foi revertida.
+- No navegador, em organização sintética isolada: cadastros Setor/Mecânico sem e-mail, troca obrigatória resistente a ESC/reload, acesso por perfil, chamado de teste, confirmação cancelada, exclusão de usuário sem vínculos, desativação dos três cadastros vinculados e reativação condicionada ao setor foram exercitados. Foi detectada demora na ocultação da tela após revogação e aplicada uma correção específica; a confirmação dessa correção está em andamento.
+- APK/NSIS 1.0.2 compilados em runners Android/Windows. Certificado público Android comparado ao APK anterior e preservado. Uma nova compilação inclui o bloqueio de interface após revogação; os links definitivos serão registrados após seu término.
+- Pendentes: confirmar a correção de revogação no navegador e validar novos acessos/troca de senha nos aparelhos, além dos ícones Windows ainda não confirmados pelo usuário.
 - A Web pública já existente não foi substituída ou publicada automaticamente.
 
 ## Roteiro seguro
