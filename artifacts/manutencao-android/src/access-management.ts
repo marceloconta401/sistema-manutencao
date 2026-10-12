@@ -3,6 +3,9 @@
 // Relies on the global `sb` client and on the inline context bridge
 // (window.__maintenanceContext / __maintenanceSuspend / __maintenanceLock).
 
+import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
+
 type AnyWin = Window & Record<string, any>;
 const w = window as unknown as AnyWin;
 const client = () => w.sb;
@@ -161,31 +164,75 @@ export async function ensureReady(): Promise<boolean> {
 }
 
 // ---------- Freshness: deactivated users / pending password ----------
-let lastCheck = 0;
 let checking = false;
+let lastCatalogRefresh = 0;
+let pausedUi: { app: boolean; modal: boolean } | null = null;
+function pauseVisibleData(): void {
+  const ctx = w.__maintenanceContext?.();
+  if (!ctx?.session || !ctx?.profile || forcedDialog) return;
+  const app = document.getElementById("app");
+  const modal = document.getElementById("modal");
+  if (!pausedUi) pausedUi = {
+    app: !!app && !app.classList.contains("hidden"),
+    modal: !!modal && !modal.classList.contains("hidden"),
+  };
+  app?.classList.add("hidden");
+  modal?.classList.add("hidden");
+  document.getElementById("notificationPanel")?.classList.add("hidden");
+}
 async function freshnessCheck(force = false): Promise<void> {
   const ctx = typeof w.__maintenanceContext === "function" ? w.__maintenanceContext() : null;
   if (!ctx?.session || !ctx?.profile || checking || forcedDialog) return;
-  const now = Date.now();
-  if (!force && now - lastCheck < 15000) return;
-  lastCheck = now;
+  if (!force && document.visibilityState !== "visible") return;
   checking = true;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
-    const r = await client().from("profiles").select("id,active").eq("id", ctx.session.user.id).maybeSingle();
-    if (!r.error && (!r.data || r.data.active === false)) {
-      w.__maintenanceLock?.("Seu usuário foi desativado. Procure o administrador.", true);
-      return;
+    // The server validates the JWT and active profile; RLS remains the
+    // authority for data. A resume never exposes cached data before this check.
+    const status = await Promise.race([
+      getAccessStatus(),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error("A verificação de acesso demorou demais.")), 15000);
+      }),
+    ]);
+    if (w.__maintenanceContext?.()?.session?.user?.id !== ctx.session.user.id) return;
+    if (status.must_change_password) {
+      pausedUi = null;
+      await ensureReady();
+    } else {
+      if (pausedUi?.app) document.getElementById("app")?.classList.remove("hidden");
+      if (pausedUi?.modal) document.getElementById("modal")?.classList.remove("hidden");
+      pausedUi = null;
+      if (force || Date.now() - lastCatalogRefresh >= 60000) {
+        lastCatalogRefresh = Date.now();
+        await w.__maintenanceRefreshCatalogs?.();
+      }
     }
-    const status = await getAccessStatus().catch(() => null);
-    if (status?.must_change_password) await ensureReady();
-    else if (status) await w.__maintenanceRefreshCatalogs?.();
+  } catch (e: any) {
+    if (w.__maintenanceContext?.()?.session?.user?.id !== ctx.session.user.id) return;
+    pausedUi = null;
+    const revoked = e?.status === 401 || e?.status === 403;
+    await w.__maintenanceLock?.(revoked
+      ? "Seu acesso foi revogado ou a sessão expirou. Procure o administrador."
+      : "Não foi possível verificar seu acesso. Confira a conexão e entre novamente.", revoked);
   } finally {
+    if (timeout) clearTimeout(timeout);
     checking = false;
   }
 }
-window.setInterval(() => { void freshnessCheck(true); }, 60000);
-window.addEventListener("focus", () => { void freshnessCheck(); });
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") void freshnessCheck(); });
+function resumeAccess(): void { pauseVisibleData(); void freshnessCheck(true); }
+window.setInterval(() => { void freshnessCheck(); }, 5000);
+window.addEventListener("focus", resumeAccess);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") resumeAccess();
+  else pauseVisibleData();
+});
+if (Capacitor.isNativePlatform()) {
+  void App.addListener("appStateChange", ({ isActive }) => {
+    if (isActive) resumeAccess();
+    else pauseVisibleData();
+  });
+}
 
 w.maintenanceAccess = { ensureReady, manageEntity, readFunctionError, changePassword, closeForcedDialog, MIN_PASSWORD_LENGTH };
 window.dispatchEvent(new Event("maintenance-access-ready"));

@@ -183,6 +183,10 @@ window.__maintenanceSuspend=function(){clearInterval(notificationTimer);notifica
 window.__maintenanceLock=async function(message,signOut){
   window.__maintenanceSuspend();
   $('modal')?.classList.add('hidden');
+  $('notificationPanel')?.classList.add('hidden');
+  for(const id of ['tickets','historyList','usersList','modalContent','notificationList'])if($(id))$(id).replaceChildren();
+  equipment=[];appNotifications=[];notificationBaseline=null;
+  localStorage.removeItem(NOTIFY_LIST_KEY);localStorage.removeItem(NOTIFY_KEY);
   if(signOut){try{await window.nativePushManager?.unregisterCurrentDevice?.()}catch(e){console.warn('Push:',e?.message||e)}try{await sb.auth.signOut()}catch(e){}session=null}
   $('login')?.classList.remove('hidden');
   if(message) notice($('loginMsg'),message);
@@ -687,7 +691,7 @@ $('saveBtn').onclick=async()=>{
 };
 
 $('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Se você entra com usuário, peça ao administrador para redefinir sua senha. Se tem e-mail cadastrado, digite-o acima e toque novamente.');if(!email.includes('@'))return notice($('loginMsg'),'Usuários sem e-mail devem pedir ao administrador uma nova senha temporária.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
-$('logoutBtn').onclick=async()=>{try{await window.nativePushManager?.unregisterCurrentDevice?.()}catch(e){alert('Não foi possível remover este aparelho das notificações: '+(e?.message||e));return}await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
+$('logoutBtn').onclick=async()=>{await window.__maintenanceLock('',true)};
 function applyTicketFilter(status){
   window.ticketFilter=status||'open';
   document.querySelectorAll('.ticket-filter').forEach(b=>b.classList.toggle('active',b.dataset.status===(window.ticketFilter||'open')));
