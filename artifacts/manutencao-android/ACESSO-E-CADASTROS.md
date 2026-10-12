@@ -30,11 +30,11 @@ As funções usam os secrets do próprio Supabase; a chave de serviço não vai 
 
 - Migração aplicada no Supabase após receber a credencial com permissão de escrita; nenhum cadastro existente foi removido ou migrado.
 - Cinco funções publicadas; inicialização e rejeição de acesso anônimo verificadas. `scripts/deploy-access.mjs` oferece a API oficial de fonte única como alternativa à publicação multipart. Aplicar a migração antes de executar esse comando.
-- TypeScript, compilação Web e 31 testes controlados de regressão passaram. Os testes incluem análise de sintaxe das Edge Functions.
+- TypeScript, compilação Web e 34 testes controlados de regressão passaram. Os testes incluem análise de sintaxe das Edge Functions e bloqueio da interface por timer, retomada e falha de conexão.
 - Testes no banco real, com papel `authenticated`, passaram para bloqueio de primeiro acesso em 13 tabelas e duas views de histórico, isolamento por organização, proteção das três exclusões vinculadas, bloqueio de elevação de perfil, permissão administrativa, proteção da própria conta e do último administrador. A transação de teste foi revertida.
-- No navegador, em organização sintética isolada: cadastros Setor/Mecânico sem e-mail, troca obrigatória resistente a ESC/reload, acesso por perfil, chamado de teste, confirmação cancelada, exclusão de usuário sem vínculos, desativação dos três cadastros vinculados e reativação condicionada ao setor foram exercitados. Foi detectada demora na ocultação da tela após revogação e aplicada uma correção específica; a confirmação dessa correção está em andamento.
+- No navegador, em organização sintética isolada: cadastros Setor/Mecânico sem e-mail, troca obrigatória resistente a ESC/reload, acesso por perfil, chamado de teste, confirmação cancelada, exclusão de usuário sem vínculos, desativação dos três cadastros vinculados e reativação condicionada ao setor foram exercitados. A correção de revogação passou no caminho de foco/visibilidade, limpando os dados sem reload e sem restaurá-los depois. O reteste por timer foi interrompido antes de completar cinco segundos: esse prazo não foi confirmado no navegador; o callback periódico foi confirmado por teste controlado.
 - APK/NSIS 1.0.2 compilados em runners Android/Windows. Certificado público Android comparado ao APK anterior e preservado. Uma nova compilação inclui o bloqueio de interface após revogação; os links definitivos serão registrados após seu término.
-- Pendentes: confirmar a correção de revogação no navegador e validar novos acessos/troca de senha nos aparelhos, além dos ícones Windows ainda não confirmados pelo usuário.
+- Pendentes: confirmar o prazo de revogação por timer em aparelho real, validar novos acessos/troca de senha nos aparelhos e os ícones Windows ainda não confirmados pelo usuário.
 - A Web pública já existente não foi substituída ou publicada automaticamente.
 
 ## Roteiro seguro
