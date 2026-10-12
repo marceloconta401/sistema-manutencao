@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, Notification, Tray, nativeImage, shell } = require("electron");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const { toAsciiUserAgent } = require("./network-user-agent.cjs");
 
 const APP_ID = "com.sistemamanutencao.app";
 const iconPath = path.join(app.getAppPath(), "desktop", "assets", "system-icon.ico");
@@ -42,6 +43,10 @@ function createWindow() {
       sandbox: true,
     },
   });
+  // Set this before loading any page, including Supabase login/recovery links.
+  mainWindow.webContents.setUserAgent(
+    toAsciiUserAgent(mainWindow.webContents.getUserAgent()),
+  );
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//i.test(url)) void shell.openExternal(url);
     return { action: "deny" };

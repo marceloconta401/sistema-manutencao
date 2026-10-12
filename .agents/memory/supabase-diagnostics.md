@@ -9,8 +9,8 @@ Uma negativa ao listar projetos não prova que o token não consegue acessar o p
 
 **How to apply:** confirme o destino pelo URL público usado pela aplicação e teste somente os endpoints necessários desse projeto. Não solicite credencial nova apenas pela negativa da listagem.
 
-Logs exigem a permissão `analytics_logs_read`. Use o endpoint `analytics/endpoints/logs`, SQL ClickHouse e a tabela unificada `logs`, filtrando `source_name`.
+Logs exigem a permissão `analytics_logs_read`. Use o endpoint `analytics/endpoints/logs`, SQL ClickHouse e a tabela unificada `logs`, filtrando `source`.
 
 **Why:** a documentação oficial informa que o antigo endpoint `logs.all` foi removido em 23 de setembro de 2026. O acesso ao banco não inclui necessariamente acesso aos logs.
 
-**How to apply:** informe timestamps de início/fim para consultar o período do erro. Se a permissão dos logs estiver ausente, não altere o schema de autenticação por tentativa; obtenha primeiro o erro específico.
+**How to apply:** informe timestamps de início/fim em intervalos de no máximo 24 horas. A referência atual e uma consulta real confirmaram `source`, não `source_name`. Detalhes de requisição ficam no mapa `log_attributes`. Se a permissão dos logs estiver ausente, não altere o schema de autenticação por tentativa; obtenha primeiro o erro específico.
