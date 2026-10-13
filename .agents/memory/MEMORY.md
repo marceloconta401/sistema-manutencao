@@ -2,3 +2,15 @@
 - [Empacotamento Windows neste ambiente](windows-container.md) — use runner Windows para finalizar NSIS; Wine do container não é prova de um instalador funcional.
 - [Compilação Android no container](android-container.md) — ausência inicial de SDK não impede APK local; JDK 21 e ferramentas oficiais funcionam com SDK temporário.
 - [Diagnóstico Supabase com token restrito](supabase-diagnostics.md) — consulte o projeto conhecido diretamente; logs usam endpoint novo e exigem analytics_logs_read.
+- [Autorização GitHub](github-autorizacao.md) — conexão ativa não comprova acesso de escrita; leitura de repositório público pode ser anônima.
+- [Fonte das funções Supabase](supabase-function-source.md) — compare a fonte extraída pela CLI; o bundle da API inclui dependências e pode gerar conclusões falsas.
+- [Login Windows e codificação](windows-auth-encoding.md) — nomes com acentos não devem entrar nos cabeçalhos HTTP; preserve o nome visível e use ASCII no protocolo.
+- [Logs Supabase atuais](supabase-management-logs.md) — endpoint unificado com ClickHouse; logs.all antigo retorna HTTP 410.
+- [Som de notificações Android](android-notification-sound.md) — prefira o som padrão e um novo canal ao mudar o áudio; entrega FCM não comprova som no aparelho.
+- [Assinatura de APKs de teste](android-debug-signing.md) — preserve a chave de debug do CI; trocar a assinatura pode exigir reinstalação e nova ativação de notificações.
+- [Escopos de tokens Supabase](supabase-token-scopes.md) — acesso ao banco/logs não autoriza funções; token de publicação deve ter Edge Functions Read-write.
+- [Acesso e históricos](user-access-requirements.md) — login sem e-mail obrigatório, troca no primeiro acesso e remoção administrativa sem perder históricos.
+- [Publicação de Edge Functions](edge-function-deployment.md) — validar sintaxe e inicialização; ACTIVE não comprova funcionamento, e multipart pode falhar quando a API JSON funciona.
+- [Revogação de sessão](session-revocation.md) — RLS não remove dados já carregados; bloquear antes de revalidar ao retomar e limpar tela/notificações após revogação.
+- [Despacho de builds GitHub](native-build-dispatch.md) — esperar o push ser processado antes do despacho manual; a concorrência pode cancelar Android/Windows.
+- [Data de preventiva](preventive-date-scope.md) — preservar abertura e avisos imediatos; data planejada não cria recorrência nem envio futuro implicitamente.

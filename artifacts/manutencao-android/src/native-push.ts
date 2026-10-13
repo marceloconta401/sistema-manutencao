@@ -2,7 +2,9 @@ import { Capacitor } from "@capacitor/core";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { PushNotifications } from "@capacitor/push-notifications";
 
-const CHANNEL_ID = "maintenance_calls_v1";
+// Android preserves the sound of an existing channel; use a new ID rather
+// than trying to overwrite the old custom-sound channel.
+const CHANNEL_ID = "maintenance_calls_v2";
 const TOKEN_STORAGE_KEY = "maintenance.nativePushToken";
 const isAndroid =
   Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android";
@@ -84,11 +86,11 @@ async function ensureAndroidSetup(): Promise<void> {
   nativeSetup = (async () => {
     await PushNotifications.createChannel({
       id: CHANNEL_ID,
-      name: "Chamados e atualizações",
+      name: "Chamados e atualizações — som padrão",
       description: "Novos chamados, solicitações de peças e mudanças de status.",
-      importance: 5,
+      importance: 4,
       visibility: 1,
-      sound: "maintenance_notification.wav",
+      // Omit custom sound so Android uses its default notification ringtone.
       vibration: true,
     });
 

@@ -1,61 +1,22 @@
-import { createClient } from "npm:@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, apikey, x-client-info, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-function response(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
+import { actor as authorizedActor, checkedPassword, digest, failure, normalizedLogin, preflight, response } from "../_shared/access.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return response({ ok: false, error: "Method not allowed" }, 405);
+  const early = preflight(req); if (early) return early;
 
   try {
-    const authorization = req.headers.get("authorization") || "";
-    const token = authorization.match(/^Bearer\s+(.+)$/i)?.[1];
-    if (!token) return response({ ok: false, error: "Authentication required" }, 401);
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!supabaseUrl || !anonKey || !serviceRoleKey) {
-      return response({ ok: false, error: "Supabase function environment is incomplete" }, 500);
-    }
-
-    const caller = createClient(supabaseUrl, anonKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: { headers: { Authorization: authorization } },
-    });
-    const admin = createClient(supabaseUrl, serviceRoleKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data: auth, error: authError } = await caller.auth.getUser(token);
-    if (authError || !auth.user) return response({ ok: false, error: "Invalid or expired session" }, 401);
-
-    const { data: actor, error: actorError } = await admin
-      .from("profiles")
-      .select("id,role,active,organization_id")
-      .eq("id", auth.user.id)
-      .maybeSingle();
-    if (actorError) throw actorError;
-    if (!actor?.active || actor.role !== "admin" || !actor.organization_id) {
-      return response({ ok: false, error: "An active organization administrator is required" }, 403);
-    }
+    const { admin, profile: actor } = await authorizedActor(req, true);
 
     const body = await req.json().catch(() => null) as Record<string, unknown> | null;
     const fullName = typeof body?.full_name === "string" ? body.full_name.trim() : "";
     const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
     const role = typeof body?.role === "string" ? body.role : "";
     const sectorId = typeof body?.sector_id === "string" ? body.sector_id : null;
-    if (!fullName || fullName.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return response({ ok: false, error: "A valid name and email are required" }, 400);
+    const localAccess = Boolean(body?.login) || body?.mode === "local";
+    if (!fullName || fullName.length > 120) {
+      return response({ ok: false, error: "Informe um nome de até 120 caracteres." }, 400);
+    }
+    if (!localAccess && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return response({ ok: false, error: "Informe o e-mail para o convite opcional." }, 400);
     }
     if (!["admin", "mechanic", "sector"].includes(role)) {
       return response({ ok: false, error: "Unsupported user role" }, 400);
@@ -72,9 +33,33 @@ Deno.serve(async (req) => {
         .select("id")
         .eq("id", sectorId)
         .eq("organization_id", actor.organization_id)
+        .eq("active", true)
         .maybeSingle();
       if (error) throw error;
       if (!sector) return response({ ok: false, error: "The selected sector is not in your organization" }, 400);
+    }
+
+    if (localAccess) {
+      const login = normalizedLogin(body?.login);
+      const password = checkedPassword(body?.password);
+      // Internal Auth identifier only. No mailbox, SMTP or confirmation is
+      // required; the human-facing identifier is always the login.
+      const authEmail = `${await digest(login)}@login.sistemamanutencao.invalid`;
+      const { data: created, error: createError } = await admin.auth.admin.createUser({
+        email: authEmail, password, email_confirm: true, user_metadata: { full_name: fullName },
+      });
+      if (createError || !created.user) return response({ ok: false,
+        error: "Não foi possível cadastrar. O login pode já estar em uso ou a senha não foi aceita." }, 409);
+      const { error: setupError } = await admin.rpc("maintenance_account_create", {
+        p_user_id: created.user.id, p_org: actor.organization_id, p_name: fullName,
+        p_login: login, p_email: authEmail, p_role: role, p_sector: sectorId,
+      });
+      if (setupError) {
+        const { error: rollbackError } = await admin.auth.admin.deleteUser(created.user.id);
+        if (rollbackError) console.error("Account creation rollback needs attention.");
+        return response({ ok: false, error: "Não foi possível cadastrar. Confira o login e o setor." }, 409);
+      }
+      return response({ ok: true, user_id: created.user.id, login, must_change_password: true });
     }
 
     const { data: invitation, error: invitationError } = await admin.auth.admin
@@ -99,8 +84,6 @@ Deno.serve(async (req) => {
 
     return response({ ok: true, user_id: invitedUserId, email });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error("admin-create-user failed", message);
-    return response({ ok: false, error: message }, 500);
+    return failure(error);
   }
 });

@@ -32,7 +32,9 @@ const statusLabels: Record<string, string> = {
   cancelled: "Cancelado",
 };
 
-const nativeChannelId = "maintenance_calls_v1";
+// New APKs create this channel with Android's default ringtone. Older APKs
+// fall back to the channel declared in their own manifest when it is absent.
+const nativeChannelId = "maintenance_calls_v2";
 let cachedFcmAccessToken = "";
 let cachedFcmAccessTokenExpiresAt = 0;
 
@@ -133,7 +135,8 @@ async function sendFcmNotification(
             priority: "HIGH",
             notification: {
               channel_id: nativeChannelId,
-              sound: "maintenance_notification",
+              sound: "default",
+              default_sound: true,
               default_vibrate_timings: true,
               visibility: "PUBLIC",
               icon: "ic_stat_maintenance",
@@ -205,6 +208,11 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (actorError) throw actorError;
     if (!actor?.active) return jsonResponse({ ok: false, error: "Active user profile required" }, 403);
+    const { data: passwordRequired, error: passwordStatusError } = await admin.rpc("maintenance_account_status", {
+      p_user_id: authData.user.id,
+    });
+    if (passwordStatusError) throw passwordStatusError;
+    if (passwordRequired) return jsonResponse({ ok: false, error: "Troque a senha antes de continuar." }, 403);
 
     // Confirm that this user can read the work order under the app's RLS policies.
     const { data: visibleWorkOrder, error: accessError } = await caller
@@ -273,6 +281,9 @@ Deno.serve(async (req) => {
       })
       .map((profile) => profile.id);
     if (!recipientIds.length) {
+      console.info("Push delivery summary", JSON.stringify({
+        event_type: eventType, target_users: 0, sent: 0, failed: 0,
+      }));
       return jsonResponse({ ok: true, event_type: eventType, target_users: 0, sent: 0, failed: 0 });
     }
 
@@ -394,7 +405,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return jsonResponse({
+    const deliverySummary = {
       ok: failed === 0,
       event_type: eventType,
       target_users: recipientIds.length,
@@ -404,7 +415,10 @@ Deno.serve(async (req) => {
       native_sent: nativeSent,
       sent,
       failed,
-    });
+    };
+    // Counts only: never log device tokens, session credentials or call data.
+    console.info("Push delivery summary", JSON.stringify(deliverySummary));
+    return jsonResponse(deliverySummary);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("send-push failed", message);

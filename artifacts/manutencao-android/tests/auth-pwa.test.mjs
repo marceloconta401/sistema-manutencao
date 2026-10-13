@@ -38,6 +38,16 @@ function makeLoginHarness({ authResult }) {
   let signInArgs;
 
   const context = vm.createContext({
+    fetch: async (_url, options) => {
+      signInArgs = JSON.parse(options.body);
+      return {
+        ok: !authResult.error,
+        status: authResult.error ? 401 : 200,
+        json: async () => authResult.error
+          ? { ok: false, error: "Login ou senha inválidos." }
+          : { ok: true, session: { access_token: "test-access", refresh_token: "test-refresh" } },
+      };
+    },
     document: {
       getElementById(id) {
         return elements[id] ?? null;
@@ -47,7 +57,10 @@ function makeLoginHarness({ authResult }) {
       supabase: { createClient() {} },
     },
     sb: {
+      supabaseUrl: "https://example.invalid",
+      supabaseKey: "public-test-key",
       auth: {
+        async setSession() { return authResult; },
         async signInWithPassword(args) {
           signInArgs = args;
           return authResult;
@@ -146,7 +159,7 @@ for (const fileName of ["index.html", "app.html"]) {
 
     await harness.context.window.__directLogin();
 
-    assert.equal(harness.signInArgs.email, "operator@example.com");
+    assert.equal(harness.signInArgs.email ?? harness.signInArgs.login, "operator@example.com");
     assert.equal(harness.signInArgs.password, "test-password");
     assert.equal(harness.showAppCalls, 1);
     assert.match(harness.elements.loginMsg.textContent, /Login realizado/i);
@@ -163,7 +176,7 @@ for (const fileName of ["index.html", "app.html"]) {
     await harness.context.window.__directLogin();
 
     assert.equal(harness.showAppCalls, 0);
-    assert.match(harness.elements.loginMsg.textContent, /Senha inválida/);
+    assert.match(harness.elements.loginMsg.textContent, /Senha inválida|(?:Login|Usuário) ou senha inválidos/i);
     assert.equal(harness.elements.loginBtn.disabled, false);
   });
 
@@ -244,7 +257,7 @@ test("service worker only caches same-origin app-shell resources", async () => {
   assert.doesNotThrow(() => new vm.Script(serviceWorker));
   assert.match(serviceWorker, /requestUrl\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /const isAppShellAsset = APP_SHELL/);
-  assert.match(serviceWorker, /sistema-manutencao-v18/);
+  assert.match(serviceWorker, /sistema-manutencao-v20/);
   assert.match(serviceWorker, /key\.startsWith\("sistema-manutencao-"\)/);
   assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
   assert.equal(publicServiceWorker, serviceWorker);
@@ -262,7 +275,7 @@ test("Push Edge Function authenticates users and routes Web Push and Android FCM
   assert.match(edgeFunction, /from\("push_subscriptions"\)/);
   assert.match(edgeFunction, /from\("native_push_devices"\)/);
   assert.match(edgeFunction, /FCM_PROJECT_ID/);
-  assert.match(edgeFunction, /maintenance_calls_v1/);
+  assert.match(edgeFunction, /maintenance_calls_v2/);
 });
 
 test("Android FCM channel, token table and invitation function are present", async () => {
@@ -273,7 +286,7 @@ test("Android FCM channel, token table and invitation function are present", asy
   const inviteFunction = await readAppFile("supabase/functions/admin-create-user/index.ts");
 
   assert.match(nativePush, /createChannel/);
-  assert.match(nativePush, /maintenance_calls_v1/);
+  assert.match(nativePush, /maintenance_calls_v2/);
   assert.match(nativePush, /unregisterCurrentDevice/);
   assert.match(manifest, /POST_NOTIFICATIONS/);
   assert.match(manifest, /default_notification_icon/);
@@ -281,7 +294,10 @@ test("Android FCM channel, token table and invitation function are present", asy
   assert.match(migration, /enable row level security/i);
   assert.match(migration, /user_id = auth\.uid\(\)/);
   assert.match(inviteFunction, /inviteUserByEmail/);
-  assert.match(inviteFunction, /actor\.role !== "admin"/);
+  assert.match(inviteFunction, /authorizedActor\(req, true\)/);
+  const access = await readAppFile("supabase/functions/_shared/access.ts");
+  assert.match(access, /requireAdmin && profile\.role !== "admin"/);
+  assert.match(access, /caller\.auth\.getUser\(token\)/);
 });
 
 test("Windows Electron entry points are packaged with an isolated renderer", async () => {
