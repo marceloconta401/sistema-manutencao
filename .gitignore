@@ -47,6 +47,8 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+# In-progress uploads are temporary; keep completed attachments.
+/attached_assets/.*~
 
 # System Maintenance platform build outputs and local signing/configuration files
 /artifacts/manutencao-android/release/
@@ -57,3 +59,4 @@ Thumbs.db
 /artifacts/manutencao-android/android/*.jks
 /artifacts/manutencao-android/android/*.keystore
 /artifacts/manutencao-android/*.env
+/artifacts/manutencao-android/supabase/.temp/
