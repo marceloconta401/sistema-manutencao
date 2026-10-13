@@ -16,6 +16,8 @@
 
 Aplicar `supabase/access_management.sql` com uma credencial **Database — Read-write**. A migração é transacional e aditiva; não elimina cadastros existentes e mantém as políticas anteriores, complementadas por regras restritivas.
 
+Para a preventiva da versão 1.0.3, aplicar depois `supabase/preventive_scheduling.sql`. Essa migração já foi aplicada ao Supabase deste sistema.
+
 Somente após aplicar a migração, publicar:
 
 - `admin-create-user`
@@ -57,6 +59,21 @@ Usar registros claramente identificados como TESTE, sem alterar ou excluir cadas
 3. Trocar senha, entrar novamente e conferir acesso por perfil; a senha antiga não deve funcionar.
 4. Mecânico e Setor não podem cadastrar/remover usuários, setores ou equipamentos.
 5. Excluir apenas um cadastro de teste sem vínculos; confirmação cancelada não altera dados.
+
+## Correção de manutenção preventiva — 1.0.3
+
+O administrador tinha formulário de preventiva, mas somente o perfil Setor tinha política permissiva de INSERT em chamados. A correção adiciona uma política administrativa limitada à criação de preventiva com data, equipamento, solicitante autenticado e status inicial, preservando as políticas anteriores e o RLS.
+
+- Campo obrigatório **Data programada**, salvo como data de calendário sem conversão de fuso e exibido nos chamados, detalhes e lista de preventivas.
+- A data não modifica os horários reais de abertura/conclusão. O chamado e seus avisos são gerados agora; não foi criado um agendador de notificações futuras.
+- Data ausente/inválida é rejeitada; durante o envio o botão fica bloqueado. Erros preservam a descrição digitada.
+- 44 testes locais, TypeScript e compilação Web passaram. Testes controlados exercitaram o handler de cadastro, data no payload/lista, aviso de erro e clique concorrente.
+- Banco real com papel `authenticated`: INSERT administrativo e persistência da data passaram; organização/setor/equipamento externos, solicitante adulterado, cadastro administrativo não preventivo, ausência de data, equipamento inativo, primeiro acesso incompleto e INSERT mecânico foram bloqueados. INSERT Setor legado e leitura da data por Setor/Mecânico passaram. Todos os registros dessa validação foram revertidos.
+- APK e NSIS 1.0.3 compilados pelos runners GitHub. Certificado Android comparado e igual ao 1.0.2. Instalação/cadastro na 1.0.3 ainda não foram confirmados pelo usuário.
+- [Android 1.0.3](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38330618208/artifacts/11783260157) — SHA-256 `bca542e4f41d6668192732ce8dc125c2827b20fe1a90924c31e7c4d5e0d54d66`
+- [Windows 1.0.3](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38330618208/artifacts/11782940980) — SHA-256 `136781b45a01c074b2679a756fde80dbfa19e755e4655e013ff8f0698ff0dce5`
+
+É necessário instalar a versão 1.0.3 por cima da anterior, sem desinstalar, para usar o novo campo. A prévia Web foi atualizada; a publicação Web anterior continua sem substituição automática.
 6. Um cadastro vinculado a chamado/relatório deve rejeitar exclusão e oferecer desativação, mantendo o histórico.
 7. Conta desativada perde acesso, inclusive numa sessão aberta; reativação restaura somente as permissões do seu perfil.
 8. Conferir leitura dos mesmos cadastros e alterações entre Web, Android e Windows; testar login e troca de senha nos novos instaladores.
