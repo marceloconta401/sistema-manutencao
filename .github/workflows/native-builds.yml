@@ -15,7 +15,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: native-builds-${{ github.ref }}
+  group: native-builds-${{ github.ref }}-${{ github.event_name == 'push' && 'windows' || inputs.platform }}
   cancel-in-progress: true
 jobs:
   windows:

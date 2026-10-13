@@ -85,6 +85,8 @@ ipcMain.on("maintenance:notification", (_event, payload) => {
     title: payload?.title || "Sistema de Manutenção",
     body: payload?.body || "Há uma atualização em um chamado.",
     icon: iconPath,
+    // Foreground tones are controlled by the user's settings in the renderer.
+    silent: true,
   });
   notification.on("click", () => showWindow(payload?.callId || ""));
   notification.show();

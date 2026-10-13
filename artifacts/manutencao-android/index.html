@@ -55,13 +55,13 @@ body:has(#login:not(.hidden)) .top{display:none}
 </style>
 </head>
 <body>
-<header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="btn secondary installbtn installAppBtn hidden" id="installAppBtn" type="button" aria-describedby="installHelp">Instalar app</button><span class="small install-help hidden" id="installHelp" role="status" aria-live="polite"></span><button class="topbtn" id="themeBtn" title="Tema">☀️</button><div class="notifywrap">
-<button class="topbtn" id="notifyBtn" title="Ativar notificações">🔔<span id="notifyBadge" class="notifybadge hidden">0</span></button>
+<header class="top"><div class="topin"><div class="brand"><div class="logo">Logo</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="btn secondary installbtn installAppBtn hidden" id="installAppBtn" type="button" aria-describedby="installHelp">Instalar app</button><span class="small install-help hidden" id="installHelp" role="status" aria-live="polite"></span><button class="topbtn" id="themeBtn" title="Tema"></button><div class="notifywrap">
+<button class="topbtn" id="notifyBtn" title="Notificações"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="notifyBadge" class="notifybadge hidden">0</span></button>
 <div id="notifyPanel" class="notifypanel hidden">
-  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type="button" id="enablePushBtn" style="margin:10px">🔔 Ativar notificações no aparelho</button><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
+  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type="button" id="enablePushBtn" style="margin:10px">Ativar notificações no aparelho</button><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
   <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
 </div>
-</div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button></div></header>
+</div><button class="topbtn" id="refreshBtn" title="Atualizar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8M21 3v5h-5"/></svg></button></div></header>
 <script>
 (()=>{
   const installButtons=[...document.querySelectorAll('.installAppBtn')];
@@ -104,7 +104,7 @@ body:has(#login:not(.hidden)) .top{display:none}
 </script>
 <main class="layout">
 <section id="login" class="card login">
-<h1>🔐 Acesso ao sistema</h1><p class="small">Entre com o usuário e a senha fornecidos pelo administrador.</p>
+<h1>Acesso ao sistema</h1><p class="small">Entre com o usuário e a senha fornecidos pelo administrador.</p>
 <button class="btn secondary installbtn installAppBtn hidden" id="installLoginBtn" type="button" aria-describedby="installLoginHelp">Instalar app</button><span class="small install-help hidden" id="installLoginHelp" role="status" aria-live="polite"></span>
 <div class="field"><label for="email">Usuário ou e-mail</label><input id="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu usuário ou e-mail" data-testid="input-login"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
@@ -112,18 +112,18 @@ body:has(#login:not(.hidden)) .top{display:none}
 </section>
 <section id="app" class="hidden">
 <div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
-<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>🔴 Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>🔵 Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>🟣 Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>🟢 Concluídos</span><b id="kDone">0</b></button></div>
-<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>👥 Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>🏢 Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>⚙️ Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>📋 Total de chamados</span><b id="aOrders">0</b></div></div></div>
-<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button">➕ Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>➕ Novo usuário</h3><div class="modeswitch" role="group" aria-label="Forma de acesso"><button class="btn secondary active" type="button" id="newUserModePassword" data-testid="button-mode-password">Usuário e senha</button><button class="btn secondary" type="button" id="newUserModeInvite" data-testid="button-mode-invite">Convite por e-mail (legado)</button></div><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário" data-testid="input-new-user-name"></label><label id="newUserLoginWrap">Login<input id="newUserLogin" placeholder="ex.: joao.silva" autocomplete="off" autocapitalize="none" spellcheck="false" data-testid="input-new-user-login"></label><label id="newUserPasswordWrap">Senha temporária<input id="newUserPassword" type="password" autocomplete="new-password" placeholder="mínimo 12 caracteres" data-testid="input-new-user-password"></label><label id="newUserEmailWrap" class="hidden">E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off" data-testid="input-new-user-email"></label><label>Perfil<select id="newUserRole" data-testid="select-new-user-role"><option value="sector">🏢 Setor</option><option value="mechanic">🔧 Mecânico</option><option value="admin">👨‍💼 Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector" data-testid="select-new-user-sector"><option value="">Carregando setores...</option></select></label></div><p class="small" id="newUserModeHint">O usuário entra com login e senha temporária e será obrigado a trocar a senha no primeiro acesso. E-mail não é necessário.</p><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
+<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>Concluídos</span><b id="kDone">0</b></button></div>
+<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>Total de chamados</span><b id="aOrders">0</b></div></div></div>
+<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button">Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>Novo usuário</h3><div class="modeswitch" role="group" aria-label="Forma de acesso"><button class="btn secondary active" type="button" id="newUserModePassword" data-testid="button-mode-password">Usuário e senha</button><button class="btn secondary" type="button" id="newUserModeInvite" data-testid="button-mode-invite">Convite por e-mail (legado)</button></div><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário" data-testid="input-new-user-name"></label><label id="newUserLoginWrap">Login<input id="newUserLogin" placeholder="ex.: joao.silva" autocomplete="off" autocapitalize="none" spellcheck="false" data-testid="input-new-user-login"></label><label id="newUserPasswordWrap">Senha temporária<input id="newUserPassword" type="password" autocomplete="new-password" placeholder="mínimo 12 caracteres" data-testid="input-new-user-password"></label><label id="newUserEmailWrap" class="hidden">E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off" data-testid="input-new-user-email"></label><label>Perfil<select id="newUserRole" data-testid="select-new-user-role"><option value="sector">Setor</option><option value="mechanic">Mecânico</option><option value="admin">Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector" data-testid="select-new-user-sector"><option value="">Carregando setores...</option></select></label></div><p class="small" id="newUserModeHint">O usuário entra com login e senha temporária e será obrigado a trocar a senha no primeiro acesso. E-mail não é necessário.</p><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
 
-<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</button></div><div class="filtergrid"><div class="field"><label>Equipamento</label><select id="historyEquipment"><option value="">Todos os equipamentos</option></select></div><div class="field"><label>Tipo</label><select id="historyType"><option value="">Todos os tipos</option></select></div><div class="field"><label>De</label><input id="historyStart" type="date"></div><div class="field"><label>Até</label><input id="historyEnd" type="date"></div></div><div class="actions"><button class="btn primary" id="applyHistoryBtn" type="button">Aplicar filtros</button><button class="btn secondary" id="clearHistoryBtn" type="button">Limpar</button></div><div id="historyList" class="list" style="margin-top:14px"><div class="empty">Carregando histórico...</div></div></div>
+<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</button></div><div class="filtergrid"><div class="field"><label>Equipamento</label><select id="historyEquipment"><option value="">Todos os equipamentos</option></select></div><div class="field"><label>Tipo</label><select id="historyType"><option value="">Todos os tipos</option></select></div><div class="field"><label>De</label><input id="historyStart" type="date"></div><div class="field"><label>Até</label><input id="historyEnd" type="date"></div></div><div class="actions"><button class="btn primary" id="applyHistoryBtn" type="button">Aplicar filtros</button><button class="btn secondary" id="clearHistoryBtn" type="button">Limpar</button></div><div id="historyList" class="list" style="margin-top:14px"><div class="empty">Carregando histórico...</div></div></div>
 <div class="grid2">
 <div>
-<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class="empty">Carregando chamados...</div></div></div>
+<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class="empty">Carregando chamados...</div></div></div>
 </div>
 <div>
-<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">🖼️ Galeria</button><button class="btn secondary" type="button" id="cameraBtn">📷 Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
-<div class="card hidden" id="shortcutsCard"><div class="sectionhead"><h2>🧭 Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
+<div class="card hidden" id="newCard"><div class="sectionhead"><h2>Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">Galeria</button><button class="btn secondary" type="button" id="cameraBtn">Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
+<div class="card hidden" id="shortcutsCard"><div class="sectionhead"><h2>Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
 </div></div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
@@ -178,10 +178,25 @@ const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 window.sb=sb;
 const $=id=>document.getElementById(id);
 let session=null,profile=null,equipment=[];
+let privateViewEpoch=0;
+function privateViewStamp(){return {epoch:privateViewEpoch,user:session?.user?.id}}
+function privateViewCurrent(stamp){return stamp.epoch===privateViewEpoch&&stamp.user===session?.user?.id&&profile?.id===stamp.user}
+function resetPrivateViews(){
+  privateViewEpoch++;
+  for(const id of ['usersPanel','newUserPanel','historyPanel','adminPanel','newCard'])$(id)?.classList.add('hidden');
+  for(const field of $('app')?.querySelectorAll('input,textarea,select')||[]){
+    if(field.tagName==='SELECT'){field.selectedIndex=0}else{field.value=field.defaultValue||''}
+  }
+  for(const id of ['equipment','historyEquipment','newUserSector'])$(id)?.replaceChildren();
+  if($('password'))$('password').value='';
+  if($('saveNewUserBtn'))$('saveNewUserBtn').disabled=true;
+  $('app')?.removeAttribute('data-role');
+}
 window.__maintenanceContext=()=>({session,profile});
 window.__maintenanceSuspend=function(){clearInterval(notificationTimer);notificationTimer=null;profile=null;$('app')?.classList.add('hidden')};
 window.__maintenanceLock=async function(message,signOut){
   window.__maintenanceSuspend();
+  resetPrivateViews();
   $('modal')?.classList.add('hidden');
   $('notifyPanel')?.classList.add('hidden');
   $('notifyBadge')?.classList.add('hidden');
@@ -271,7 +286,7 @@ async function enableNotifications(){
   if(!('Notification' in window)) return alert('Este navegador não oferece notificações.');
   const p=await Notification.requestPermission();
   if(p==='granted'){
-    $('notifyBtn').firstChild.textContent='🔔';
+    
      alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. Para receber avisos com o sistema fechado, ative também as notificações do aparelho.');
   }else if(p==='denied'){
     alert('As notificações foram bloqueadas. Ative-as nas configurações do navegador.');
@@ -312,7 +327,7 @@ async function registerPushOnDevice(){
     if(window.nativePushManager?.isAvailable()){
       if(!session?.user?.id) throw new Error('Entre no sistema antes de ativar as notificações.');
       await window.nativePushManager.register();
-      if(btn){btn.textContent='✅ Notificações Android ativadas';btn.disabled=true;}
+      if(btn){btn.textContent='Notificações Android ativadas';btn.disabled=true;}
       alert('Notificações nativas do Android ativadas. O envio com o aplicativo fechado depende da configuração do Firebase/FCM no Supabase.');
       return;
     }
@@ -329,7 +344,7 @@ async function registerPushOnDevice(){
     if(!endpoint||!p256dh||!auth) throw new Error('O navegador não retornou os dados da assinatura.');
     const r=await sb.from('push_subscriptions').upsert({user_id:session.user.id,endpoint,p256dh,auth},{onConflict:'endpoint'});
     if(r.error)throw r.error;
-    if(btn){btn.textContent='✅ Notificações do aparelho ativadas';btn.disabled=true;}
+    if(btn){btn.textContent='Notificações do aparelho ativadas';btn.disabled=true;}
      alert('Este aparelho foi inscrito para receber novos chamados e atualizações. O envio em segundo plano depende da função Push e das chaves estarem configuradas no Supabase.');
   }catch(e){
     if(btn)btn.disabled=false;
@@ -378,7 +393,7 @@ async function checkNotifications(){
       if(freshParts.length){
         freshParts.slice(0,8).forEach(p=>{
           notifyUser(
-            '📦 Solicitação de peça',
+            'Solicitação de peça',
             `${p.part_name} · quantidade ${p.quantity}`,
             p.work_order_id
           );
@@ -424,13 +439,13 @@ async function checkNotifications(){
       // Não avisar o próprio setor sobre a abertura do chamado.
       if(isNew && newStatus==='open') continue;
 
-      let title='🔔 Chamado atualizado';
-      if(newStatus==='accepted') title='🔧 Chamado aceito';
-      else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
-      else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
+      let title='Chamado atualizado';
+      if(newStatus==='accepted') title='Chamado aceito';
+      else if(newStatus==='in_progress') title='Atendimento iniciado';
+      else if(newStatus==='waiting_parts') title='Aguardando peça';
       else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
-      else if(newStatus==='completed') title='🟢 Chamado concluído';
-      else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
+      else if(newStatus==='completed') title='Chamado concluído';
+      else if(newStatus==='cancelled') title='Chamado cancelado';
 
       notifyUser(
         title,
@@ -443,7 +458,7 @@ async function checkNotifications(){
     if(profile.role==='mechanic'){
       if(isNew && newStatus==='open'){
         notifyUser(
-          x.priority==='urgent'?'🔴 Novo chamado urgente':'🆕 Novo chamado',
+          x.priority==='urgent'?'Novo chamado urgente':'🆕 Novo chamado',
           `${x.title||'Chamado'} · ${plabels[x.priority]||x.priority}`,
           x.id
         );
@@ -451,12 +466,12 @@ async function checkNotifications(){
       }
 
       if(x.mechanic_id===session.user.id){
-        let title='🔧 Chamado atualizado';
-        if(newStatus==='accepted') title='✅ Chamado aceito';
-        else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
-        else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
+        let title='Chamado atualizado';
+        if(newStatus==='accepted') title='Chamado aceito';
+        else if(newStatus==='in_progress') title='Atendimento iniciado';
+        else if(newStatus==='waiting_parts') title='Aguardando peça';
         else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Peça recebida / atendimento retomado';
-        else if(newStatus==='completed') title='🟢 Chamado concluído';
+        else if(newStatus==='completed') title='Chamado concluído';
 
         notifyUser(
           title,
@@ -468,14 +483,14 @@ async function checkNotifications(){
 
     // ADMINISTRADOR: acompanha eventos relevantes de toda a organização.
     if(profile.role==='admin'){
-      let title='🔔 Atualização de chamado';
-      if(isNew && newStatus==='open') title=x.priority==='urgent'?'🔴 Novo chamado urgente':'🆕 Novo chamado';
-      else if(newStatus==='accepted') title='🔧 Chamado aceito';
-      else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
-      else if(newStatus==='waiting_parts') title='📦 Chamado aguardando peça';
+      let title='Atualização de chamado';
+      if(isNew && newStatus==='open') title=x.priority==='urgent'?'Novo chamado urgente':'🆕 Novo chamado';
+      else if(newStatus==='accepted') title='Chamado aceito';
+      else if(newStatus==='in_progress') title='Atendimento iniciado';
+      else if(newStatus==='waiting_parts') title='Chamado aguardando peça';
       else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
-      else if(newStatus==='completed') title='🟢 Chamado concluído';
-      else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
+      else if(newStatus==='completed') title='Chamado concluído';
+      else if(newStatus==='cancelled') title='Chamado cancelado';
 
       notifyUser(
         title,
@@ -494,7 +509,7 @@ async function checkNotifications(){
     const freshParts=parts.filter(p=>!seenParts.has(p.id) && p.status==='requested');
     freshParts.slice(0,8).forEach(p=>{
       notifyUser(
-        '📦 Solicitação de peça',
+        'Solicitação de peça',
         `${p.part_name} · quantidade ${p.quantity}`,
         p.work_order_id
       );
@@ -530,7 +545,7 @@ function fmtPlannedDate(value){
   return `${day}/${month}/${year}`;
 }
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').textContent=t==='light'?'🌙':'☀️'}
+function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').innerHTML=t==='light'?'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>':'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'}
 document.addEventListener('pointerdown',()=>{unlockNotificationAudio()},{once:true});
 $('notifyBtn').onclick=()=>{
   if($('notifyPanel').classList.contains('hidden')) $('notifyPanel').classList.remove('hidden');
@@ -560,17 +575,19 @@ async function getProfile(){const r=await sb.from('profiles').select('id,full_na
 async function loadEquipment(){const prev=$('equipment').value;const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error)throw new Error('Não foi possível carregar equipamentos: '+r.error.message);equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');if(equipment.some(e=>e.id===prev))$('equipment').value=prev}
 window.loadAdminUsers=async function loadAdminUsers(){
  if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
+ const stamp=privateViewStamp();
  $('usersPanel').classList.remove('hidden');
  $('usersList').innerHTML='<div class="empty">Carregando usuários...</div>';
  const [pr,sr]=await Promise.all([
   sb.from('profiles').select('*').eq('organization_id',profile.organization_id).order('full_name'),
   sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
  ]);
+ if(!privateViewCurrent(stamp)||profile?.role!=='admin')return;
  if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
  const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
  const rows=pr.data||[];
  if(!rows.length){$('usersList').innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return}
- const roleLabel={admin:'👨‍💼 Administrador',mechanic:'🔧 Mecânico',sector:'🏢 Setor'};
+ const roleLabel={admin:'Administrador',mechanic:'Mecânico',sector:'Setor'};
  $('usersList').innerHTML=rows.map(u=>`<div class="ticket ${u.active?'':'inactive'}" data-testid="row-user-${u.id}"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||'')}</div></div><div class="tags"><span class="tag ${u.active?'s-completed':'s-cancelled'}">${u.active?'Ativo':'Inativo'}</span></div></div><div class="small" style="margin-top:8px">${u.login?'Login: '+escapeHtml(u.login)+' · ':''}${u.role==='sector'?'Setor: '+escapeHtml(sectors[u.sector_id]||'Não vinculado'):u.role==='mechanic'?'Atuação: Manutenção':'Acesso total da organização'}</div>${u.id===session?.user?.id?'<div class="small" style="margin-top:8px">Seu usuário</div>':adminRowActions('users',u.id,u.full_name,u.active)}</div>`).join('');
 }
 
@@ -590,7 +607,9 @@ async function loadAdminOverview(){
  $('aOrders').textContent=w.error?'—':(w.count||0);
 }
 async function loadTickets(){
+  const stamp=privateViewStamp();
   const r=await sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  if(!privateViewCurrent(stamp))return;
   if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
   const allRows=r.data||[];
   let open=0,urgent=0,prog=0,parts=0,done=0;
@@ -637,7 +656,7 @@ window.reportTicket=async id=>{
   try{
     const woR=await sb.from('work_orders').select('id,equipment_id,title').eq('id',id).single();if(woR.error)throw woR.error;
     let eqId=woR.data.equipment_id||'';
-    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEquipment">${equipmentOptions(eqId)}</select></div><div class="field"><label>Diagnóstico</label><textarea id="reportDiagnosis" placeholder="O que foi encontrado?"></textarea></div><div class="field"><label>Serviço realizado</label><textarea id="reportWork" placeholder="O que foi feito?"></textarea></div><div class="field"><label>Peças utilizadas</label><input id="reportParts" placeholder="Nenhuma"></div><div class="actions"><button class="btn primary" id="confirmReport">Registrar serviço</button><button class="btn secondary" id="cancelReport">Cancelar</button></div>`;
+    $('modalContent').innerHTML=`<h2>Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEquipment">${equipmentOptions(eqId)}</select></div><div class="field"><label>Diagnóstico</label><textarea id="reportDiagnosis" placeholder="O que foi encontrado?"></textarea></div><div class="field"><label>Serviço realizado</label><textarea id="reportWork" placeholder="O que foi feito?"></textarea></div><div class="field"><label>Peças utilizadas</label><input id="reportParts" placeholder="Nenhuma"></div><div class="actions"><button class="btn primary" id="confirmReport">Registrar serviço</button><button class="btn secondary" id="cancelReport">Cancelar</button></div>`;
     $('modal').classList.remove('hidden');
     $('cancelReport').onclick=()=>$('modal').classList.add('hidden');
     $('confirmReport').onclick=async()=>{
@@ -667,11 +686,20 @@ window.details=async id=>{
   let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" src="${sr.data.signedUrl}" alt="Foto do problema">`}
   let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<div class="historyitem"><b>${escapeHtml(ph.photo_type||'Foto')}:</b> ${escapeHtml(ph.description||'')}<img class="photo" src="${sr.data.signedUrl}" alt="Foto da manutenção"></div>`}
   const timeline=(events.data||[]).map(e=>`<div class="historyitem"><b>${fmt(e.created_at)}</b> — ${escapeHtml(e.description||e.event_type||'Evento')}</div>`).join('');
-  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>📷 Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>📷 Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>🕒 Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
+  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
   if(x.scheduled_for){const planned=document.createElement('div');planned.className='notice';planned.textContent='Data programada: '+fmtPlannedDate(x.scheduled_for);$('modalContent').prepend(planned)}
  }catch(e){showError(e,'Não foi possível abrir os detalhes')}
 };
 $('closeModal').onclick=()=>{$('modal').classList.add('hidden');currentAdminModal=null};$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
+function cancelNewCall(){
+  $('newCard').classList.add('hidden');
+  for(const field of $('newCard').querySelectorAll('input,textarea'))field.value='';
+  $('priority').value='normal';$('equipment').value='';
+  $('photoName').textContent='Nenhuma foto selecionada.';
+  $('saveMsg').textContent='';$('saveMsg').classList.add('hidden');
+}
+$('saveBtn').insertAdjacentHTML('afterend','<button class="btn secondary full" type="button" id="cancelNewCallBtn" data-testid="button-cancel-new-call" style="margin-top:8px">Cancelar</button>');
+$('cancelNewCallBtn').onclick=cancelNewCall;
 $('newBtn').onclick=()=>{
   $('newCard').classList.remove('hidden');
   $('newCard').scrollIntoView({behavior:'smooth',block:'start'});
@@ -720,10 +748,13 @@ async function showApp(){
     if(!await access.ensureReady()) return;
     await getProfile();
     if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');
+    $('app').dataset.role=profile.role;
+    for(const id of ['usersPanel','newUserPanel','historyPanel'])$(id)?.classList.add('hidden');
+    $('saveNewUserBtn').disabled=profile.role!=='admin';
     $('login').classList.add('hidden');
     $('app').classList.remove('hidden');
     $('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';
-    const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];
+    const info={admin:['','Administrador','Visão geral da organização'],mechanic:['','Mecânico','Painel de manutenção'],sector:['','Setor','Chamados do seu setor']}[profile.role];
     $('profile').textContent=info[0]+' '+info[1]+' · '+info[2];
     $('roleNotice').textContent='';
     $('roleNotice').className='notice hidden';
@@ -731,16 +762,16 @@ async function showApp(){
     $('newBtn').classList.toggle('hidden',!isSector);
     $('newCard').classList.add('hidden');
     if(profile.role==='admin'){
-      $('ticketsTitle').textContent='📋 Todos os chamados';
+      $('ticketsTitle').textContent='Todos os chamados';
       const sc=$('shortcutsCard');
       if(sc)sc.classList.remove('hidden');
-      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';
+      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">Manutenção preventiva</button>';
     }else if(profile.role==='mechanic'){
-      $('ticketsTitle').textContent='🔧 Chamados para atendimento';
+      $('ticketsTitle').textContent='Chamados para atendimento';
       const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
       const sc=$('shortcutsCard');if(sc)sc.classList.add('hidden');
     }else{
-      $('ticketsTitle').textContent='🏢 Chamados do meu setor';
+      $('ticketsTitle').textContent='Chamados do meu setor';
       const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
       const sc=$('shortcutsCard');if(sc)sc.classList.add('hidden');
     }
@@ -960,9 +991,9 @@ async function openSectorsPanel(){
     const usersBy=Object.fromEntries((ur.data||[]).map(x=>[x.sector_id,(Object.values(Object.fromEntries([])).length)]));
     const uc={},ec={}; (ur.data||[]).forEach(x=>{if(x.sector_id)uc[x.sector_id]=(uc[x.sector_id]||0)+1}); (er.data||[]).forEach(x=>{if(x.sector_id)ec[x.sector_id]=(ec[x.sector_id]||0)+1});
     const rows=sr.data||[];
-    openAdminModal('🏢 Setores',`
-      <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
-      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}" data-testid="row-sector-${s.id}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div>${adminRowActions('sectors',s.id,s.name,s.active!==false)}</div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
+    openAdminModal('Setores',`
+      <div class="actions"><button class="btn primary" id="newSectorAdmin">Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">Atualizar</button></div>
+      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}" data-testid="row-sector-${s.id}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">${uc[s.id]||0} usuário(s) · ${ec[s.id]||0} equipamento(s)</div>${adminRowActions('sectors',s.id,s.name,s.active!==false)}</div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
       <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
     $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
     $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
@@ -986,9 +1017,9 @@ async function openEquipmentPanel(){
     if(er.error)throw er.error;
     const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
     const rows=er.data||[];
-    openAdminModal('⚙️ Equipamentos',`
-      <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
-      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket ${e.active?'':'inactive'}" data-testid="row-equipment-${e.id}"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div>${adminRowActions('equipment',e.id,e.name,e.active)}</div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
+    openAdminModal('Equipamentos',`
+      <div class="actions"><button class="btn primary" id="newEquipmentAdmin">Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">Atualizar</button></div>
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket ${e.active?'':'inactive'}" data-testid="row-equipment-${e.id}"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div>${adminRowActions('equipment',e.id,e.name,e.active)}</div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
       <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
     $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).filter(s=>s.active!==false).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
     $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
@@ -1009,8 +1040,8 @@ async function openPartsPanel(){
     const r=await sb.from('part_requests').select('id,work_order_id,part_name,quantity,status,requested_at,created_at:requested_at,requested_by').order('requested_at',{ascending:false}).limit(100);
     if(r.error)throw r.error;
     const rows=r.data||[];
-    openAdminModal('📦 Peças',`
-      <div class="actions"><button class="btn secondary" id="refreshPartsAdmin">↻ Atualizar</button></div>
+    openAdminModal('Peças',`
+      <div class="actions"><button class="btn secondary" id="refreshPartsAdmin">Atualizar</button></div>
       <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidade: ${p.quantity||1} · Chamado: ${escapeHtml(p.work_order_id||'')}</div></div><span class="tag">${escapeHtml(p.status||'Sem status')}</span></div><div class="small" style="margin-top:8px">Solicitada em: ${fmt(p.requested_at||p.created_at)}</div></div>`).join(''):'<div class="empty">Nenhuma solicitação de peça encontrada.</div>'}</div>`);
     $('refreshPartsAdmin').onclick=openPartsPanel;
   }catch(e){showError(e,'Não foi possível carregar as solicitações de peças')}
@@ -1025,7 +1056,7 @@ async function openPreventivePanel(){
     ]);
     if(er.error)throw er.error;if(sr.error)throw sr.error;
     const eqs=er.data||[], sectors=(sr.data||[]).filter(s=>s.active!==false);
-    openAdminModal('🗓️ Manutenção preventiva',`
+    openAdminModal('Manutenção preventiva',`
       <p class="small">Crie um chamado preventivo para um equipamento e encaminhe-o ao setor responsável.</p>
       <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_id||''}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}</select></div>
       <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></div>
@@ -1131,4 +1162,6 @@ document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole'
 <script type="module" src="./src/native-push.ts"></script>
 <script type="module" src="./src/access-management.ts"></script>
 <script type="module" src="./src/auth-links.ts"></script>
+<script type="module" src="./src/shell.ts"></script>
+<script type="module" src="./src/operations.ts"></script>
 </body></html>
