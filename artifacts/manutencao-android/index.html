@@ -518,6 +518,17 @@ const labels={open:'Aberto',accepted:'Aceito',in_progress:'Em atendimento',waiti
 const plabels={urgent:'Urgente',high:'Alta',normal:'Normal',low:'Baixa'};
 function notice(el,t,ok=false){el.textContent=t;el.className='notice '+(ok?'ok':'error');el.classList.remove('hidden')}
 function fmt(d){return d?new Date(d).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):''}
+function preventiveDate(value){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw new Error('Informe a data programada da preventiva.');
+  const date=new Date(value+'T12:00:00Z');
+  if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)throw new Error('Informe uma data programada válida.');
+  return value;
+}
+function fmtPlannedDate(value){
+  if(!value)return '';
+  const [year,month,day]=value.split('-');
+  return `${day}/${month}/${year}`;
+}
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').textContent=t==='light'?'🌙':'☀️'}
 document.addEventListener('pointerdown',()=>{unlockNotificationAudio()},{once:true});
@@ -579,7 +590,7 @@ async function loadAdminOverview(){
  $('aOrders').textContent=w.error?'—':(w.count||0);
 }
 async function loadTickets(){
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
   if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
   const allRows=r.data||[];
   let open=0,urgent=0,prog=0,parts=0,done=0;
@@ -595,7 +606,7 @@ async function loadTickets(){
     if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')">Registrar serviço</button>`;
     if(mine&&x.status==='waiting_parts') actions+=`<button class="btn primary" onclick="resumeTicket('${x.id}')">Retomar atendimento</button>`;
     actions+=`<button class="btn secondary" onclick="details('${x.id}')">Ver detalhes</button>`;
-    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</div></div><div class="tags"><span class="tag s-${x.status}">${labels[x.status]||x.status}</span><span class="tag p-${x.priority}">${plabels[x.priority]||x.priority}</span></div></div><div class="desc">${escapeHtml(x.description||'Sem descrição')}</div><div class="small">Aberto: ${fmt(x.opened_at||x.created_at)} ${x.mechanic?.full_name?'· Mecânico: '+escapeHtml(x.mechanic.full_name):''}</div><div class="actions">${actions}</div></article>`;
+    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</div></div><div class="tags"><span class="tag s-${x.status}">${labels[x.status]||x.status}</span><span class="tag p-${x.priority}">${plabels[x.priority]||x.priority}</span></div></div><div class="desc">${escapeHtml(x.description||'Sem descrição')}</div>${x.scheduled_for?`<div class="small"><b>Data programada:</b> ${escapeHtml(fmtPlannedDate(x.scheduled_for))}</div>`:''}<div class="small">Aberto: ${fmt(x.opened_at||x.created_at)} ${x.mechanic?.full_name?'· Mecânico: '+escapeHtml(x.mechanic.full_name):''}</div><div class="actions">${actions}</div></article>`;
   }).join('')
 }
 async function updateStatus(id,status,extra={},shouldNotify=true){
@@ -643,7 +654,7 @@ window.reportTicket=async id=>{
 };
 window.details=async id=>{
  try{
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').eq('id',id).single();if(r.error)throw r.error;const x=r.data;if(!x)throw new Error('Chamado não encontrado.');
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').eq('id',id).single();if(r.error)throw r.error;const x=r.data;if(!x)throw new Error('Chamado não encontrado.');
   const [rep,parts,photos,events]=await Promise.all([
    sb.from('maintenance_reports').select('diagnosis,work_performed,parts_used,created_at').eq('work_order_id',id).order('created_at',{ascending:false}).limit(1),
    sb.from('part_requests').select('part_name,quantity,status,requested_at').eq('work_order_id',id).order('requested_at',{ascending:true}),
@@ -657,6 +668,7 @@ window.details=async id=>{
   let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<div class="historyitem"><b>${escapeHtml(ph.photo_type||'Foto')}:</b> ${escapeHtml(ph.description||'')}<img class="photo" src="${sr.data.signedUrl}" alt="Foto da manutenção"></div>`}
   const timeline=(events.data||[]).map(e=>`<div class="historyitem"><b>${fmt(e.created_at)}</b> — ${escapeHtml(e.description||e.event_type||'Evento')}</div>`).join('');
   $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>📷 Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>📷 Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>🕒 Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
+  if(x.scheduled_for){const planned=document.createElement('div');planned.className='notice';planned.textContent='Data programada: '+fmtPlannedDate(x.scheduled_for);$('modalContent').prepend(planned)}
  }catch(e){showError(e,'Não foi possível abrir os detalhes')}
 };
 $('closeModal').onclick=()=>{$('modal').classList.add('hidden');currentAdminModal=null};$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
@@ -1011,31 +1023,42 @@ async function openPreventivePanel(){
       sb.from('equipment').select('id,name,code,sector_id,active').eq('organization_id',profile.organization_id).eq('active',true).order('name'),
       sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
     ]);
-    if(er.error)throw er.error;
+    if(er.error)throw er.error;if(sr.error)throw sr.error;
     const eqs=er.data||[], sectors=(sr.data||[]).filter(s=>s.active!==false);
     openAdminModal('🗓️ Manutenção preventiva',`
       <p class="small">Crie um chamado preventivo para um equipamento e encaminhe-o ao setor responsável.</p>
       <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_id||''}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}</select></div>
       <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></div>
+      <div class="field"><label for="preventiveDate">Data programada</label><input id="preventiveDate" type="date" required><div class="small">Data prevista para realizar a manutenção. O chamado é criado e enviado ao setor agora.</div></div>
       <div class="field"><label>Descrição da preventiva</label><textarea id="preventiveDescription" placeholder="Ex.: inspeção, lubrificação, troca de filtros..."></textarea></div>
       <div class="actions"><button class="btn primary" id="createPreventive">Criar chamado preventivo</button></div><div id="preventiveMsg" class="notice hidden"></div>
       <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
       <h3>Últimos chamados preventivos</h3><div id="preventiveRecent" class="list"><div class="empty">Carregando...</div></div>`);
     $('preventiveEquipment').onchange=()=>{const s=$('preventiveEquipment').selectedOptions[0]?.dataset.sector||'';if(s)$('preventiveSector').value=s};
-    $('createPreventive').onclick=async()=>{
-      const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=$('preventiveDescription').value.trim();
-      if(!eq||!sector||!desc)return notice($('preventiveMsg'),'Preencha equipamento, setor e descrição.');
-      const e=eqs.find(x=>x.id===eq);
-      const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq}).select('id').single();
-      if(x.error)return notice($('preventiveMsg'),x.error.message);
-       await triggerPush(x.data.id,'created');
-      notice($('preventiveMsg'),'Chamado preventivo criado com sucesso.',true);$('preventiveDescription').value='';await loadTickets();
-      loadPreventiveRecent();
+    const createButton=$('createPreventive'), message=$('preventiveMsg'), descriptionInput=$('preventiveDescription'), recentBox=$('preventiveRecent');
+    let creating=false;
+    createButton.onclick=async()=>{
+      if(creating)return;
+      try{
+        const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=descriptionInput.value.trim();
+        if(!eq||!sector||!desc)throw new Error('Preencha equipamento, setor e descrição.');
+        const scheduled_for=preventiveDate($('preventiveDate').value);
+        const e=eqs.find(x=>x.id===eq);
+        if(!e||!sectors.some(s=>s.id===sector))throw new Error('Selecione um equipamento e setor ativos.');
+        creating=true;createButton.disabled=true;
+        const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq,scheduled_for}).select('id').single();
+        if(x.error)throw x.error;
+        descriptionInput.value='';
+        notice(message,'Chamado preventivo criado para '+fmtPlannedDate(scheduled_for)+'.',true);
+        await triggerPush(x.data.id,'created');
+        await Promise.all([loadTickets(),loadPreventiveRecent()]);
+      }catch(e){notice(message,e.message||'Não foi possível criar a preventiva.')}
+      finally{creating=false;createButton.disabled=false;}
     };
     async function loadPreventiveRecent(){
-      const x=await sb.from('work_orders').select('id,title,status,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order('created_at',{ascending:false}).limit(10);
-      if(x.error){$('preventiveRecent').innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
-      $('preventiveRecent').innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.status} · ${fmt(w.created_at)}</div><div class="actions"><button class="btn secondary" onclick="details('${w.id}')">Ver detalhes</button></div></div>`).join('')||'<div class="empty">Nenhuma preventiva criada.</div>';
+      const x=await sb.from('work_orders').select('id,title,status,scheduled_for,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order('created_at',{ascending:false}).limit(10);
+      if(x.error){recentBox.innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
+      recentBox.innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.status} · ${fmt(w.created_at)}</div>${w.scheduled_for?`<div class="small"><b>Data programada:</b> ${escapeHtml(fmtPlannedDate(w.scheduled_for))}</div>`:''}<div class="actions"><button class="btn secondary" onclick="details('${w.id}')">Ver detalhes</button></div></div>`).join('')||'<div class="empty">Nenhuma preventiva criada.</div>';
     }
     loadPreventiveRecent();
   }catch(e){showError(e,'Não foi possível abrir a manutenção preventiva')}
