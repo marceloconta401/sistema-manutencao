@@ -41,6 +41,25 @@ As funções usam os secrets do próprio Supabase; a chave de serviço não vai 
 - A Web pública já existente não foi substituída ou publicada automaticamente.
 - Contas sintéticas de teste tiveram acesso banido e sessões revogadas após a validação; credenciais temporárias foram removidas dos arquivos locais. Os registros sintéticos permanecem separados dos dados reais.
 
+### Verificação complementar de revogação — 13/10/2026
+
+- `pnpm --filter @workspace/manutencao-android test`: 49 testes passaram. Nenhum cadastro ou serviço remoto foi alterado nesta execução.
+- O timer real de cinco segundos do módulo foi executado em Node, sem chamar manualmente o callback, foco ou reload. Com resposta sintética de revogação e latência controlada de 100 ms, o bloqueio ocorreu em aproximadamente 5.105 ms (5,105 segundos).
+- Os testes controlados também exercitaram o listener Android `appStateChange`: ocultação antes da resposta, revogação na retomada e falha de rede. Timer/foco/visibilidade/retomada após o bloqueio não restauraram o cache sintético.
+- **Esses resultados não são medição em Android/Windows instalados.** DOM, ponte Capacitor, transporte e limpeza de cache são simulados nesses testes; eles não comprovam limpeza real de notificações nativas nem preservação do histórico no banco.
+- A confirmação nativa continua pendente: este ambiente não dispõe de aparelho Android conectado, emulador ou Windows para executar os aplicativos. Não substituir esse requisito por emulação de viewport ou compilação bem-sucedida.
+
+#### Roteiro pendente nos aplicativos instalados
+
+Usar somente uma organização isolada de teste, contas e chamados claramente identificados como TESTE. Não reativar contas reais para viabilizar o teste.
+
+1. Em Android e Windows, entrar com conta sintética após concluir a troca obrigatória de senha. Abrir um chamado sintético, seus detalhes e notificações; registrar o histórico pelo administrador.
+2. Em outra sessão administrativa, desativar apenas essa conta. Marcar o instante da confirmação administrativa e deixar o aplicativo testado aberto, sem tocar, focar ou recarregar. Registrar o instante em que dados e detalhes desaparecem e surge o bloqueio. Aguardar cinco segundos mais a latência; se a validação travar, há timeout de 15 segundos após o início da consulta.
+3. Confirmar que os dados não reaparecem nos ciclos seguintes, ao restaurar a janela, retomar o aplicativo ou abri-lo novamente. Conferir remoção das notificações e ausência de acesso ao chamado pela conta desativada.
+4. Com outra conta sintética ativa, colocar o Android em segundo plano / minimizar o Windows, desativar a conta na sessão administrativa e retomar o aplicativo. Nenhum dado anterior deve aparecer enquanto a verificação está pendente.
+5. Com conta sintética ativa e dados carregados, interromper a rede e testar tela aberta e retomada. A falha/timeout deve bloquear, sem usar dados em cache como fallback. Restabelecer a rede não deve restaurar automaticamente a tela anterior.
+6. Pelo administrador, conferir que o chamado e seu histórico permanecem intactos; não confundir limpeza local com exclusão no banco. Registrar versão, plataforma, tempos observados e resultado de cada cenário. Encerrar as sessões sintéticas ao terminar.
+
 ## Downloads 1.0.2
 
 - [Android — APK debug](https://github.com/marceloconta401/sistema-manutencao/actions/runs/38300072466/artifacts/11769519294)
