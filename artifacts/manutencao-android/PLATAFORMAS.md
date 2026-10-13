@@ -110,9 +110,9 @@ Guarde o resultado como secret `GOOGLE_SERVICES_JSON_BASE64` no GitHub Actions o
 
 ## Verificação
 
-`pnpm --filter @workspace/manutencao-android test` e `typecheck` verificam o código local. A entrega FCM requer teste com um Android instalado, usuário inscrito e o app em primeiro plano, segundo plano e fechado pela lista de recentes. Não confunda esse último estado com **Forçar parada** nas configurações do Android: o sistema impede o recebimento de Push de um aplicativo forçado a parar até ele ser aberto novamente. Convites exigem testar uma conta administradora e confirmar o e-mail recebido. O Windows requer executar o instalador em uma máquina Windows para verificar atalhos, ícone e notificações.
+`pnpm --filter @workspace/manutencao-android test` e `typecheck` verificam o código local. A entrega FCM requer teste com um Android instalado, usuário inscrito e o app em primeiro plano, segundo plano e fechado pela lista de recentes. Não confunda esse último estado com **Forçar parada** nas configurações do Android: o sistema impede o recebimento de Push de um aplicativo forçado a parar até ele ser aberto novamente. O cadastro atual por login não exige e-mail; convites por e-mail são um fluxo legado opcional. O Windows requer executar o instalador em uma máquina Windows para verificar atalhos, ícone e notificações.
 
-### Roteiro em aparelhos reais — ainda pendente
+### Resultados por ambiente
 
 Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique quaisquer registros criados para teste e não exclua nem altere chamados, usuários ou histórico reais.
 
@@ -121,12 +121,16 @@ Use contas autorizadas dos perfis administrador, mecânico e setor. Identifique 
 - [x] Android: conferir o ícone na tela inicial dos dois celulares; confirmado pelo usuário.
 - [x] Android: confirmar permissões e configurar o canal para alerta e som nos dois Samsung.
 - [x] Windows: instalar o EXE corrigido e entrar com uma conta autorizada; login confirmado pelo usuário.
-- [ ] Windows: conferir os ícones do instalador, atalhos e aplicativo.
-- [ ] Administrador/aparelhos: criar contas Setor/Mecânico por nome, login e senha, sem e-mail obrigatório, e concluir a troca de senha no primeiro acesso. O convite legado é opcional; o usuário substituiu o fluxo obrigatório por acesso sem e-mail.
-- [ ] Perfis: verificar criação, leitura, edição e exclusão onde permitidas pelas regras existentes; confirmar que operações proibidas são rejeitadas e que o histórico permanece correto.
+- [x] Windows 1.0.2: ícones do instalador, atalhos e aplicativo corretos, confirmados pelo usuário em 12/10/2026.
+- [x] Contas novas por login, sem e-mail obrigatório: Setor/Mecânico no Android e conta nova no Windows 1.0.2; login e troca obrigatória de senha confirmados pelo usuário em 12/10/2026. O convite legado é opcional; o usuário substituiu o fluxo obrigatório por acesso sem e-mail.
+- [x] Navegador/banco real, organização sintética: cadastro de usuários, máquinas e setores; criação e leitura de chamado; exclusão de usuário sem vínculo; cancelamento de confirmação; proteção de exclusão vinculada e histórico; desativação/reativação e restrições por perfil. Criação, aceite, atualização e solicitação de peça também foram exercitados nos aparelhos nos testes anteriores.
 - [x] Setor: criar um chamado identificado como teste e conferir a notificação no Android mecânico.
 - [x] Mecânico: aceitar e atualizar o chamado, solicitar uma peça e conferir os avisos aos destinatários previstos.
 - [x] Android: criação e aceite em segundo plano e fechados pelos recentes; solicitação de peça com setor fechado. Som, vibração e abertura do chamado correto confirmados pelo usuário.
 - [x] Windows: aviso com o programa na bandeja e clique abrindo o chamado correto; confirmado pelo usuário.
 
 Registre o resultado por etapa e eventuais mensagens de erro sem compartilhar senhas, tokens ou conteúdo privado. Compilação, inspeção dos recursos, testes estáticos e validação FCM sem entrega não substituem esse roteiro.
+
+As confirmações anteriores de Push com som/vibração e clique correspondem à versão 1.0.1; a confirmação dos novos acessos e ícones corresponde à 1.0.2. O canal, som e encaminhamento dos avisos foram preservados. O prazo do bloqueio periódico de uma tela já aberta após desativação ainda não foi cronometrado em aparelho real; o caminho de foco/visibilidade passou no navegador e o callback periódico passou em teste controlado.
+
+Downloads, verificações do RLS e detalhes das mudanças estão em `ACESSO-E-CADASTROS.md`. A Web pública antiga não foi substituída; a prévia e os instaladores atualizados compartilham o mesmo Supabase.
