@@ -7,25 +7,25 @@
 <meta name="theme-color" content="#0b1220">
 <title>Sistema de Manutenção</title>
 <style>
-:root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3aed;--blue:#2563eb;--orange:#ea580c;--shadow:0 12px 35px #0005}
+:root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3a[...]
 :root.light{--bg:#eef2f7;--panel:#fff;--panel2:#f8fafc;--text:#111827;--muted:#64748b;--line:#dbe3ee;--shadow:0 10px 30px #0f172a14}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
 .top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.topin{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;flex:1}.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;font-size:21px}.topbtn{background:var(--panel2);color:var(--text);border:1px solid var(--line);width:42px;height:42px;border-radius:12px}
-.layout{max-width:1200px;margin:auto;padding:18px 16px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:8px 0 20px}.hero h1{margin:0;font-size:28px}.hero p{margin:5px 0;color:var(--muted)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}.login{max-width:460px;margin:8vh auto}.login h1{margin-top:0}.field{margin:12px 0}.field label{display:block;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;outline:none}.field textarea{min-height:100px;resize:vertical}.btn{padding:12px 15px;border-radius:12px;font-weight:800}.primary{background:var(--primary);color:white}.primary:hover{background:var(--primary2)}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#7f1d1d;color:#fff}.full{width:100%}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.kpi{border-radius:16px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}.kpi b{font-size:30px}.kpi.ticket-filter{border:0;width:100%;text-align:left}.kpi.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.kpi span{font-weight:750}.k-yellow{background:#ca8a04}.k-red{background:#dc2626}.k-blue{background:#2563eb}.k-purple{background:#7c3aed}.k-green{background:#16a34a}
-.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0;font-size:20px}.list{display:grid;gap:10px}.ticket{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.tickettop{display:flex;justify-content:space-between;gap:10px}.ticket h3{margin:0 0 5px;font-size:17px}.small{font-size:13px;color:var(--muted)}.desc{margin:10px 0;color:var(--muted);line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:7px}.tag{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#334155;color:#fff}.s-open{background:#ca8a04}.s-accepted{background:#2563eb}.s-in_progress{background:#2563eb}.s-waiting_parts{background:#7c3aed}.s-completed{background:#16a34a}.s-cancelled{background:#64748b}.p-urgent{background:#dc2626}.p-high{background:#ea580c}.p-normal{background:#475569}.p-low{background:#64748b}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-filter{border:2px solid transparent}.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.actions .btn{flex:1;min-width:120px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.profileline{color:var(--muted)}.photo{width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:10px}.modal{position:fixed;inset:0;background:#0009;z-index:50;padding:18px;overflow:auto}.modalbox{max-width:700px;margin:4vh auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.close{float:right;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;width:38px;height:38px}.history{display:grid;gap:9px}.historyitem{padding:11px;border-left:3px solid var(--primary);background:var(--panel2);border-radius:8px}.notice{padding:12px;border-radius:12px;background:#172554;color:#bfdbfe;margin-bottom:12px}.error{background:#450a0a;color:#fecaca}.ok{background:#052e16;color:#bbf7d0}
+.topin{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;flex:1}.logo{width:38p[...]
+.layout{max-width:1200px;margin:auto;padding:18px 16px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:8px 0 20px}.hero h1{margin:0;font-size:28px}.hero p{[...]
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}.login{max-width:460px;margin:8vh auto}.login h1{margin-top:0[...]
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.kpi{border-radius:16px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-conte[...]
+.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0;font-s[...]
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-filter{border:2px solid transparent}.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.actions .btn{flex:1[...]
 @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.hero{align-items:flex-start}.hero h1{font-size:24px}}
-@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:92px;padding:13px}.kpi b{font-size:25px}.layout{padding:14px 11px 40px}.card{padding:14px}.actions .btn{min-width:100%;}.topin{padding:10px 11px}.brand{font-size:16px}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:92px;padding:13px}.kpi b{font-size:25px}.layout{padding:14px 11px 40px}.card{padding:14px}.actions .btn{min-width:100%;}[...]
 
-.historypanel{margin-top:16px}.filtergrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:10px}.historyrow{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.historyrow h3{margin:0 0 5px}.historymeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.historymeta span{padding:5px 8px;border-radius:999px;background:#334155;color:#fff;font-size:12px;font-weight:800}.historydetail{margin-top:10px;color:var(--muted);line-height:1.45}.historyactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:700px){.filtergrid{grid-template-columns:1fr 1fr}}
+.historypanel{margin-top:16px}.filtergrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:10px}.historyrow{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding[...]
 
 .notifywrap{position:relative}
-.notifybadge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
-.notifypanel{position:absolute;right:0;top:48px;width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(0,0,0,.28);z-index:50;overflow:hidden}
+.notifybadge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;display:flex;align-item[...]
+.notifypanel{position:absolute;right:0;top:48px;width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(0,0,0,.28);z[...]
 .notifhead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border-bottom:1px solid var(--line)}
 .notifhead .btn{padding:7px 9px;font-size:12px}
 .notificationlist{max-height:360px;overflow:auto}
@@ -40,10 +40,10 @@ body:has(#login:not(.hidden)) .top{display:none}
 </style>
 </head>
 <body>
-<header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="topbtn" id="themeBtn" title="Tema">☀️</button><div class="notifywrap">
+<header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="topbtn" id[...]
 <button class="topbtn" id="notifyBtn" title="Ativar notificações">🔔<span id="notifyBadge" class="notifybadge hidden">0</span></button>
 <div id="notifyPanel" class="notifypanel hidden">
-  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type="button" id="enablePushBtn" style="margin:10px">🔔 Ativar notificações no aparelho</button><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
+  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type[...]
   <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
 </div>
 </div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button></div></header>
@@ -52,21 +52,21 @@ body:has(#login:not(.hidden)) .top{display:none}
 <h1>🔐 Acesso ao sistema</h1><p class="small">Entre com seu usuário do Supabase.</p>
 <div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="off" placeholder="seu e-mail"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
-<button class="btn primary full" id="loginBtn" type="button" onclick="if(window.__loginNow){window.__loginNow()}else{alert('O sistema ainda está carregando. Atualize a página e tente novamente.')}">Entrar</button><button class="btn secondary full" id="forgotBtn" type="button">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
+<button class="btn primary full" id="loginBtn" type="button" onclick="if(window.__loginNow){window.__loginNow()}else{alert('O sistema ainda está carregando. Atualize a página e tente novamente.'[...]
 </section>
 <section id="app" class="hidden">
-<div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
-<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>🔴 Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>🔵 Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>🟣 Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>🟢 Concluídos</span><b id="kDone">0</b></button></div>
-<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>👥 Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>🏢 Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>⚙️ Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>📋 Total de chamados</span><b id="aOrders">0</b></div></div></div>
-<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button">➕ Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>➕ Novo usuário</h3><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário"></label><label>E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off"></label><label>Perfil<select id="newUserRole"><option value="sector">🏢 Setor</option><option value="mechanic">🔧 Mecânico</option><option value="admin">👨‍💼 Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector"><option value="">Carregando setores...</option></select></label></div><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
+<div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="log[...]
+<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></butt[...]
+<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-[...]
+<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button"[...]
 
-<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</button></div><div class="filtergrid"><div class="field"><label>Equipamento</label><select id="historyEquipment"><option value="">Todos os equipamentos</option></select></div><div class="field"><label>Tipo</label><select id="historyType"><option value="">Todos os tipos</option></select></div><div class="field"><label>De</label><input id="historyStart" type="date"></div><div class="field"><label>Até</label><input id="historyEnd" type="date"></div></div><div class="actions"><button class="btn primary" id="applyHistoryBtn" type="button">Aplicar filtros</button><button class="btn secondary" id="clearHistoryBtn" type="button">Limpar</button></div><div id="historyList" class="list" style="margin-top:14px"><div class="empty">Carregando histórico...</div></div></div>
+<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</bu[...]
 <div class="grid2">
 <div>
-<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class="empty">Carregando chamados...</div></div></div>
+<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class=[...]
 </div>
 <div>
-<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">🖼️ Galeria</button><button class="btn secondary" type="button" id="cameraBtn">📷 Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
+<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><d[...]
 <div class="card hidden" id="shortcutsCard"><div class="sectionhead"><h2>🧭 Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
 </div></div>
 </section></main>
@@ -101,11 +101,9 @@ window.__loginNow=async function(){
     if(error)throw error;
     if(!data?.session)throw new Error('Login aceito, mas a sessão não foi criada.');
     show('Login realizado! Abrindo o sistema...','notice ok');
-    if(typeof showApp==='function'){
-      await showApp();
-    }else{
-      throw new Error('A função principal do sistema não carregou. Atualize a página.');
-    }
+    // Prefer reload to ensure main app code is loaded (avoids race where showApp isn't defined yet)
+    // Redirect with cache-buster like other login flows in the repo
+    location.replace('./?v=' + Date.now());
   }catch(e){
     show('Erro no login: '+(e?.message||e),'notice error');
     btn.disabled=false;
@@ -193,7 +191,7 @@ async function enableNotifications(){
   const p=await Notification.requestPermission();
   if(p==='granted'){
     $('notifyBtn').firstChild.textContent='🔔';
-    alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. A base PWA já está preparada; o Push com o sistema fechado será ligado na próxima etapa ao servidor.');
+    alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. A base PWA já está preparada; o Push com o sistema fechado será lig[...]
   }else if(p==='denied'){
     alert('As notificações foram bloqueadas. Ative-as nas configurações do navegador.');
   }
@@ -328,7 +326,7 @@ async function checkNotifications(){
       let title='🔔 Chamado atualizado';
       if(newStatus==='accepted') title='🔧 Chamado aceito';
       else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
-      else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
+      else if(newStatus==='waiting_parts') title='�� Aguardando peça';
       else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
       else if(newStatus==='completed') title='🟢 Chamado concluído';
       else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
@@ -446,8 +444,8 @@ $('themeBtn').onclick=()=>{localStorage.setItem('maint_theme',(localStorage.getI
 loadLocalNotifications();
 if($('notificationScope')) $('notificationScope').textContent='As notificações exibidas aqui são filtradas pelo seu perfil.';
 function showError(e,prefix='Erro'){const msg=e?.message||String(e);alert(prefix+': '+msg);console.error(prefix,e)}
-async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).single();if(r.error)throw r.error;profile=r.data;if(!profile.active)throw new Error('Usuário inativo.')}
-async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error){console.error(r.error);return}equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
+async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).single();if(r.error)throw r.error;profile=r.dat[...]
+async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error){console.error(r.error);return}equipm[...]
 window.loadAdminUsers=async function loadAdminUsers(){
  if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
  $('usersPanel').classList.remove('hidden');
@@ -461,7 +459,7 @@ window.loadAdminUsers=async function loadAdminUsers(){
  const rows=pr.data||[];
  if(!rows.length){$('usersList').innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return}
  const roleLabel={admin:'👨‍💼 Administrador',mechanic:'🔧 Mecânico',sector:'🏢 Setor'};
- $('usersList').innerHTML=rows.map(u=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||'')}</div></div><div class="tags"><span class="tag ${u.active?'s-completed':'s-cancelled'}">${u.active?'Ativo':'Inativo'}</span></div></div><div class="small" style="margin-top:8px">${u.role==='sector'?'Setor: '+escapeHtml(sectors[u.sector_id]||'Não vinculado'):u.role==='mechanic'?'Atuação: Manutenção':'Acesso total da organização'}</div></div>`).join('');
+ $('usersList').innerHTML=rows.map(u=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||''[...]
 }
 
 async function loadAdminOverview(){
@@ -480,12 +478,12 @@ async function loadAdminOverview(){
  $('aOrders').textContent=w.error?'—':(w.count||0);
 }
 async function loadTickets(){
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,co[...]
   if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
   const allRows=r.data||[];
   let open=0,urgent=0,prog=0,parts=0,done=0;
-  allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.status==='waiting_parts')parts++;if(x.status==='completed')done++});
-  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'||x.status==='accepted'); else rows=allRows.filter(x=>x.status===f);
+  allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.[...]
+  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'[...]
   $('kOpen').textContent=open;$('kUrgent').textContent=urgent;$('kProgress').textContent=prog;$('kParts').textContent=parts;$('kDone').textContent=done;
   if(!rows.length){$('tickets').innerHTML='<div class="empty">Nenhum chamado encontrado.</div>';return}
   $('tickets').innerHTML=rows.map(x=>{
@@ -493,10 +491,10 @@ async function loadTickets(){
     let actions='';
     if(profile?.role==='mechanic' && x.status==='open') actions+=`<button class="btn primary" onclick="acceptTicket('${x.id}')">Aceitar chamado</button>`;
     if(mine&&x.status==='accepted') actions+=`<button class="btn primary" onclick="startTicket('${x.id}')">Iniciar atendimento</button>`;
-    if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')">Registrar serviço</button>`;
+    if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')[...]
     if(mine&&x.status==='waiting_parts') actions+=`<button class="btn primary" onclick="resumeTicket('${x.id}')">Retomar atendimento</button>`;
     actions+=`<button class="btn secondary" onclick="details('${x.id}')">Ver detalhes</button>`;
-    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</div></div><div class="tags"><span class="tag s-${x.status}">${labels[x.status]||x.status}</span><span class="tag p-${x.priority}">${plabels[x.priority]||x.priority}</span></div></div><div class="desc">${escapeHtml(x.description||'Sem descrição')}</div><div class="small">Aberto: ${fmt(x.opened_at||x.created_at)} ${x.mechanic?.full_name?'· Mecânico: '+escapeHtml(x.mechanic.full_name):''}</div><div class="actions">${actions}</div></article>`;
+    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?[...]
   }).join('')
 }
 async function updateStatus(id,status,extra={}){
@@ -513,14 +511,14 @@ window.resumeTicket=async id=>{if(!confirm('Retomar o atendimento?'))return;awai
 window.partTicket=async id=>{
   const part=prompt('Nome da peça necessária:');if(!part)return;
   const qty=parseInt(prompt('Quantidade:','1')||'1',10);if(!Number.isFinite(qty)||qty<1)return alert('Quantidade inválida.');
-  try{const r=await sb.from('part_requests').insert({organization_id:profile.organization_id,work_order_id:id,requested_by:session.user.id,part_name:part.trim(),quantity:qty}).select('id,status').single();if(r.error)throw r.error;await loadTickets();alert('Peça solicitada com sucesso. O chamado deve ficar como Aguardando peça.')}catch(e){showError(e,'Não foi possível solicitar a peça')}
+  try{const r=await sb.from('part_requests').insert({organization_id:profile.organization_id,work_order_id:id,requested_by:session.user.id,part_name:part.trim(),quantity:qty}).select('id,status')[...]
 };
-function equipmentOptions(selected=''){return '<option value="">Selecione um equipamento</option>'+equipment.map(e=>`<option value="${e.id}" ${e.id===selected?'selected':''}>${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
+function equipmentOptions(selected=''){return '<option value="">Selecione um equipamento</option>'+equipment.map(e=>`<option value="${e.id}" ${e.id===selected?'selected':''}>${escapeHtml(e.name)}[...]
 window.reportTicket=async id=>{
   try{
     const woR=await sb.from('work_orders').select('id,equipment_id,title').eq('id',id).single();if(woR.error)throw woR.error;
     let eqId=woR.data.equipment_id||'';
-    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEquipment">${equipmentOptions(eqId)}</select></div><div class="field"><label>Diagnóstico</label><textarea id="reportDiagnosis" placeholder="O que foi encontrado?"></textarea></div><div class="field"><label>Serviço realizado</label><textarea id="reportWork" placeholder="O que foi feito?"></textarea></div><div class="field"><label>Peças utilizadas</label><input id="reportParts" placeholder="Nenhuma"></div><div class="actions"><button class="btn primary" id="confirmReport">Registrar serviço</button><button class="btn secondary" id="cancelReport">Cancelar</button></div>`;
+    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEqu[...]
     $('modal').classList.remove('hidden');
     $('cancelReport').onclick=()=>$('modal').classList.add('hidden');
     $('confirmReport').onclick=async()=>{
@@ -529,15 +527,15 @@ window.reportTicket=async id=>{
       const btn=$('confirmReport');btn.disabled=true;btn.textContent='Salvando...';
       try{
         if(!woR.data.equipment_id){const ur=await sb.from('work_orders').update({equipment_id:eq}).eq('id',id).select('id').single();if(ur.error)throw ur.error}
-        const r=await sb.from('maintenance_reports').insert({organization_id:profile.organization_id,work_order_id:id,mechanic_id:session.user.id,equipment_id:eq,diagnosis,work_performed:work,parts_used:parts}).select('id').single();if(r.error)throw r.error;
-        $('modal').classList.add('hidden');await loadTickets();if(confirm('Serviço registrado. Finalizar o chamado agora?')){await updateStatus(id,'completed')}else{alert('Serviço registrado com sucesso.')}
+        const r=await sb.from('maintenance_reports').insert({organization_id:profile.organization_id,work_order_id:id,mechanic_id:session.user.id,equipment_id:eq,diagnosis,work_performed:work,par[...]
+        $('modal').classList.add('hidden');await loadTickets();if(confirm('Serviço registrado. Finalizar o chamado agora?')){await updateStatus(id,'completed')}else{alert('Serviço registrado co[...]
       }catch(e){showError(e,'Não foi possível registrar o serviço')}finally{if($('confirmReport')){$('confirmReport').disabled=false;$('confirmReport').textContent='Registrar serviço'}}
     };
   }catch(e){showError(e,'Não foi possível abrir o registro de serviço')}
 };
 window.details=async id=>{
  try{
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').eq('id',id).single();if(r.error)throw r.error;const x=r.data;if(!x)throw new Error('Chamado não encontrado.');
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:[...]
   const [rep,parts,photos,events]=await Promise.all([
    sb.from('maintenance_reports').select('diagnosis,work_performed,parts_used,created_at').eq('work_order_id',id).order('created_at',{ascending:false}).limit(1),
    sb.from('part_requests').select('part_name,quantity,status,requested_at').eq('work_order_id',id).order('requested_at',{ascending:true}),
@@ -546,11 +544,11 @@ window.details=async id=>{
   ]);
   if(rep.error)throw rep.error;if(parts.error)throw parts.error;if(photos.error)throw photos.error;if(events.error)throw events.error;
   const mr=rep.data?.[0]||{};const partText=(parts.data||[]).map(p=>`${p.part_name} (qtd: ${p.quantity}) — ${labels[p.status]||p.status}`).join(', ')||'Nenhuma';
-  let time='Não iniciado';if(x.started_at){const end=x.completed_at?new Date(x.completed_at):new Date();const mins=Math.max(0,Math.floor((end-new Date(x.started_at))/60000));time=`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')}`}
-  let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" src="${sr.data.signedUrl}" alt="Foto do problema">`}
-  let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<div class="historyitem"><b>${escapeHtml(ph.photo_type||'Foto')}:</b> ${escapeHtml(ph.description||'')}<img class="photo" src="${sr.data.signedUrl}" alt="Foto da manutenção"></div>`}
+  let time='Não iniciado';if(x.started_at){const end=x.completed_at?new Date(x.completed_at):new Date();const mins=Math.max(0,Math.floor((end-new Date(x.started_at))/60000));time=`${Math.floor(m[...]
+  let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" sr[...]
+  let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<di[...]
   const timeline=(events.data||[]).map(e=>`<div class="historyitem"><b>${fmt(e.created_at)}</b> — ${escapeHtml(e.description||e.event_type||'Evento')}</div>`).join('');
-  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>📷 Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>📷 Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>🕒 Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
+  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.cod[...]
  }catch(e){showError(e,'Não foi possível abrir os detalhes')}
 };
 $('closeModal').onclick=()=>$('modal').classList.add('hidden');$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
@@ -577,15 +575,15 @@ $('refreshBtn').onclick=async()=>{
 };
 $('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
 $('saveBtn').onclick=async()=>{
- const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
+ const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('save[...]
  $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
- try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`;const up=await sb.storage.from('maintenance-photos').upload(path,f,{contentType:f.type,upsert:false});if(up.error)throw up.error;photo_path=path}
- const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;\n await sb.functions.invoke('send-push',{body:{work_order_id:r.data.id}}).catch(e=>console.warn('Push:',e));
- notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
+ try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`[...]
+ const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,[...]
+ notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').valu[...]
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
 
-$('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
+$('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirect[...]
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
 function applyTicketFilter(status){
   window.ticketFilter=status||'open';
@@ -603,7 +601,7 @@ async function showApp(){
     $('login').classList.add('hidden');
     $('app').classList.remove('hidden');
     $('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';
-    const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];
+    const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profi[...]
     $('profile').textContent=info[0]+' '+info[1]+' · '+info[2];
     $('roleNotice').textContent='';
     $('roleNotice').className='notice hidden';
@@ -614,7 +612,7 @@ async function showApp(){
       $('ticketsTitle').textContent='📋 Todos os chamados';
       const sc=$('shortcutsCard');
       if(sc)sc.classList.remove('hidden');
-      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';
+      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sect[...]
     }else if(profile.role==='mechanic'){
       $('ticketsTitle').textContent='🔧 Chamados para atendimento';
       const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
@@ -638,7 +636,7 @@ window.showApp=showApp;
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
 document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
-document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files;document.getElementById('photoName').textContent='Foto da câmera: '+f.name;}});
+document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files[...]
 sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});
 showApp();
 
@@ -705,8 +703,8 @@ async function openSectorsPanel(){
     const rows=sr.data||[];
     openAdminModal('🏢 Setores',`
       <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
-      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket"><h3>${escapeHtml(s.name)}</h3><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div></div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
-      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
+      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket"><h3>${escapeHtml(s.name)}</h3><div class="small">👥 ${uc[s.id]||0} usuário(s[...]
+      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><di[...]
     $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
     $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
     $('refreshSectorsAdmin').onclick=openSectorsPanel;
@@ -730,15 +728,15 @@ async function openEquipmentPanel(){
     const rows=er.data||[];
     openAdminModal('⚙️ Equipamentos',`
       <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
-      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div></div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
-      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small"[...]
+      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class=[...]
     $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
     $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
     $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden')};
     $('refreshEquipmentAdmin').onclick=openEquipmentPanel;
     $('saveEquipmentAdmin').onclick=async()=>{
       const name=$('newEquipmentName').value.trim();if(!name)return notice($('equipmentAdminMsg'),'Informe o nome do equipamento.');
-      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true}).select('id').single();
+      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,s[...]
       if(x.error)return notice($('equipmentAdminMsg'),x.error.message);
       openEquipmentPanel(); await loadEquipment(); await loadAdminOverview();
     };
@@ -752,7 +750,7 @@ async function openPartsPanel(){
     const rows=r.data||[];
     openAdminModal('📦 Peças',`
       <div class="actions"><button class="btn secondary" id="refreshPartsAdmin">↻ Atualizar</button></div>
-      <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidade: ${p.quantity||1} · Chamado: ${escapeHtml(p.work_order_id||'')}</div></div><span class="tag">${escapeHtml(p.status||'Sem status')}</span></div><div class="small" style="margin-top:8px">Solicitada em: ${fmt(p.requested_at||p.created_at)}</div></div>`).join(''):'<div class="empty">Nenhuma solicitação de peça encontrada.</div>'}</div>`);
+      <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidad[...]
     $('refreshPartsAdmin').onclick=openPartsPanel;
   }catch(e){showError(e,'Não foi possível carregar as solicitações de peças')}
 }
@@ -767,8 +765,8 @@ async function openPreventivePanel(){
     const eqs=er.data||[], sectors=sr.data||[];
     openAdminModal('🗓️ Manutenção preventiva',`
       <p class="small">Crie um chamado preventivo para um equipamento e encaminhe-o ao setor responsável.</p>
-      <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_id||''}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}</select></div>
-      <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_[...]
+      <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}<[...]
       <div class="field"><label>Descrição da preventiva</label><textarea id="preventiveDescription" placeholder="Ex.: inspeção, lubrificação, troca de filtros..."></textarea></div>
       <div class="actions"><button class="btn primary" id="createPreventive">Criar chamado preventivo</button></div><div id="preventiveMsg" class="notice hidden"></div>
       <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
@@ -778,15 +776,15 @@ async function openPreventivePanel(){
       const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=$('preventiveDescription').value.trim();
       if(!eq||!sector||!desc)return notice($('preventiveMsg'),'Preencha equipamento, setor e descrição.');
       const e=eqs.find(x=>x.id===eq);
-      const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq}).select('id').single();
+      const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:des[...]
       if(x.error)return notice($('preventiveMsg'),x.error.message);
       notice($('preventiveMsg'),'Chamado preventivo criado com sucesso.',true);$('preventiveDescription').value='';await loadTickets();
       loadPreventiveRecent();
     };
     async function loadPreventiveRecent(){
-      const x=await sb.from('work_orders').select('id,title,status,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order('created_at',{ascending:false}).limit(10);
+      const x=await sb.from('work_orders').select('id,title,status,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order([...]
       if(x.error){$('preventiveRecent').innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
-      $('preventiveRecent').innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.status} · ${fmt(w.created_at)}</div><div class="actions"><button class="btn secondary" onclick="details('${w.id}')">Ver detalhes</button></div></div>`).join('')||'<div class="empty">Nenhuma preventiva criada.</div>';
+      $('preventiveRecent').innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.stat[...]
     }
     loadPreventiveRecent();
   }catch(e){showError(e,'Não foi possível abrir a manutenção preventiva')}
@@ -797,14 +795,14 @@ async function openHistoryPanel(){
   const panel=$('historyPanel'); if(!panel)return;
   panel.classList.remove('hidden'); panel.scrollIntoView({behavior:'smooth',block:'start'});
   const er=await sb.from('equipment').select('id,name,code').eq('organization_id',profile.organization_id).order('name');
-  $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');
-  $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças utilizadas</option>';
+  $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</opt[...]
+  $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças u[...]
   await renderAdminHistory();
 }
 async function renderAdminHistory(){
   if(profile?.role!=='admin')return;
   const list=$('historyList'); if(!list)return; list.innerHTML='<div class="empty">Carregando histórico...</div>';
-  let q=sb.from('maintenance_reports').select('id,work_order_id,equipment_id,diagnosis,work_performed,parts_used,created_at').eq('organization_id',profile.organization_id).order('created_at',{ascending:false}).limit(200);
+  let q=sb.from('maintenance_reports').select('id,work_order_id,equipment_id,diagnosis,work_performed,parts_used,created_at').eq('organization_id',profile.organization_id).order('created_at',{asc[...]
   const eq=$('historyEquipment')?.value,start=$('historyStart')?.value,end=$('historyEnd')?.value,type=$('historyType')?.value;
   if(eq)q=q.eq('equipment_id',eq);
   if(start)q=q.gte('created_at',start+'T00:00:00');
@@ -813,7 +811,7 @@ async function renderAdminHistory(){
   const rows=r.data||[];const ids=[...new Set(rows.map(x=>x.work_order_id).filter(Boolean))];
   let titles={}; if(ids.length){const wr=await sb.from('work_orders').select('id,title').in('id',ids);titles=Object.fromEntries((wr.data||[]).map(x=>[x.id,x.title]))}
   const filtered=rows.filter(x=>!type||(type==='diagnosis'?x.diagnosis:type==='work'?x.work_performed:x.parts_used));
-  list.innerHTML=filtered.map(x=>`<div class="historyrow"><h3>${escapeHtml(titles[x.work_order_id]||'Manutenção')}</h3><div class="historymeta"><span>${fmt(x.created_at)}</span></div><div class="historydetail"><b>Diagnóstico:</b> ${escapeHtml(x.diagnosis||'Não registrado')}<br><b>Serviço:</b> ${escapeHtml(x.work_performed||'Não registrado')}<br><b>Peças:</b> ${escapeHtml(x.parts_used||'Nenhuma')}</div><div class="historyactions"><button class="btn secondary" onclick="details('${x.work_order_id}')">Ver chamado</button></div></div>`).join('')||'<div class="empty">Nenhum registro encontrado.</div>';
+  list.innerHTML=filtered.map(x=>`<div class="historyrow"><h3>${escapeHtml(titles[x.work_order_id]||'Manutenção')}</h3><div class="historymeta"><span>${fmt(x.created_at)}</span></div><div class[...]
 }
 
 // Atalhos administrativos
