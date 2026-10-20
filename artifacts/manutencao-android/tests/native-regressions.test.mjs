@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 
@@ -21,6 +22,32 @@ test("Electron applies ASCII User-Agent before loading the application", async (
   assert.match(source, /asciiUserAgent\(mainWindow\.webContents\.getUserAgent\(\)\)/);
   assert.ok(source.indexOf("setUserAgent(") < source.indexOf("mainWindow.loadFile("));
   assert.match(source, /app\.setName\("Sistema de Manutenção"\)/);
+});
+
+test("an accented Electron User-Agent corrupts UTF-8 on the HTTP wire, and the fixed value does not", async (t) => {
+  const original = "Mozilla/5.0 SistemadeManutenção/1.0.0 Chrome/152 Electron/44 Safari/537.36";
+  const server = createServer((req, res) => {
+    const wireBytes = Buffer.from(req.headers["user-agent"], "latin1");
+    try {
+      new TextDecoder("utf-8", { fatal: true }).decode(wireBytes);
+      res.writeHead(200).end("valid UTF-8");
+    } catch {
+      res.writeHead(422).end("invalid UTF-8");
+    }
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  t.after(() => new Promise((resolve) => {
+    server.close(resolve);
+    server.closeAllConnections();
+  }));
+
+  const url = `http://127.0.0.1:${server.address().port}/`;
+  const broken = await fetch(url, { headers: { "User-Agent": original } });
+  assert.equal(broken.status, 422);
+  await broken.text();
+  const fixed = await fetch(url, { headers: { "User-Agent": asciiUserAgent(original) } });
+  assert.equal(fixed.status, 200);
+  assert.equal(await fixed.text(), "valid UTF-8");
 });
 
 test("Parts queries use requested_at while preserving the UI date alias", async () => {
