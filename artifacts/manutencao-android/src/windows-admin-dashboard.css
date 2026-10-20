@@ -1,0 +1,640 @@
+html.windows-admin,
+html.windows-admin body {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+html.windows-admin body {
+  min-width: 360px;
+  overflow: hidden;
+}
+
+html.windows-admin .top {
+  position: fixed;
+  inset: 0 0 auto 220px;
+  height: 56px;
+  z-index: 40;
+}
+
+html.windows-admin .topin {
+  height: 56px;
+  max-width: none;
+  padding: 7px 14px;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+html.windows-admin .brand,
+html.windows-admin .installAppBtn,
+html.windows-admin .install-help {
+  display: none !important;
+}
+
+html.windows-admin .layout {
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  overflow: auto;
+  padding: 66px 12px 16px 232px;
+}
+
+html.windows-admin #app.windows-admin-active {
+  display: block;
+  min-width: 0;
+}
+
+html.windows-admin .windows-admin-nav {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  display: flex;
+  width: 220px;
+  flex-direction: column;
+  padding: 12px 10px;
+  color: #e5edf7;
+  background: #0b1728;
+  border-right: 1px solid #25364c;
+}
+
+html.windows-admin .windows-admin-nav-brand {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+html.windows-admin .windows-admin-nav-brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  flex: none;
+  color: #fff;
+  background: #155eaa;
+  border: 1px solid #3387dd;
+  border-radius: 9px;
+}
+
+html.windows-admin .windows-admin-nav-label {
+  padding: 0 9px 7px;
+  color: #8293aa;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+html.windows-admin .windows-admin-nav-list {
+  display: grid;
+  gap: 4px;
+  overflow: auto;
+}
+
+html.windows-admin .windows-admin-nav-button {
+  display: flex;
+  width: 100%;
+  min-height: 36px;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  color: #c4d0df;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 11px;
+}
+
+html.windows-admin .windows-admin-nav-button:hover {
+  background: #182a40;
+}
+
+html.windows-admin .windows-admin-nav-button[aria-current="page"] {
+  color: #fff;
+  background: #1454a0;
+  border-color: #246fc2;
+}
+
+html.windows-admin .windows-admin-nav-button svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html.windows-admin .windows-admin-logout {
+  margin-top: auto;
+}
+
+html.windows-admin #windowsAdminTopbarExtras {
+  position: fixed;
+  z-index: 45;
+  top: 7px;
+  right: 174px;
+  left: 230px;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  pointer-events: none;
+}
+
+html.windows-admin #windowsAdminTopbarExtras > * {
+  pointer-events: auto;
+}
+
+html.windows-admin .windows-top-search {
+  display: flex;
+  width: min(430px, 48vw);
+  min-width: 120px;
+  height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  color: var(--muted);
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+html.windows-admin .windows-top-search svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+html.windows-admin .windows-top-search input {
+  width: 100%;
+  min-width: 0;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 11px;
+}
+
+html.windows-admin .windows-top-search kbd {
+  white-space: nowrap;
+  font-size: 10px;
+}
+
+html.windows-admin #windowsAdminUser {
+  display: flex;
+  min-width: 120px;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: var(--text);
+  font-size: 11px;
+}
+
+html.windows-admin #windowsAdminAvatar {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  flex: none;
+  color: #fff;
+  background: #1684d7;
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+html.windows-admin #windowsAdminUserEmail {
+  display: block;
+  max-width: 190px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html.windows-admin #windowsNavToggle {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  place-items: center;
+}
+
+html.windows-admin #windowsAdminContent {
+  width: 100%;
+  max-width: 1700px;
+  min-width: 0;
+  margin: 0 auto;
+}
+
+html.windows-admin #windowsAdminContent > .hero {
+  display: none !important;
+}
+
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > .kpis,
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > #adminPanel,
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > #usersPanel,
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > #historyPanel,
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > .grid2,
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > .kpis,
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > #adminPanel,
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > #usersPanel,
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > #historyPanel,
+html.windows-admin #app[data-windows-admin-view="users"] #windowsAdminContent > .kpis,
+html.windows-admin #app[data-windows-admin-view="users"] #windowsAdminContent > #adminPanel,
+html.windows-admin #app[data-windows-admin-view="users"] #windowsAdminContent > #historyPanel,
+html.windows-admin #app[data-windows-admin-view="users"] #windowsAdminContent > .grid2,
+html.windows-admin #app[data-windows-admin-view="history"] #windowsAdminContent > .kpis,
+html.windows-admin #app[data-windows-admin-view="history"] #windowsAdminContent > #adminPanel,
+html.windows-admin #app[data-windows-admin-view="history"] #windowsAdminContent > #usersPanel,
+html.windows-admin #app[data-windows-admin-view="history"] #windowsAdminContent > .grid2 {
+  display: none !important;
+}
+
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > #windowsAdminDashboard,
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > .grid2,
+html.windows-admin #app[data-windows-admin-view="users"] #windowsAdminContent > #usersPanel,
+html.windows-admin #app[data-windows-admin-view="history"] #windowsAdminContent > #historyPanel {
+  display: block;
+}
+
+html.windows-admin #app[data-windows-admin-view="dashboard"] #windowsAdminContent > #windowsAdminDashboard {
+  display: grid;
+}
+
+html.windows-admin #app[data-windows-admin-view="calls"] #windowsAdminContent > .grid2 {
+  display: grid;
+}
+
+html.windows-admin .windows-admin-dashboard {
+  display: grid;
+  gap: 9px;
+  color: var(--text);
+}
+
+html.windows-admin .windows-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+html.windows-admin .windows-metric,
+html.windows-admin .windows-panel {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 5px 18px #0002;
+}
+
+html.windows-admin .windows-metric {
+  display: flex;
+  min-height: 70px;
+  align-items: center;
+  gap: 9px;
+  padding: 8px;
+  color: var(--text);
+  text-align: left;
+}
+
+html.windows-admin .windows-metric:hover {
+  filter: brightness(1.08);
+}
+
+html.windows-admin .windows-metric-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  color: #fff;
+  background: #217bd5;
+  border-radius: 9px;
+}
+
+html.windows-admin .windows-metric-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html.windows-admin .windows-metric-open .windows-metric-icon { background: #df3a55; }
+html.windows-admin .windows-metric-progress .windows-metric-icon { background: #f2a900; }
+html.windows-admin .windows-metric-completed .windows-metric-icon { background: #1db876; }
+html.windows-admin .windows-metric-mechanics .windows-metric-icon { background: #8147e8; }
+
+html.windows-admin .windows-metric-copy {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+  font-size: 10px;
+}
+
+html.windows-admin .windows-metric-copy strong {
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+html.windows-admin .windows-metric-copy small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html.windows-admin .windows-chart-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 8px;
+}
+
+html.windows-admin .windows-panel {
+  padding: 11px;
+}
+
+html.windows-admin .windows-panel-heading {
+  display: flex;
+  min-height: 25px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+html.windows-admin .windows-panel-heading h3 {
+  margin: 0;
+  font-size: 12px;
+}
+
+html.windows-admin .windows-panel-heading p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+html.windows-admin .windows-status-chart {
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+html.windows-admin .windows-donut {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  flex: none;
+  place-items: center;
+  background: conic-gradient(var(--line) 0 100%);
+  border-radius: 50%;
+}
+
+html.windows-admin .windows-donut > div {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-content: center;
+  text-align: center;
+  background: var(--panel);
+  border-radius: 50%;
+}
+
+html.windows-admin .windows-donut strong { font-size: 17px; }
+html.windows-admin .windows-donut span { color: var(--muted); font-size: 8px; }
+
+html.windows-admin .windows-chart-legend {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-legend-row {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px;
+}
+
+html.windows-admin .windows-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+html.windows-admin .windows-priority-chart { min-height: 100px; }
+html.windows-admin .windows-priority-bars {
+  display: grid;
+  height: 100px;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+  gap: 8px;
+  padding: 0 5px;
+}
+
+html.windows-admin .windows-priority-column {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 14px minmax(0, 1fr) 15px;
+  justify-items: center;
+  align-items: end;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-priority-track {
+  display: flex;
+  width: min(36px, 80%);
+  height: 100%;
+  align-items: end;
+  background: repeating-linear-gradient(to bottom, transparent 0 20px, var(--line) 21px);
+}
+
+html.windows-admin .windows-priority-fill {
+  width: 100%;
+  background: #239b6e;
+  border-radius: 4px 4px 0 0;
+}
+
+html.windows-admin .priority-urgent { background: #e94b58; }
+html.windows-admin .priority-high { background: #ef823e; }
+html.windows-admin .priority-normal { background: #edbd35; }
+html.windows-admin .priority-low { background: #21b879; }
+html.windows-admin .windows-priority-label { font-size: 8px; }
+
+html.windows-admin .windows-dashboard-lower {
+  display: grid;
+  grid-template-columns: 1.1fr 1.05fr 1.05fr 1.2fr;
+  gap: 8px;
+}
+
+html.windows-admin .windows-recent-panel { padding: 9px; }
+html.windows-admin .windows-recent-heading { align-items: center; }
+html.windows-admin .windows-table-tools { display: flex; align-items: center; gap: 6px; }
+html.windows-admin .windows-table-search {
+  display: flex;
+  width: 160px;
+  height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+html.windows-admin .windows-table-search svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+}
+
+html.windows-admin .windows-table-search input {
+  width: 100%;
+  min-width: 0;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-table-tools select {
+  max-width: 135px;
+  padding: 6px;
+  color: var(--text);
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-link-button,
+html.windows-admin .windows-open-call {
+  padding: 6px 8px;
+  color: #fff;
+  background: #1475d4;
+  border-radius: 6px;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-table-wrap { width: 100%; overflow: auto; }
+html.windows-admin .windows-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9px;
+}
+
+html.windows-admin .windows-table th,
+html.windows-admin .windows-table td {
+  max-width: 180px;
+  padding: 7px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+html.windows-admin .windows-table th {
+  color: var(--muted);
+  background: var(--panel2);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+html.windows-admin .windows-cell-strong,
+html.windows-admin .windows-call-title,
+html.windows-admin .windows-call-subtitle { display: block; }
+
+html.windows-admin .windows-call-title { font-weight: 700; }
+html.windows-admin .windows-call-subtitle { max-width: 160px; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
+html.windows-admin .windows-table .tag { padding: 3px 5px; font-size: 8px; }
+html.windows-admin .windows-open-call { display: grid; width: 24px; height: 24px; place-items: center; padding: 4px; }
+html.windows-admin .windows-open-call svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+html.windows-admin .windows-bars,
+html.windows-admin .windows-activity-list { display: grid; gap: 8px; }
+html.windows-admin .windows-bar-row { display: grid; gap: 4px; }
+html.windows-admin .windows-bar-label { display: flex; justify-content: space-between; gap: 5px; font-size: 9px; }
+html.windows-admin .windows-bar-track { height: 7px; overflow: hidden; background: var(--panel2); border-radius: 99px; }
+html.windows-admin .windows-bar-fill { display: block; height: 100%; background: #1688df; border-radius: inherit; }
+html.windows-admin .windows-bar-row:nth-child(2) .windows-bar-fill { background: #8647e8; }
+html.windows-admin .windows-bar-row:nth-child(3) .windows-bar-fill { background: #22b5b2; }
+html.windows-admin .windows-bar-row:nth-child(4) .windows-bar-fill { background: #ec7b41; }
+
+html.windows-admin .windows-average-summary { display: flex; align-items: center; gap: 9px; }
+html.windows-admin .windows-average-icon { display: grid; width: 38px; height: 38px; place-items: center; color: #8ec5ff; background: var(--panel2); border-radius: 9px; }
+html.windows-admin .windows-average-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+html.windows-admin .windows-average-value { font-size: 20px; }
+html.windows-admin .windows-average-note { margin: 7px 0 0; color: var(--muted); font-size: 8px; }
+html.windows-admin .windows-preventive-item,
+html.windows-admin .windows-activity-item { display: grid; gap: 3px; font-size: 9px; }
+html.windows-admin .windows-preventive-item span,
+html.windows-admin .windows-activity-item span,
+html.windows-admin .windows-activity-item time { color: var(--muted); font-size: 8px; }
+html.windows-admin .windows-data-state { padding: 10px; color: var(--muted); text-align: center; font-size: 9px; }
+
+html.windows-admin .modal { z-index: 80; }
+html.windows-admin #notifyPanel { z-index: 90; }
+html.windows-admin #app.windows-sidebar-collapsed + .windows-admin-nav { width: 62px; }
+html.windows-admin #app.windows-sidebar-collapsed .windows-admin-nav { width: 62px; }
+html.windows-admin #app.windows-sidebar-collapsed .windows-admin-nav-button span,
+html.windows-admin #app.windows-sidebar-collapsed .windows-admin-nav-label,
+html.windows-admin #app.windows-sidebar-collapsed .windows-admin-nav-brand span { display: none; }
+html.windows-admin body:has(#app.windows-sidebar-collapsed) .layout { padding-left: 74px; }
+html.windows-admin body:has(#app.windows-sidebar-collapsed) .top { left: 62px; }
+html.windows-admin body:has(#app.windows-sidebar-collapsed) #windowsAdminTopbarExtras { left: 72px; }
+
+html.windows-admin.light .windows-admin-nav {
+  color: #1e293b;
+  background: #f8fafc;
+  border-color: #dbe3ee;
+}
+
+html.windows-admin.light .windows-admin-nav-button { color: #475569; }
+html.windows-admin.light .windows-admin-nav-button:hover { background: #e8eef6; }
+html.windows-admin.light .windows-admin-nav-button[aria-current="page"] { color: #fff; background: #1454a0; }
+html.windows-admin.light .windows-admin-nav-label { color: #64748b; }
+html.windows-admin.light .windows-admin-nav-brand-mark { color: #fff; }
+
+@media (max-width: 1000px) {
+  html.windows-admin .windows-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  html.windows-admin .windows-chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html.windows-admin .windows-equipment-status { grid-column: 1 / -1; }
+  html.windows-admin .windows-dashboard-lower { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html.windows-admin #windowsAdminTopbarExtras { right: 150px; }
+}
+
+@media (max-width: 680px) {
+  html.windows-admin .windows-admin-nav { width: 62px; }
+  html.windows-admin .windows-admin-nav-button span,
+  html.windows-admin .windows-admin-nav-label,
+  html.windows-admin .windows-admin-nav-brand span { display: none; }
+  html.windows-admin .top { left: 62px; }
+  html.windows-admin .topin { gap: 6px; padding: 7px 8px; }
+  html.windows-admin .topbtn { width: 32px; height: 32px; }
+  html.windows-admin .layout { padding-left: 74px; }
+  html.windows-admin .windows-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html.windows-admin .windows-chart-grid,
+  html.windows-admin .windows-dashboard-lower { grid-template-columns: 1fr; }
+  html.windows-admin .windows-equipment-status { grid-column: auto; }
+  html.windows-admin #windowsAdminTopbarExtras { left: 72px; right: 124px; }
+  html.windows-admin #windowsAdminUser { display: none; }
+  html.windows-admin .windows-top-search { width: auto; min-width: 0; flex: 1; }
+  html.windows-admin .windows-top-search kbd { display: none; }
+  html.windows-admin .windows-table-tools { flex-wrap: wrap; }
+  html.windows-admin .windows-recent-heading { align-items: flex-start; flex-direction: column; }
+}

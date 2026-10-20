@@ -26,13 +26,16 @@ test("stock, purchases, call purchase detail and reports expose functional integ
   for (const method of ["openInventory", "openPurchases", "openReports", "renderPurchaseRequests"])
     assert.equal(typeof window.maintenanceOperations[method], "function");
 });
-test("all application entry points load the same integrated layout and operations", async () => {
+test("Windows dashboard stays isolated from the shared Web and Android entry point", async () => {
   const index = await readFile(new URL("../index.html", import.meta.url), "utf8");
-  const legacy = await readFile(new URL("../app.html", import.meta.url), "utf8");
-  assert.equal(index, legacy);
-  assert.match(index, /src="\.\/src\/shell\.ts"/);
-  assert.match(index, /src="\.\/src\/operations\.ts"/);
-  assert.match(index, /src="\.\/src\/access-management\.ts"/);
+  const webAndAndroid = await readFile(new URL("../app.html", import.meta.url), "utf8");
+  assert.match(index, /function isWindowsDesktopAdmin\(\)\s*\{\s*return Boolean\(session&&window\.maintenanceDesktop\?\.platform==='win32'&&profile\?\.role==='admin'\)/);
+  assert.match(index, /id="windowsAdminDashboard"/);
+  assert.doesNotMatch(webAndAndroid, /id="windowsAdminDashboard"/);
+  for (const modulePath of ["src/shell.ts", "src/operations.ts", "src/access-management.ts"]) {
+    assert.ok(index.includes(modulePath), `Windows entry still loads ${modulePath}`);
+    assert.ok(webAndAndroid.includes(modulePath), `Web/Android entry still loads ${modulePath}`);
+  }
 });
 test("additive operations schema protects audit history, tenant boundaries and revoked accounts", async () => {
   const sql = await readFile(new URL("../supabase/inventory_purchases.sql", import.meta.url), "utf8");

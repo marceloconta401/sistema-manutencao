@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("maintenanceDesktop", {
+  platform: process.platform,
   showNotification(payload) {
     if (!payload || typeof payload.title !== "string" || typeof payload.body !== "string") return;
     ipcRenderer.send("maintenance:notification", {

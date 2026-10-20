@@ -18,6 +18,7 @@ document.querySelector('link[rel="icon"][sizes="32x32"]').href=new URL("favicon-
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v11.png">
 <title>Sistema de Manutenção</title>
+<link rel="stylesheet" href="./src/windows-admin-dashboard.css">
 <style>
 :root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3aed;--blue:#2563eb;--orange:#ea580c;--shadow:0 12px 35px #0005}
 :root.light{--bg:#eef2f7;--panel:#fff;--panel2:#f8fafc;--text:#111827;--muted:#64748b;--line:#dbe3ee;--shadow:0 10px 30px #0f172a14}
@@ -62,6 +63,11 @@ body:has(#login:not(.hidden)) .top{display:none}
   <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
 </div>
 </div><button class="topbtn" id="refreshBtn" title="Atualizar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8M21 3v5h-5"/></svg></button></div></header>
+<div id="windowsAdminTopbarExtras" class="hidden">
+  <button class="topbtn" id="windowsNavToggle" type="button" aria-expanded="true" aria-label="Recolher menu" title="Recolher menu">☰</button>
+  <label class="windows-top-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="windowsGlobalSearchInput" type="search" placeholder="Pesquisar máquinas, chamados, setores..." aria-label="Pesquisar chamados"><kbd>Ctrl + K</kbd></label>
+  <div id="windowsAdminUser" class="hidden"><span id="windowsAdminAvatar">A</span><span><strong id="windowsAdminUserName">Administrador</strong><span id="windowsAdminUserEmail">Perfil administrador</span></span></div>
+</div>
 <script>
 (()=>{
   const installButtons=[...document.querySelectorAll('.installAppBtn')];
@@ -111,7 +117,52 @@ body:has(#login:not(.hidden)) .top{display:none}
 <button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
 </section>
 <section id="app" class="hidden">
+<aside id="windowsAdminNav" class="windows-admin-nav hidden" aria-label="Navegação administrativa">
+  <div class="windows-admin-nav-brand"><span class="windows-admin-nav-brand-mark" aria-hidden="true">⚙</span><span>Sistema de<br>Manutenção</span></div>
+  <div class="windows-admin-nav-label">MENU</div>
+  <nav class="windows-admin-nav-list">
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="dashboard" aria-current="page" title="Painel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Painel</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="calls" title="Chamados"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H7zM17 3v5h4M10 13h8M10 17h8"/></svg><span>Chamados</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="equipment" title="Equipamentos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h4M8 17h8"/></svg><span>Equipamentos</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="sectors" title="Setores"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h2M14 10h2M9 14h2M14 14h2"/></svg><span>Setores</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="mechanics" title="Mecânicos"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M17 11a3 3 0 1 0 0-6M18 14a4 4 0 0 1 3 4v2"/></svg><span>Mecânicos</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="users" title="Usuários"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M17 11a3 3 0 1 0 0-6M18 14a4 4 0 0 1 3 4v2"/></svg><span>Usuários</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="history" title="Histórico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 9h8M8 13h8M8 17h5"/></svg><span>Histórico</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="preventive" title="Manutenção preventiva"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h6"/></svg><span>Preventiva</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="parts" title="Peças e solicitações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3.5 8.5 12 13l8.5-4.5M12 13v8"/></svg><span>Peças</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="inventory" title="Estoque"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/></svg><span>Estoque</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="purchases" title="Compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h2l2.5 11h9L20 8H7M10 19h.01M17 19h.01"/></svg><span>Compras</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="reports" title="Relatórios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4M4 20h17M8 16v-4M13 16V8M18 16V5"/></svg><span>Relatórios</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="notifications" title="Notificações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span>Notificações</span></button>
+  </nav>
+  <button class="windows-admin-nav-button windows-admin-logout" type="button" data-windows-nav="logout" title="Sair"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg><span>Sair</span></button>
+</aside>
+<div id="windowsAdminContent">
 <div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
+<section id="windowsAdminDashboard" class="windows-admin-dashboard hidden" aria-label="Painel administrativo">
+  <div class="windows-metrics" aria-label="Indicadores da manutenção">
+    <button class="windows-metric windows-metric-open" type="button" data-windows-ticket-filter="open"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v5h5M9 12h7M9 16h7"/></svg></span><span class="windows-metric-copy"><span>Chamados abertos</span><strong id="windowsMetricOpen">—</strong><small id="windowsMetricUrgent">— urgentes</small></span></button>
+    <button class="windows-metric windows-metric-progress" type="button" data-windows-ticket-filter="in_progress"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="windows-metric-copy"><span>Em atendimento</span><strong id="windowsMetricProgress">—</strong><small>Chamados aceitos ou iniciados</small></span></button>
+    <div class="windows-metric windows-metric-completed"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><span class="windows-metric-copy"><span>Concluídos</span><strong id="windowsMetricCompleted30d">—</strong><small>Nos últimos 30 dias</small></span></div>
+    <div class="windows-metric windows-metric-equipment"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 8h10M7 12h5"/></svg></span><span class="windows-metric-copy"><span>Equipamentos</span><strong id="windowsMetricEquipment">—</strong><small>Total cadastrado</small></span></div>
+    <div class="windows-metric windows-metric-mechanics"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M17 11a3 3 0 1 0 0-6M18 14a4 4 0 0 1 3 4v2"/></svg></span><span class="windows-metric-copy"><span>Mecânicos</span><strong id="windowsMetricMechanics">—</strong><small>Perfis ativos</small></span></div>
+  </div>
+  <div class="windows-chart-grid">
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Chamados por situação</h3><p>Distribuição dos registros disponíveis</p></div></div><div class="windows-status-chart"><div id="windowsStatusDonut" class="windows-donut" aria-hidden="true"><div><strong id="windowsStatusTotal">—</strong><span>chamados</span></div></div><div id="windowsStatusLegend" class="windows-chart-legend"><div class="windows-data-state">Carregando dados reais…</div></div></div></section>
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Chamados por prioridade</h3><p>Chamados ativos</p></div></div><div id="windowsPriorityChart" class="windows-priority-chart"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+    <section class="windows-panel windows-equipment-status"><div class="windows-panel-heading"><div><h3>Status dos equipamentos</h3><p>Situação cadastral; não indica funcionamento</p></div></div><div class="windows-status-chart"><div id="windowsEquipmentDonut" class="windows-donut" aria-hidden="true"><div><strong id="windowsEquipmentTotal">—</strong><span>equipamentos</span></div></div><div id="windowsEquipmentLegend" class="windows-chart-legend"><div class="windows-data-state">Carregando dados reais…</div></div></div></section>
+  </div>
+  <section class="windows-panel windows-recent-panel">
+    <div class="windows-panel-heading windows-recent-heading"><div><h3>Últimos chamados</h3></div><div class="windows-table-tools"><label class="windows-table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="windowsCallSearch" type="search" placeholder="Pesquisar chamados..." aria-label="Pesquisar chamados"></label><select id="windowsCallStatusFilter" aria-label="Filtrar chamados por status"><option value="all">Todos os status</option><option value="open">Aberto</option><option value="accepted">Aceito</option><option value="in_progress">Em atendimento</option><option value="waiting_parts">Aguardando peça</option><option value="completed">Concluído</option><option value="cancelled">Cancelado</option></select><button id="windowsShowAllCalls" class="windows-link-button" type="button">Ver todos</button></div></div>
+    <div class="windows-table-wrap"><table class="windows-table"><thead><tr><th>#</th><th>Data</th><th>Máquina / Equipamento</th><th>Setor</th><th>Descrição</th><th>Prioridade</th><th>Status</th><th>Responsável</th><th>Ações</th></tr></thead><tbody id="windowsRecentCalls"><tr><td colspan="9" class="windows-data-state">Carregando chamados…</td></tr></tbody></table></div>
+  </section>
+  <div class="windows-dashboard-lower">
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Chamados por setor</h3><p>Chamados ativos</p></div></div><div id="windowsSectorChart" class="windows-bars"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Tempo médio de atendimento</h3></div></div><div class="windows-average-summary"><span class="windows-average-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><strong id="windowsAverageTime" class="windows-average-value">—</strong></div><p class="windows-average-note">Baseado nos horários registrados</p></section>
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Manutenções preventivas</h3></div></div><div id="windowsPreventiveList" class="windows-activity-list"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+    <section class="windows-panel"><div class="windows-panel-heading"><div><h3>Últimas atividades</h3></div></div><div id="windowsActivityList" class="windows-activity-list"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+  </div>
+</section>
 <div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>Concluídos</span><b id="kDone">0</b></button></div>
 <div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>Total de chamados</span><b id="aOrders">0</b></div></div></div>
 <div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button">Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>Novo usuário</h3><div class="modeswitch" role="group" aria-label="Forma de acesso"><button class="btn secondary active" type="button" id="newUserModePassword" data-testid="button-mode-password">Usuário e senha</button><button class="btn secondary" type="button" id="newUserModeInvite" data-testid="button-mode-invite">Convite por e-mail (legado)</button></div><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário" data-testid="input-new-user-name"></label><label id="newUserLoginWrap">Login<input id="newUserLogin" placeholder="ex.: joao.silva" autocomplete="off" autocapitalize="none" spellcheck="false" data-testid="input-new-user-login"></label><label id="newUserPasswordWrap">Senha temporária<input id="newUserPassword" type="password" autocomplete="new-password" placeholder="mínimo 12 caracteres" data-testid="input-new-user-password"></label><label id="newUserEmailWrap" class="hidden">E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off" data-testid="input-new-user-email"></label><label>Perfil<select id="newUserRole" data-testid="select-new-user-role"><option value="sector">Setor</option><option value="mechanic">Mecânico</option><option value="admin">Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector" data-testid="select-new-user-sector"><option value="">Carregando setores...</option></select></label></div><p class="small" id="newUserModeHint">O usuário entra com login e senha temporária e será obrigado a trocar a senha no primeiro acesso. E-mail não é necessário.</p><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
@@ -125,6 +176,7 @@ body:has(#login:not(.hidden)) .top{display:none}
 <div class="card hidden" id="newCard"><div class="sectionhead"><h2>Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">Galeria</button><button class="btn secondary" type="button" id="cameraBtn">Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
 <div class="card hidden" id="shortcutsCard"><div class="sectionhead"><h2>Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
 </div></div>
+</div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -183,6 +235,7 @@ function privateViewStamp(){return {epoch:privateViewEpoch,user:session?.user?.i
 function privateViewCurrent(stamp){return stamp.epoch===privateViewEpoch&&stamp.user===session?.user?.id&&profile?.id===stamp.user}
 function resetPrivateViews(){
   privateViewEpoch++;
+  if(typeof setWindowsAdminMode==='function')setWindowsAdminMode(false);
   for(const id of ['usersPanel','newUserPanel','historyPanel','adminPanel','newCard'])$(id)?.classList.add('hidden');
   for(const field of $('app')?.querySelectorAll('input,textarea,select')||[]){
     if(field.tagName==='SELECT'){field.selectedIndex=0}else{field.value=field.defaultValue||''}
@@ -573,7 +626,216 @@ if($('notificationScope')) $('notificationScope').textContent='As notificações
 function showError(e,prefix='Erro'){const msg=e?.message||String(e);alert(prefix+': '+msg);console.error(prefix,e)}
 async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Não foi possível encontrar um perfil de usuário visível no Supabase. Confirme se há uma linha em public.profiles com o ID deste usuário e se as políticas RLS permitem a leitura.');profile=r.data;if(!profile.active)throw new Error('Usuário inativo.')}
 async function loadEquipment(){const prev=$('equipment').value;const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error)throw new Error('Não foi possível carregar equipamentos: '+r.error.message);equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');if(equipment.some(e=>e.id===prev))$('equipment').value=prev}
-window.loadAdminUsers=async function loadAdminUsers(){
+const windowsAdminDashboardState={orders:[],sectors:[],activity:[],equipmentActive:null,equipmentInactive:null,equipmentTotal:null,mechanics:null,ordersLoaded:false,equipmentLoaded:false,ordersError:false,equipmentError:false,sectorError:false,activityError:false,searchText:'',statusFilter:'all'};
+const windowsDashboardStatuses=[['open','Abertos','#dc2626'],['accepted','Aceitos','#2563eb'],['in_progress','Em atendimento','#0ea5e9'],['waiting_parts','Aguardando peça','#7c3aed'],['completed','Concluídos','#16a34a'],['cancelled','Cancelados','#64748b']];
+let windowsDashboardGeneration=0;
+function isWindowsDesktopAdmin(){return Boolean(session&&window.maintenanceDesktop?.platform==='win32'&&profile?.role==='admin')}
+function setWindowsAdminNavActive(action){document.querySelectorAll('#windowsAdminNav [data-windows-nav]').forEach(button=>{if(button.dataset.windowsNav===action)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')})}
+function updateWindowsAdminIdentity(){
+  const name=profile?.full_name||'Administrador',initials=name.trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join('').toLocaleUpperCase('pt-BR')||'A';
+  if($('windowsAdminAvatar'))$('windowsAdminAvatar').textContent=initials;
+  if($('windowsAdminUserName'))$('windowsAdminUserName').textContent=name;
+  if($('windowsAdminUserEmail'))$('windowsAdminUserEmail').textContent=session?.user?.email||'Perfil administrador';
+}
+function setWindowsAdminView(view){
+  if(!isWindowsDesktopAdmin())return;
+  const allowed=['dashboard','calls','users','history'],next=allowed.includes(view)?view:'dashboard';
+  $('app').dataset.windowsAdminView=next;
+  $('windowsAdminDashboard')?.classList.toggle('hidden',next!=='dashboard');
+  if(next==='dashboard'||next==='calls'){$('usersPanel')?.classList.add('hidden');$('historyPanel')?.classList.add('hidden')}
+  else if(next==='users')$('historyPanel')?.classList.add('hidden');
+  else $('usersPanel')?.classList.add('hidden');
+  setWindowsAdminNavActive(next);
+}
+function setWindowsAdminMode(enabled){
+  const active=Boolean(enabled&&isWindowsDesktopAdmin()),app=$('app');
+  document.documentElement.classList.toggle('windows-admin',active);
+  app?.classList.toggle('windows-admin-active',active);
+  $('windowsAdminNav')?.classList.toggle('hidden',!active);
+  $('windowsAdminTopbarExtras')?.classList.toggle('hidden',!active);
+  if(!active){
+    windowsDashboardGeneration++;
+    app?.removeAttribute('data-windows-admin-view');
+    $('windowsAdminDashboard')?.classList.add('hidden');
+    app?.classList.remove('windows-sidebar-collapsed');
+    Object.assign(windowsAdminDashboardState,{orders:[],sectors:[],activity:[],equipmentActive:null,equipmentInactive:null,equipmentTotal:null,mechanics:null,ordersLoaded:false,equipmentLoaded:false,ordersError:false,equipmentError:false,sectorError:false,activityError:false,searchText:'',statusFilter:'all'});
+    return;
+  }
+  updateWindowsAdminIdentity();
+  setWindowsAdminView('dashboard');
+  renderWindowsAdminDashboard();
+}
+function normalizeWindowsSearch(value=''){return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim()}
+function renderWindowsDonut(donutId,totalId,legendId,items,unit,emptyMessage){
+  const donut=$(donutId),legend=$(legendId),total=items.reduce((sum,item)=>sum+(Number(item.count)||0),0);
+  if($(totalId))$(totalId).textContent=String(total);
+  if(donut){
+    let cursor=0;
+    const slices=items.filter(item=>item.count>0).map(item=>{const start=cursor/Math.max(total,1)*100;cursor+=item.count;return `${item.color} ${start}% ${cursor/Math.max(total,1)*100}%`});
+    donut.style.background=total?`conic-gradient(${slices.join(',')})`:'conic-gradient(var(--line) 0 100%)';
+    const label=donut.querySelector('span');if(label)label.textContent=unit;
+  }
+  if(legend)legend.innerHTML=total?items.map(item=>`<div class="windows-legend-row"><span class="windows-legend-dot" style="background:${item.color}"></span><span>${escapeHtml(item.label)}</span><strong>${item.count}</strong></div>`).join(''):`<div class="windows-data-state">${escapeHtml(emptyMessage)}</div>`;
+}
+function renderWindowsBars(containerId,items,emptyMessage){
+  const container=$(containerId);if(!container)return;
+  if(!items.length){container.innerHTML=`<div class="windows-data-state">${escapeHtml(emptyMessage)}</div>`;return}
+  const max=Math.max(1,...items.map(item=>item.count));
+  container.innerHTML=items.map(item=>`<div class="windows-bar-row"><div class="windows-bar-label"><span>${escapeHtml(item.label)}</span><strong>${item.count}</strong></div><div class="windows-bar-track"><span class="windows-bar-fill" style="width:${Math.min(100,item.count/max*100)}%"></span></div></div>`).join('');
+}
+function renderWindowsAdminDashboard(){
+  if(!isWindowsDesktopAdmin())return;
+  const data=windowsAdminDashboardState,orders=data.orders||[],setValue=(id,value)=>{if($(id))$(id).textContent=String(value)};
+  if(data.equipmentError){
+    setValue('windowsMetricEquipment','—');setValue('windowsMetricMechanics',data.mechanics??'—');setValue('windowsEquipmentTotal','—');
+    $('windowsEquipmentLegend').innerHTML='<div class="windows-data-state">Não foi possível carregar os equipamentos.</div>';
+    $('windowsEquipmentDonut').style.background='conic-gradient(var(--line) 0 100%)';
+  }else if(data.equipmentLoaded){
+    setValue('windowsMetricEquipment',data.equipmentTotal??'—');setValue('windowsMetricMechanics',data.mechanics??'—');
+    const active=Number(data.equipmentActive)||0,inactive=Number(data.equipmentInactive)||0,total=Number(data.equipmentTotal)||0,other=Math.max(0,total-active-inactive);
+    const items=[{label:'Ativos',count:active,color:'#16a34a'},{label:'Inativos',count:inactive,color:'#dc2626'}];
+    if(other)items.push({label:'Sem situação',count:other,color:'#64748b'});
+    renderWindowsDonut('windowsEquipmentDonut','windowsEquipmentTotal','windowsEquipmentLegend',items,'equipamentos','Nenhum equipamento cadastrado.');
+  }
+  if(data.ordersError){
+    ['windowsMetricOpen','windowsMetricUrgent','windowsMetricProgress','windowsMetricCompleted30d','windowsStatusTotal','windowsAverageTime'].forEach(id=>setValue(id,'—'));
+    ['windowsStatusLegend','windowsPriorityChart','windowsSectorChart','windowsPreventiveList','windowsActivityList'].forEach(id=>{if($(id))$(id).innerHTML='<div class="windows-data-state">Não foi possível carregar os chamados.</div>'});
+    if($('windowsRecentCalls'))$('windowsRecentCalls').innerHTML='<tr><td colspan="9" class="windows-data-state">Não foi possível carregar os chamados.</td></tr>';
+    return;
+  }
+  if(!data.ordersLoaded)return;
+  const activeOrders=orders.filter(row=>!['completed','cancelled'].includes(row.status));
+  const cutoff=Date.now()-30*24*60*60*1000;
+  setValue('windowsMetricOpen',orders.filter(row=>row.status==='open').length);
+  setValue('windowsMetricUrgent',`${orders.filter(row=>row.priority==='urgent'&&!['completed','cancelled'].includes(row.status)).length} urgentes`);
+  setValue('windowsMetricProgress',orders.filter(row=>['accepted','in_progress'].includes(row.status)).length);
+  setValue('windowsMetricCompleted30d',orders.filter(row=>row.status==='completed'&&row.completed_at&&new Date(row.completed_at).getTime()>=cutoff).length);
+  renderWindowsDonut('windowsStatusDonut','windowsStatusTotal','windowsStatusLegend',windowsDashboardStatuses.map(([key,label,color])=>({label,count:orders.filter(row=>row.status===key).length,color})),'chamados','Nenhum chamado encontrado.');
+  const priorities=[['urgent','Urgente','priority-urgent'],['high','Alta','priority-high'],['normal','Normal','priority-normal'],['low','Baixa','priority-low']].map(([key,label,colorClass])=>({label,colorClass,count:activeOrders.filter(row=>row.priority===key).length}));
+  const priorityChart=$('windowsPriorityChart');
+  priorityChart.innerHTML=activeOrders.length?`<div class="windows-priority-bars">${priorities.map(item=>`<div class="windows-priority-column"><strong>${item.count}</strong><div class="windows-priority-track"><span class="windows-priority-fill ${item.colorClass}" style="height:${item.count?Math.max(6,item.count/Math.max(...priorities.map(x=>x.count),1)*100):0}%"></span></div><span class="windows-priority-label">${item.label}</span></div>`).join('')}</div>`:'<div class="windows-data-state">Nenhum chamado ativo encontrado.</div>';
+  const sectorNames=new Map((data.sectors||[]).map(item=>[item.id,item.name]));
+  if(data.sectorError)$('windowsSectorChart').innerHTML='<div class="windows-data-state">Não foi possível carregar os setores.</div>';
+  else{
+    const counts=new Map();
+    activeOrders.forEach(row=>{const id=row.sector_id||'__none__',label=row.sector_id?(sectorNames.get(row.sector_id)||'Setor não disponível'):'Sem setor';const item=counts.get(id)||{label,count:0};item.count++;counts.set(id,item)});
+    const sectors=[...counts.values()].sort((a,b)=>b.count-a.count||a.label.localeCompare(b.label,'pt-BR')).slice(0,6);
+    renderWindowsBars('windowsSectorChart',sectors,activeOrders.length?'Nenhum setor associado aos chamados.':'Nenhum chamado ativo encontrado.');
+  }
+  const query=normalizeWindowsSearch(data.searchText),filter=data.statusFilter||'all';
+  const filtered=orders.filter(row=>{
+    if(filter!=='all'&&row.status!==filter)return false;
+    if(!query)return true;
+    const sector=row.sector_id?(sectorNames.get(row.sector_id)||'Setor não disponível'):'Sem setor';
+    return normalizeWindowsSearch([row.id,row.title,row.description,row.equipment?.name,row.equipment?.code,sector,row.mechanic?.full_name,labels[row.status],plabels[row.priority]].join(' ')).includes(query);
+  }).sort((a,b)=>new Date(b.created_at||b.opened_at||0)-new Date(a.created_at||a.opened_at||0)).slice(0,5);
+  $('windowsRecentCalls').innerHTML=filtered.length?filtered.map(row=>{
+    const shortId=String(row.id||'').slice(0,6).toUpperCase(),sector=row.sector_id?(sectorNames.get(row.sector_id)||'Setor não disponível'):'Sem setor';
+    return `<tr><td>#${escapeHtml(shortId||'—')}</td><td>${escapeHtml(fmt(row.opened_at||row.created_at)||'—')}</td><td><span class="windows-cell-strong">${escapeHtml(row.equipment?.name||'Sem equipamento')}</span>${row.equipment?.code?`<small>${escapeHtml(row.equipment.code)}</small>`:''}</td><td>${escapeHtml(sector)}</td><td><span class="windows-call-title">${escapeHtml(row.title||'Chamado sem título')}</span><span class="windows-call-subtitle">${escapeHtml(row.description||'Sem descrição')}</span></td><td><span class="tag p-${escapeHtml(row.priority||'normal')}">${escapeHtml(plabels[row.priority]||row.priority||'—')}</span></td><td><span class="tag s-${escapeHtml(row.status||'')}">${escapeHtml(labels[row.status]||row.status||'—')}</span></td><td>${escapeHtml(row.mechanic?.full_name||'Não atribuído')}</td><td><button class="windows-open-call" type="button" title="Ver detalhes" data-windows-detail="${escapeHtml(row.id)}" aria-label="Ver detalhes do chamado ${escapeHtml(shortId)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></svg></button></td></tr>`;
+  }).join(''):'<tr><td colspan="9" class="windows-data-state">Nenhum chamado corresponde aos filtros.</td></tr>';
+  const durations=orders.filter(row=>row.status==='completed'&&row.started_at&&row.completed_at).map(row=>(new Date(row.completed_at)-new Date(row.started_at))/60000).filter(value=>Number.isFinite(value)&&value>=0);
+  const average=durations.length?durations.reduce((sum,value)=>sum+value,0)/durations.length:null;
+  setValue('windowsAverageTime',average===null?'—':average<60?`${Math.round(average)} min`:`${(average/60).toLocaleString('pt-BR',{maximumFractionDigits:1})} h`);
+  const today=new Date(),todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const preventive=orders.filter(row=>row.scheduled_for&&row.scheduled_for>=todayKey&&String(row.title||'').toLocaleLowerCase('pt-BR').startsWith('manutenção preventiva')).sort((a,b)=>String(a.scheduled_for).localeCompare(String(b.scheduled_for))).slice(0,4);
+  $('windowsPreventiveList').innerHTML=preventive.length?preventive.map(row=>`<div class="windows-preventive-item"><strong>${escapeHtml(row.title)}</strong><span>${escapeHtml(row.equipment?.name||'Sem equipamento')} · ${escapeHtml(fmtPlannedDate(row.scheduled_for))}</span></div>`).join(''):'<div class="windows-data-state">Nenhuma preventiva futura registrada.</div>';
+  if(data.activityError)$('windowsActivityList').innerHTML='<div class="windows-data-state">Não foi possível carregar as atividades.</div>';
+  else{
+    const orderNames=new Map(orders.map(row=>[row.id,row.title||'Chamado']));
+    $('windowsActivityList').innerHTML=data.activity.length?data.activity.slice(0,5).map(event=>`<div class="windows-activity-item"><strong>${escapeHtml(event.description||event.event_type||'Atualização de chamado')}</strong><span>${escapeHtml(orderNames.get(event.work_order_id)||'Chamado')}</span><time>${escapeHtml(fmt(event.created_at)||'—')}</time></div>`).join(''):'<div class="windows-data-state">Nenhuma atividade recente registrada.</div>';
+  }
+}
+async function loadWindowsAdminOverview(){
+  if(!isWindowsDesktopAdmin())return;
+  const stamp=privateViewStamp(),generation=windowsDashboardGeneration,org=profile.organization_id;
+  windowsAdminDashboardState.equipmentLoaded=false;windowsAdminDashboardState.equipmentError=false;renderWindowsAdminDashboard();
+  try{
+    const [active,inactive,total,mechanics,sectors]=await Promise.all([
+      sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
+      sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',false),
+      sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org),
+      sb.from('profiles').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true).eq('role','mechanic'),
+      sb.from('sectors').select('id,name').eq('organization_id',org).order('name')
+    ]);
+    if(!privateViewCurrent(stamp)||generation!==windowsDashboardGeneration||!isWindowsDesktopAdmin())return;
+    windowsAdminDashboardState.equipmentActive=active.error?null:(active.count||0);
+    windowsAdminDashboardState.equipmentInactive=inactive.error?null:(inactive.count||0);
+    windowsAdminDashboardState.equipmentTotal=total.error?null:(total.count||0);
+    windowsAdminDashboardState.mechanics=mechanics.error?null:(mechanics.count||0);
+    windowsAdminDashboardState.sectors=sectors.data||[];
+    windowsAdminDashboardState.equipmentError=Boolean(active.error||inactive.error||total.error||mechanics.error);
+    windowsAdminDashboardState.sectorError=Boolean(sectors.error);
+    windowsAdminDashboardState.equipmentLoaded=true;
+  }catch(error){
+    if(!privateViewCurrent(stamp)||generation!==windowsDashboardGeneration)return;
+    windowsAdminDashboardState.equipmentError=true;windowsAdminDashboardState.equipmentLoaded=true;
+  }
+  renderWindowsAdminDashboard();
+}
+async function loadWindowsAdminActivities(orders){
+  if(!isWindowsDesktopAdmin())return;
+  const stamp=privateViewStamp(),generation=windowsDashboardGeneration,ids=(orders||[]).slice(0,40).map(row=>row.id).filter(Boolean);
+  if(!ids.length){windowsAdminDashboardState.activity=[];windowsAdminDashboardState.activityError=false;renderWindowsAdminDashboard();return}
+  try{
+    const result=await sb.from('work_order_events').select('work_order_id,event_type,description,created_at').in('work_order_id',ids).order('created_at',{ascending:false}).limit(8);
+    if(!privateViewCurrent(stamp)||generation!==windowsDashboardGeneration||!isWindowsDesktopAdmin())return;
+    windowsAdminDashboardState.activity=result.data||[];windowsAdminDashboardState.activityError=Boolean(result.error);
+  }catch(_){
+    if(!privateViewCurrent(stamp)||generation!==windowsDashboardGeneration)return;
+    windowsAdminDashboardState.activity=[];windowsAdminDashboardState.activityError=true;
+  }
+  renderWindowsAdminDashboard();
+}
+function openWindowsOperation(name){
+  const invoke=()=>{const operation=window.maintenanceOperations?.[name];if(typeof operation==='function'){void operation();return true}return false};
+  if(invoke())return;
+  const onReady=()=>{if(!invoke())alert('O módulo de estoque e compras não foi carregado. Feche e abra o aplicativo novamente.')};
+  window.addEventListener('maintenance-operations-ready',onReady,{once:true});
+  setTimeout(()=>window.removeEventListener('maintenance-operations-ready',onReady),10000);
+}
+document.addEventListener('click',function(ev){
+  const nav=ev.target.closest('[data-windows-nav]');
+  if(nav&&isWindowsDesktopAdmin()){
+    ev.preventDefault();const action=nav.dataset.windowsNav;setWindowsAdminNavActive(action);
+    if(action==='dashboard'){setWindowsAdminView('dashboard');Promise.all([loadTickets(),loadAdminOverview(),loadWindowsAdminOverview()]).catch(e=>console.warn('Painel Windows:',e))}
+    else if(action==='calls'){setWindowsAdminView('calls');applyTicketFilter('all')}
+    else if(action==='users'){setWindowsAdminView('users');openUsersPanel('all')}
+    else if(action==='mechanics'){setWindowsAdminView('users');setWindowsAdminNavActive('mechanics');openUsersPanel('mechanic')}
+    else if(action==='history'){setWindowsAdminView('history');openHistoryPanel()}
+    else if(action==='equipment')openEquipmentPanel()
+    else if(action==='sectors')openSectorsPanel()
+    else if(action==='preventive')openPreventivePanel()
+    else if(action==='parts')openPartsPanel()
+    else if(action==='inventory')openWindowsOperation('openInventory')
+    else if(action==='purchases')openWindowsOperation('openPurchases')
+    else if(action==='reports')openWindowsOperation('openReports')
+    else if(action==='notifications')$('notifyBtn')?.click()
+    else if(action==='logout')$('logoutBtn')?.click()
+    return;
+  }
+  const metric=ev.target.closest('[data-windows-ticket-filter]');
+  if(metric&&isWindowsDesktopAdmin()){setWindowsAdminView('calls');applyTicketFilter(metric.dataset.windowsTicketFilter)}
+  if(ev.target.closest('#windowsShowAllCalls')&&isWindowsDesktopAdmin()){windowsAdminDashboardState.statusFilter='all';setWindowsAdminView('calls');applyTicketFilter('all')}
+  const detail=ev.target.closest('[data-windows-detail]');
+  if(detail&&isWindowsDesktopAdmin())window.details?.(detail.dataset.windowsDetail);
+});
+document.addEventListener('input',function(ev){
+  if(!isWindowsDesktopAdmin())return;
+  if(['windowsCallSearch','windowsGlobalSearchInput'].includes(ev.target.id)){
+    windowsAdminDashboardState.searchText=ev.target.value||'';
+    ['windowsCallSearch','windowsGlobalSearchInput'].forEach(id=>{const input=$(id);if(input&&input!==ev.target)input.value=ev.target.value});
+    renderWindowsAdminDashboard();
+  }
+});
+document.addEventListener('change',function(ev){if(isWindowsDesktopAdmin()&&ev.target.id==='windowsCallStatusFilter'){windowsAdminDashboardState.statusFilter=ev.target.value||'all';renderWindowsAdminDashboard()}});
+$('windowsNavToggle')?.addEventListener('click',()=>{
+  if(!isWindowsDesktopAdmin())return;
+  const collapsed=$('app').classList.toggle('windows-sidebar-collapsed');
+  $('windowsNavToggle').setAttribute('aria-expanded',String(!collapsed));
+  $('windowsNavToggle').setAttribute('aria-label',collapsed?'Expandir menu':'Recolher menu');
+});
+document.addEventListener('keydown',ev=>{if(isWindowsDesktopAdmin()&&(ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='k'){ev.preventDefault();$('windowsGlobalSearchInput')?.focus()}});
+window.loadAdminUsers=async function loadAdminUsers(roleFilterArg='all'){
  if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
  const stamp=privateViewStamp();
  $('usersPanel').classList.remove('hidden');
@@ -585,7 +847,7 @@ window.loadAdminUsers=async function loadAdminUsers(){
  if(!privateViewCurrent(stamp)||profile?.role!=='admin')return;
  if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
  const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
- const rows=pr.data||[];
+  const rows=(pr.data||[]).filter(user=>roleFilterArg==='all'||user.role===roleFilterArg);
  if(!rows.length){$('usersList').innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return}
  const roleLabel={admin:'Administrador',mechanic:'Mecânico',sector:'Setor'};
  $('usersList').innerHTML=rows.map(u=>`<div class="ticket ${u.active?'':'inactive'}" data-testid="row-user-${u.id}"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||'')}</div></div><div class="tags"><span class="tag ${u.active?'s-completed':'s-cancelled'}">${u.active?'Ativo':'Inativo'}</span></div></div><div class="small" style="margin-top:8px">${u.login?'Login: '+escapeHtml(u.login)+' · ':''}${u.role==='sector'?'Setor: '+escapeHtml(sectors[u.sector_id]||'Não vinculado'):u.role==='mechanic'?'Atuação: Manutenção':'Acesso total da organização'}</div>${u.id===session?.user?.id?'<div class="small" style="margin-top:8px">Seu usuário</div>':adminRowActions('users',u.id,u.full_name,u.active)}</div>`).join('');
@@ -607,14 +869,26 @@ async function loadAdminOverview(){
  $('aOrders').textContent=w.error?'—':(w.count||0);
 }
 async function loadTickets(){
-  const stamp=privateViewStamp();
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  const stamp=privateViewStamp(),windowsAdmin=isWindowsDesktopAdmin(),generation=windowsDashboardGeneration;
+  let query=sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,sector_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  if(windowsAdmin)query=query.eq('organization_id',profile.organization_id);
+  const r=await query;
   if(!privateViewCurrent(stamp))return;
-  if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
+  if(r.error){
+    if(windowsAdmin&&generation===windowsDashboardGeneration){windowsAdminDashboardState.ordersLoaded=true;windowsAdminDashboardState.ordersError=true;renderWindowsAdminDashboard()}
+    $('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return
+  }
   const allRows=r.data||[];
+  if(windowsAdmin&&generation===windowsDashboardGeneration){
+    windowsAdminDashboardState.orders=allRows;
+    windowsAdminDashboardState.ordersLoaded=true;
+    windowsAdminDashboardState.ordersError=false;
+    renderWindowsAdminDashboard();
+    void loadWindowsAdminActivities(allRows);
+  }
   let open=0,urgent=0,prog=0,parts=0,done=0;
   allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.status==='waiting_parts')parts++;if(x.status==='completed')done++});
-  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'||x.status==='accepted'); else rows=allRows.filter(x=>x.status===f);
+  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='all')rows=allRows;else if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'||x.status==='accepted'); else rows=allRows.filter(x=>x.status===f);
   $('kOpen').textContent=open;$('kUrgent').textContent=urgent;$('kProgress').textContent=prog;$('kParts').textContent=parts;$('kDone').textContent=done;
   if(!rows.length){$('tickets').innerHTML='<div class="empty">Nenhum chamado encontrado.</div>';return}
   $('tickets').innerHTML=rows.map(x=>{
@@ -721,7 +995,7 @@ $('refreshBtn').onclick=async()=>{
   u.searchParams.set('v',Date.now().toString());
   location.replace(u.toString());
 };
-$('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
+$('closeUsersBtn').onclick=()=>{$('usersPanel').classList.add('hidden');if(isWindowsDesktopAdmin())setWindowsAdminView('dashboard')};
 $('saveBtn').onclick=async()=>{
  const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
  $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
@@ -742,10 +1016,10 @@ function applyTicketFilter(status){
 async function showApp(){
   const s=await sb.auth.getSession();
   session=s.data.session;
-  if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
+  if(!session){setWindowsAdminMode(false);$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
   try{
     const access=await waitAccessModule();
-    if(!await access.ensureReady()) return;
+    if(!await access.ensureReady()){setWindowsAdminMode(false);return}
     await getProfile();
     if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');
     $('app').dataset.role=profile.role;
@@ -753,6 +1027,7 @@ async function showApp(){
     $('saveNewUserBtn').disabled=profile.role!=='admin';
     $('login').classList.add('hidden');
     $('app').classList.remove('hidden');
+    setWindowsAdminMode(isWindowsDesktopAdmin());
     $('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';
     const info={admin:['','Administrador','Visão geral da organização'],mechanic:['','Mecânico','Painel de manutenção'],sector:['','Setor','Chamados do seu setor']}[profile.role];
     $('profile').textContent=info[0]+' '+info[1]+' · '+info[2];
@@ -778,6 +1053,7 @@ async function showApp(){
     await loadEquipment();
     await loadTickets();
     await loadAdminOverview();
+    if(isWindowsDesktopAdmin())await loadWindowsAdminOverview();
      startNotificationPolling();
      const callId=new URLSearchParams(window.location.search).get('call');
      if(callId){
@@ -787,6 +1063,7 @@ async function showApp(){
        await details(callId);
      }
   }catch(e){
+    setWindowsAdminMode(false);
     $('app').classList.add('hidden');
     $('login').classList.remove('hidden');
     notice($('loginMsg'),'Erro ao abrir o sistema: '+e.message)
@@ -1094,7 +1371,7 @@ async function openPreventivePanel(){
     loadPreventiveRecent();
   }catch(e){showError(e,'Não foi possível abrir a manutenção preventiva')}
 }
-function closeHistoryPanel(){ $('historyPanel')?.classList.add('hidden'); }
+function closeHistoryPanel(){ $('historyPanel')?.classList.add('hidden');if(isWindowsDesktopAdmin())setWindowsAdminView('dashboard'); }
 async function openHistoryPanel(){
   if(!adminOnly())return;
   const panel=$('historyPanel'); if(!panel)return;
@@ -1133,12 +1410,12 @@ $('historyShortcut')?.addEventListener('click',openHistoryPanel);
 $('applyHistoryBtn').onclick=()=>renderAdminHistory();
 $('clearHistoryBtn').onclick=()=>{ $('historyEquipment').value='';$('historyType').value='';$('historyStart').value='';$('historyEnd').value='';renderAdminHistory() };
 
-function openUsersPanel(){
+function openUsersPanel(roleFilter='all'){
   const panel=document.getElementById('usersPanel');
   if(!panel) return;
   panel.classList.remove('hidden');
   panel.scrollIntoView({behavior:'smooth',block:'start'});
-  if(typeof window.loadAdminUsers==='function') window.loadAdminUsers();
+  if(typeof window.loadAdminUsers==='function') window.loadAdminUsers(roleFilter);
 }
 document.addEventListener('click',function(ev){
   const btn=ev.target.closest('#usersShortcut');
