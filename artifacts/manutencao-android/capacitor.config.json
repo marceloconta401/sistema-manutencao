@@ -5,6 +5,10 @@
   "plugins": {
     "PushNotifications": {
       "presentationOptions": ["alert", "sound"]
+    },
+    "SystemBars": {
+      "initialViewportFitValueHint": "cover",
+      "insetsHandling": "css"
     }
   }
 }

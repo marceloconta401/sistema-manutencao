@@ -52,6 +52,94 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden
 @media(max-width:700px){.notifypanel{right:-48px}}
 body:has(#login:not(.hidden)) .top{display:none}
 .formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.formgrid label{display:flex;flex-direction:column;gap:6px;font-weight:750}.formgrid input,.formgrid select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.modeswitch{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}.modeswitch .btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.rowactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.rowactions .btn{padding:8px 11px;font-size:13px}.ticket.inactive{opacity:.72}dialog::backdrop{background:#000a}
+
+/* Layout refinements shared by the web, Android and Electron builds. */
+:root{
+  --maintenance-safe-top:var(--safe-area-inset-top,env(safe-area-inset-top,0px));
+  --maintenance-safe-right:var(--safe-area-inset-right,env(safe-area-inset-right,0px));
+  --maintenance-safe-bottom:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px));
+  --maintenance-safe-left:var(--safe-area-inset-left,env(safe-area-inset-left,0px));
+}
+body{min-height:100vh;min-height:100dvh}
+button,input,select,textarea{max-width:100%}
+header.top button:focus-visible,#app button:focus-visible,#app input:focus-visible,#app select:focus-visible,#app textarea:focus-visible,#modal button:focus-visible,#modal input:focus-visible,#modal select:focus-visible,#modal textarea:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}
+.top{top:var(--maintenance-safe-top)}
+.topin{max-width:1360px;padding-left:calc(clamp(16px,2vw,28px) + var(--maintenance-safe-left));padding-right:calc(clamp(16px,2vw,28px) + var(--maintenance-safe-right))}
+.layout:has(#app:not(.hidden)){max-width:1360px;padding:clamp(18px,2vw,28px) calc(clamp(16px,2vw,28px) + var(--maintenance-safe-left)) calc(48px + var(--maintenance-safe-bottom))}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,176px),1fr));align-items:stretch}
+.kpi{min-width:0}
+.grid2{grid-template-columns:minmax(0,1.45fr) minmax(280px,.9fr);align-items:start}
+.card,.ticket,.historyrow,.formgrid>*,#app *{min-width:0}
+.sectionhead,.hero,.tickettop{flex-wrap:wrap}
+.sectionhead{align-items:flex-start}
+.sectionhead>div{min-width:0}
+.filtergrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.formgrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+.field input,.field select,.field textarea,.formgrid input,.formgrid select{min-height:44px}
+.modal{
+  top:var(--maintenance-visual-viewport-top,0px);
+  right:0;
+  bottom:auto;
+  left:0;
+  height:var(--maintenance-visual-viewport-height,100vh);
+  height:var(--maintenance-visual-viewport-height,100dvh);
+  padding:calc(12px + var(--maintenance-safe-top)) calc(12px + var(--maintenance-safe-right)) calc(12px + var(--maintenance-safe-bottom)) calc(12px + var(--maintenance-safe-left));
+  overscroll-behavior:contain;
+}
+.modalbox{max-height:100%;overflow-y:auto;overscroll-behavior:contain;margin:clamp(8px,4vh,32px) auto}
+.notifypanel{max-width:calc(100vw - 24px - var(--maintenance-safe-left) - var(--maintenance-safe-right))}
+.notificationlist{overscroll-behavior:contain}
+
+@media(max-width:1100px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:900px){
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+  .filtergrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .topin{display:grid;grid-template-columns:minmax(0,1fr) 42px 42px 42px;gap:8px}
+  .brand{grid-column:1;grid-row:1;min-width:0}
+  #themeBtn{grid-column:2;grid-row:1}
+  .notifywrap{grid-column:3;grid-row:1}
+  #refreshBtn{grid-column:4;grid-row:1}
+  .installbtn{grid-column:1/3;grid-row:2;justify-self:start}
+  .install-help{grid-column:1/-1;grid-row:3;max-width:100%}
+  .notifypanel{
+    position:fixed;
+    top:calc(var(--maintenance-safe-top) + 58px);
+    right:calc(12px + var(--maintenance-safe-right));
+    left:calc(12px + var(--maintenance-safe-left));
+    width:auto;
+    max-height:calc(100dvh - 76px - var(--maintenance-safe-top) - var(--maintenance-safe-bottom));
+  }
+  .notificationlist{max-height:min(360px,55dvh)}
+  .filtergrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .historyactions .btn,.rowactions .btn{min-height:42px}
+}
+@media(max-width:520px){
+  .layout:has(#app:not(.hidden)){padding:14px calc(11px + var(--maintenance-safe-left)) calc(36px + var(--maintenance-safe-bottom))}
+  .topin{padding-top:10px;padding-bottom:10px}
+  .card{padding:14px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .kpi{min-height:92px;padding:13px}
+  .kpi b{font-size:25px}
+  .actions .btn{min-width:100%;min-height:44px}
+  .hero{gap:10px}
+  .hero h1{font-size:23px}
+  .sectionhead h2{font-size:18px}
+  .tickettop{align-items:flex-start}
+  .filtergrid{grid-template-columns:minmax(0,1fr)}
+  .modal{padding-left:calc(8px + var(--maintenance-safe-left));padding-right:calc(8px + var(--maintenance-safe-right))}
+  .modalbox{width:100%;padding:14px}
+}
+@media(max-width:360px){
+  .topin{grid-template-columns:minmax(0,1fr) 38px 38px 38px;gap:6px}
+  .topbtn{width:38px;height:38px}
+  .brand{font-size:15px}
+  .brand .logo{width:34px;height:34px}
+  .kpis{grid-template-columns:minmax(0,1fr)}
+}
 </style>
 </head>
 <body>
@@ -1131,4 +1219,33 @@ document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole'
 <script type="module" src="./src/native-push.ts"></script>
 <script type="module" src="./src/access-management.ts"></script>
 <script type="module" src="./src/auth-links.ts"></script>
+<script>
+(()=>{
+  const root=document.documentElement;
+  const viewport=window.visualViewport;
+  const syncVisualViewport=()=>{
+    if(!viewport)return;
+    root.style.setProperty('--maintenance-visual-viewport-height',`${Math.round(viewport.height)}px`);
+    root.style.setProperty('--maintenance-visual-viewport-top',`${Math.max(0,Math.round(viewport.offsetTop))}px`);
+  };
+  syncVisualViewport();
+  viewport?.addEventListener('resize',syncVisualViewport,{passive:true});
+  viewport?.addEventListener('scroll',syncVisualViewport,{passive:true});
+  window.addEventListener('resize',syncVisualViewport,{passive:true});
+  document.addEventListener('focusin',event=>{
+    const control=event.target;
+    if(!(control instanceof HTMLElement)||control.closest('#login')||!control.closest('#app,#modal'))return;
+    if(!control.matches('input,select,textarea,[contenteditable="true"]'))return;
+    window.setTimeout(()=>{
+      if(!window.visualViewport||window.visualViewport.height>=window.innerHeight*.86)return;
+      const rect=control.getBoundingClientRect();
+      const visibleTop=window.visualViewport.offsetTop+12;
+      const visibleBottom=window.visualViewport.offsetTop+window.visualViewport.height-24;
+      if(rect.top<visibleTop||rect.bottom>visibleBottom){
+        control.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});
+      }
+    },220);
+  },true);
+})();
+</script>
 </body></html>
