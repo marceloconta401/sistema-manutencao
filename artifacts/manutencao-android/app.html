@@ -781,29 +781,108 @@ async function openSectorsPanel(){
     };
   }catch(e){showError(e,'Não foi possível carregar os setores')}
 }
+const MACHINE_PHOTO_MAX_BYTES=4.5*1024*1024;
+async function prepareEquipmentPhoto(file){
+  if(!file||!file.type?.startsWith('image/'))throw new Error('Selecione um arquivo de imagem.');
+  if(file.size>30*1024*1024)throw new Error('A imagem original deve ter até 30 MB.');
+  const sourceUrl=URL.createObjectURL(file);
+  try{
+    const image=await new Promise((resolve,reject)=>{
+      const img=new Image();
+      img.onload=()=>resolve(img);
+      img.onerror=()=>reject(new Error('Não foi possível abrir esta imagem. Tente uma foto JPEG, PNG ou WebP.'));
+      img.src=sourceUrl;
+    });
+    let scale=Math.min(1,1920/Math.max(image.naturalWidth,image.naturalHeight));
+    let quality=.84;
+    const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+    if(!context)throw new Error('Não foi possível preparar a imagem neste aparelho.');
+    for(let attempt=0;attempt<10;attempt++){
+      canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
+      canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
+      context.clearRect(0,0,canvas.width,canvas.height);
+      context.drawImage(image,0,0,canvas.width,canvas.height);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+      if(!blob)throw new Error('Não foi possível converter a foto para JPEG.');
+      if(blob.size<=MACHINE_PHOTO_MAX_BYTES)return new File([blob],'foto-maquina.jpg',{type:'image/jpeg',lastModified:Date.now()});
+      if(quality>.58)quality=Math.max(.58,quality-.08);
+      else{scale*=.78;quality=.8}
+    }
+    throw new Error('Não foi possível reduzir a imagem para o limite de armazenamento de 5 MB.');
+  }finally{URL.revokeObjectURL(sourceUrl)}
+}
+
 async function openEquipmentPanel(){
   if(!adminOnly())return;
   try{
     const [er,sr]=await Promise.all([
-      sb.from('equipment').select('id,name,code,location,sector_id,active,created_at').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('equipment').select('id,name,code,location,sector_id,active,created_at,photo_path').eq('organization_id',profile.organization_id).order('name'),
       sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
     ]);
     if(er.error)throw er.error;
     const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
     const rows=er.data||[];
+    const photoEntries=await Promise.all(rows.map(async e=>{
+      if(!e.photo_path)return [e.id,''];
+      const signed=await sb.storage.from('maintenance-photos').createSignedUrl(e.photo_path,3600);
+      return [e.id,signed.error?'':(signed.data?.signedUrl||'')];
+    }));
+    const photoUrls=Object.fromEntries(photoEntries);
+    let selectedEquipmentPhoto=null,photoPreviewUrl='';
     openAdminModal('⚙️ Equipamentos',`
       <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
-      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div></div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
-      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div style="display:flex;gap:12px;align-items:center">${photoUrls[e.id]?`<img src="${escapeHtml(photoUrls[e.id])}" alt="Foto de ${escapeHtml(e.name)}" style="width:76px;height:64px;object-fit:cover;border-radius:10px">`:''}<div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div></div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
+      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="field"><label>Foto da máquina</label><div class="actions"><button class="btn secondary" type="button" id="newEquipmentPhotoGallery">🖼️ Escolher foto</button><button class="btn secondary" type="button" id="newEquipmentPhotoCamera">📷 Tirar foto</button></div><input id="newEquipmentPhotoFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="newEquipmentPhotoCameraFile" type="file" accept="image/*" capture="environment" hidden><div id="newEquipmentPhotoPreview" class="small" style="margin-top:8px">Nenhuma foto selecionada. A imagem será reduzida para até 5 MB.</div></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
     $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+    const clearPhotoSelection=()=>{
+      selectedEquipmentPhoto=null;
+      if(photoPreviewUrl)URL.revokeObjectURL(photoPreviewUrl);
+      photoPreviewUrl='';
+      $('newEquipmentPhotoPreview').textContent='Nenhuma foto selecionada. A imagem será reduzida para até 5 MB.';
+      $('newEquipmentPhotoFile').value='';
+      $('newEquipmentPhotoCameraFile').value='';
+    };
+    const handleEquipmentPhoto=async input=>{
+      const file=input.files?.[0];input.value='';
+      if(!file)return;
+      try{
+        selectedEquipmentPhoto=await prepareEquipmentPhoto(file);
+        if(photoPreviewUrl)URL.revokeObjectURL(photoPreviewUrl);
+        photoPreviewUrl=URL.createObjectURL(selectedEquipmentPhoto);
+        $('newEquipmentPhotoPreview').innerHTML=`<img src="${escapeHtml(photoPreviewUrl)}" alt="Prévia da foto da máquina" style="display:block;max-width:220px;max-height:160px;object-fit:cover;border-radius:10px;margin-top:8px"><span>Foto pronta para salvar (JPEG, ${Math.ceil(selectedEquipmentPhoto.size/1024)} KB).</span>`;
+        notice($('equipmentAdminMsg'),'Foto preparada para salvar.',true);
+      }catch(e){
+        clearPhotoSelection();
+        notice($('equipmentAdminMsg'),e?.message||'Não foi possível preparar a foto.');
+      }
+    };
+    $('newEquipmentPhotoGallery').onclick=()=> $('newEquipmentPhotoFile').click();
+    $('newEquipmentPhotoCamera').onclick=()=> $('newEquipmentPhotoCameraFile').click();
+    $('newEquipmentPhotoFile').onchange=e=>handleEquipmentPhoto(e.currentTarget);
+    $('newEquipmentPhotoCameraFile').onchange=e=>handleEquipmentPhoto(e.currentTarget);
     $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
-    $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden')};
+    $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden');clearPhotoSelection()};
     $('refreshEquipmentAdmin').onclick=openEquipmentPanel;
     $('saveEquipmentAdmin').onclick=async()=>{
       const name=$('newEquipmentName').value.trim();if(!name)return notice($('equipmentAdminMsg'),'Informe o nome do equipamento.');
-      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true}).select('id').single();
-      if(x.error)return notice($('equipmentAdminMsg'),x.error.message);
-      openEquipmentPanel(); await loadEquipment(); await loadAdminOverview();
+      const saveButton=$('saveEquipmentAdmin');saveButton.disabled=true;
+      let photoPath=null;
+      try{
+        if(selectedEquipmentPhoto){
+          const safeId=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
+          photoPath=`${profile.organization_id}/${session.user.id}/equipment-${safeId}.jpg`;
+          const upload=await sb.storage.from('maintenance-photos').upload(photoPath,selectedEquipmentPhoto,{contentType:'image/jpeg',upsert:false});
+          if(upload.error)throw upload.error;
+        }
+        const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true,photo_path:photoPath}).select('id').single();
+        if(x.error){
+          if(photoPath){const cleanup=await sb.storage.from('maintenance-photos').remove([photoPath]);if(cleanup.error)console.warn('Não foi possível limpar uma foto sem cadastro de máquina associado.',cleanup.error.message)}
+          throw x.error;
+        }
+        clearPhotoSelection();
+        openEquipmentPanel(); await loadEquipment(); await loadAdminOverview();
+      }catch(e){notice($('equipmentAdminMsg'),e?.message||'Não foi possível cadastrar a máquina.')}
+      finally{saveButton.disabled=false}
     };
   }catch(e){showError(e,'Não foi possível carregar os equipamentos')}
 }
