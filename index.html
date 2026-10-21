@@ -2,32 +2,49 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#101827">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>
+if(window.maintenanceDesktop?.platform==="win32")document.documentElement.classList.add("windows-desktop");
+</script>
+<link rel="manifest" href="#pwa-manifest">
+<link rel="icon" type="image/x-icon" href="./favicon-v11.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-v11.png">
+<script>
+window.__maintenanceAuthLinkType=new URLSearchParams(location.hash.slice(1)).get('type')||new URLSearchParams(location.search).get('type');
+const pwaBase=new URL("./",document.baseURI);
+document.querySelector('link[rel="manifest"]').href=new URL("manifest_v11.json",pwaBase).href;
+document.querySelector('link[rel="icon"][sizes="32x32"]').href=new URL("favicon-v11.png",pwaBase).href;
+</script>
 <meta name="theme-color" content="#0b1220">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sistema de Manutenção">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v11.png">
 <title>Sistema de Manutenção</title>
 <style>
-:root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3a[...]
+:root{--bg:#0b1220;--panel:#111a2b;--panel2:#172238;--text:#f8fafc;--muted:#94a3b8;--line:#26344d;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--purple:#7c3aed;--blue:#2563eb;--orange:#ea580c;--shadow:0 12px 35px #0005}
 :root.light{--bg:#eef2f7;--panel:#fff;--panel2:#f8fafc;--text:#111827;--muted:#64748b;--line:#dbe3ee;--shadow:0 10px 30px #0f172a14}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
 .top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.topin{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;flex:1}.logo{width:38p[...]
-.layout{max-width:1200px;margin:auto;padding:18px 16px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:8px 0 20px}.hero h1{margin:0;font-size:28px}.hero p{[...]
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}.login{max-width:460px;margin:8vh auto}.login h1{margin-top:0[...]
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.kpi{border-radius:16px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-conte[...]
-.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0;font-s[...]
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-filter{border:2px solid transparent}.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.actions .btn{flex:1[...]
+.topin{max-width:1200px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px;flex:1}.logo{width:38px;height:38px;border-radius:11px;background:#07172b url("./icon-192-v11.png") center/cover no-repeat;display:block;font-size:0;color:transparent;flex:none}.topbtn{background:var(--panel2);color:var(--text);border:1px solid var(--line);width:42px;height:42px;border-radius:12px}
+.layout{max-width:1200px;margin:auto;padding:18px 16px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:8px 0 20px}.hero h1{margin:0;font-size:28px}.hero p{margin:5px 0;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}.login{max-width:460px;margin:8vh auto}.login h1{margin-top:0}.field{margin:12px 0}.field label{display:block;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;outline:none}.field textarea{min-height:100px;resize:vertical}.btn{padding:12px 15px;border-radius:12px;font-weight:800}.primary{background:var(--primary);color:white}.primary:hover{background:var(--primary2)}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#7f1d1d;color:#fff}.full{width:100%}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.kpi{border-radius:16px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}.kpi b{font-size:30px}.kpi.ticket-filter{border:0;width:100%;text-align:left}.kpi.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.kpi span{font-weight:750}.k-yellow{background:#ca8a04}.k-red{background:#dc2626}.k-blue{background:#2563eb}.k-purple{background:#7c3aed}.k-green{background:#16a34a}
+.grid2{display:grid;grid-template-columns:1.4fr .9fr;gap:16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{margin:0;font-size:20px}.list{display:grid;gap:10px}.ticket{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.tickettop{display:flex;justify-content:space-between;gap:10px}.ticket h3{margin:0 0 5px;font-size:17px}.small{font-size:13px;color:var(--muted)}.desc{margin:10px 0;color:var(--muted);line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:7px}.tag{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#334155;color:#fff}.s-open{background:#ca8a04}.s-accepted{background:#2563eb}.s-in_progress{background:#2563eb}.s-waiting_parts{background:#7c3aed}.s-completed{background:#16a34a}.s-cancelled{background:#64748b}.p-urgent{background:#dc2626}.p-high{background:#ea580c}.p-normal{background:#475569}.p-low{background:#64748b}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ticket-filter{border:2px solid transparent}.ticket-filter.active{outline:3px solid var(--text);outline-offset:2px}.actions .btn{flex:1;min-width:120px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.profileline{color:var(--muted)}.photo{width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:10px}.modal{position:fixed;inset:0;background:#0009;z-index:50;padding:18px;overflow:auto}.modalbox{max-width:700px;margin:4vh auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.close{float:right;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;width:38px;height:38px}.history{display:grid;gap:9px}.historyitem{padding:11px;border-left:3px solid var(--primary);background:var(--panel2);border-radius:8px}.notice{padding:12px;border-radius:12px;background:#172554;color:#bfdbfe;margin-bottom:12px}.error{background:#450a0a;color:#fecaca}.ok{background:#052e16;color:#bbf7d0}
 @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.hero{align-items:flex-start}.hero h1{font-size:24px}}
-@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:92px;padding:13px}.kpi b{font-size:25px}.layout{padding:14px 11px 40px}.card{padding:14px}.actions .btn{min-width:100%;}[...]
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:92px;padding:13px}.kpi b{font-size:25px}.layout{padding:14px 11px 40px}.card{padding:14px}.actions .btn{min-width:100%;}.topin{padding:10px 11px}.brand{font-size:16px}}
 
-.historypanel{margin-top:16px}.filtergrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:10px}.historyrow{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding[...]
+.historypanel{margin-top:16px}.filtergrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:10px}.historyrow{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:14px}.historyrow h3{margin:0 0 5px}.historymeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.historymeta span{padding:5px 8px;border-radius:999px;background:#334155;color:#fff;font-size:12px;font-weight:800}.historydetail{margin-top:10px;color:var(--muted);line-height:1.45}.historyactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:700px){.filtergrid{grid-template-columns:1fr 1fr}}
 
 .notifywrap{position:relative}
-.notifybadge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;display:flex;align-item[...]
-.notifypanel{position:absolute;right:0;top:48px;width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(0,0,0,.28);z[...]
+.notifybadge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+.notifypanel{position:absolute;right:0;top:48px;width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(0,0,0,.28);z-index:50;overflow:hidden}
 .notifhead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border-bottom:1px solid var(--line)}
 .notifhead .btn{padding:7px 9px;font-size:12px}
+.installbtn{padding:9px 11px;font-size:13px;white-space:nowrap}
+.install-help{max-width:230px;line-height:1.3}
 .notificationlist{max-height:360px;overflow:auto}
 .notificationitem{padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
 .notificationitem:last-child{border-bottom:0}
@@ -37,88 +54,301 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.hidden
 .notificationitem .small{line-height:1.35}
 @media(max-width:700px){.notifypanel{right:-48px}}
 body:has(#login:not(.hidden)) .top{display:none}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.formgrid label{display:flex;flex-direction:column;gap:6px;font-weight:750}.formgrid input,.formgrid select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.modeswitch{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}.modeswitch .btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.rowactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.rowactions .btn{padding:8px 11px;font-size:13px}.ticket.inactive{opacity:.72}dialog::backdrop{background:#000a}
+
+/* Layout refinements shared by the web, Android and Electron builds. */
+:root{
+  --maintenance-safe-top:var(--safe-area-inset-top,env(safe-area-inset-top,0px));
+  --maintenance-safe-right:var(--safe-area-inset-right,env(safe-area-inset-right,0px));
+  --maintenance-safe-bottom:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px));
+  --maintenance-safe-left:var(--safe-area-inset-left,env(safe-area-inset-left,0px));
+}
+body{min-height:100vh;min-height:100dvh}
+button,input,select,textarea{max-width:100%}
+header.top button:focus-visible,#app button:focus-visible,#app input:focus-visible,#app select:focus-visible,#app textarea:focus-visible,#modal button:focus-visible,#modal input:focus-visible,#modal select:focus-visible,#modal textarea:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}
+.top{top:var(--maintenance-safe-top)}
+.topin{max-width:1360px;padding-left:calc(clamp(16px,2vw,28px) + var(--maintenance-safe-left));padding-right:calc(clamp(16px,2vw,28px) + var(--maintenance-safe-right))}
+.layout:has(#app:not(.hidden)){max-width:1360px;padding:clamp(18px,2vw,28px) calc(clamp(16px,2vw,28px) + var(--maintenance-safe-left)) calc(48px + var(--maintenance-safe-bottom))}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,176px),1fr));align-items:stretch}
+.kpi{min-width:0}
+.grid2{grid-template-columns:minmax(0,1.45fr) minmax(280px,.9fr);align-items:start}
+.card,.ticket,.historyrow,.formgrid>*,#app *{min-width:0}
+.sectionhead,.hero,.tickettop{flex-wrap:wrap}
+.sectionhead{align-items:flex-start}
+.sectionhead>div{min-width:0}
+.filtergrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.formgrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+.field input,.field select,.field textarea,.formgrid input,.formgrid select{min-height:44px}
+#shortcuts{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+#shortcuts>.btn{min-height:46px;text-align:left}
+.modal{
+  top:var(--maintenance-visual-viewport-top,0px);
+  right:0;
+  bottom:auto;
+  left:0;
+  height:var(--maintenance-visual-viewport-height,100vh);
+  height:var(--maintenance-visual-viewport-height,100dvh);
+  padding:calc(12px + var(--maintenance-safe-top)) calc(12px + var(--maintenance-safe-right)) calc(12px + var(--maintenance-safe-bottom)) calc(12px + var(--maintenance-safe-left));
+  overscroll-behavior:contain;
+}
+.modalbox{max-height:100%;overflow-y:auto;overscroll-behavior:contain;margin:clamp(8px,4vh,32px) auto}
+.notifypanel{max-width:calc(100vw - 24px - var(--maintenance-safe-left) - var(--maintenance-safe-right))}
+.notificationlist{overscroll-behavior:contain}
+
+@media(max-width:1100px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:900px){
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+  .filtergrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .topin{display:grid;grid-template-columns:minmax(0,1fr) 42px 42px 42px;gap:8px}
+  .brand{grid-column:1;grid-row:1;min-width:0}
+  #themeBtn{grid-column:2;grid-row:1}
+  .notifywrap{grid-column:3;grid-row:1}
+  #refreshBtn{grid-column:4;grid-row:1}
+  .topin > .installAppBtn,.topin > .install-help{display:none!important}
+  .installbtn{grid-column:1/3;grid-row:2;justify-self:start}
+  .install-help{grid-column:1/-1;grid-row:3;max-width:100%}
+  .notifypanel{
+    position:fixed;
+    top:calc(var(--maintenance-safe-top) + 58px);
+    right:calc(12px + var(--maintenance-safe-right));
+    left:calc(12px + var(--maintenance-safe-left));
+    width:auto;
+    max-height:calc(100dvh - 76px - var(--maintenance-safe-top) - var(--maintenance-safe-bottom));
+  }
+  .notificationlist{max-height:min(360px,55dvh)}
+  .filtergrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .historyactions .btn,.rowactions .btn{min-height:42px}
+}
+@media(max-width:520px){
+  .layout:has(#app:not(.hidden)){padding:14px calc(11px + var(--maintenance-safe-left)) calc(36px + var(--maintenance-safe-bottom))}
+  .topin{padding-top:10px;padding-bottom:10px}
+  .card{padding:14px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .kpi{min-height:92px;padding:13px}
+  .kpi b{font-size:25px}
+  .actions .btn{min-width:100%;min-height:44px}
+  .hero{gap:10px}
+  .hero h1{font-size:23px}
+  .sectionhead h2{font-size:18px}
+  .tickettop{align-items:flex-start}
+  .filtergrid{grid-template-columns:minmax(0,1fr)}
+  .modal{padding-left:calc(8px + var(--maintenance-safe-left));padding-right:calc(8px + var(--maintenance-safe-right))}
+  .modalbox{width:100%;padding:14px}
+}
+@media(max-width:360px){
+  .topin{grid-template-columns:minmax(0,1fr) 38px 38px 38px;gap:6px}
+  .topbtn{width:38px;height:38px}
+  .brand{font-size:15px}
+  .brand .logo{width:34px;height:34px}
+  .kpis{grid-template-columns:minmax(0,1fr)}
+}
 </style>
+  <script type="module" crossorigin src="/sistema-manutencao/assets/index-CPkPNPnI.js"></script>
+  <link rel="stylesheet" crossorigin href="/sistema-manutencao/assets/index-ChqUT8bs.css">
 </head>
 <body>
-<header class="top"><div class="topin"><div class="brand"><div class="logo">🔧</div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button class="topbtn" id[...]
+<header class="top"><div class="topin"><div class="brand"><div class="logo"></div><div>Sistema de Manutenção<div class="small">Controle de chamados</div></div></div><button id="windowsNavToggle" class="windows-nav-toggle hidden" type="button" aria-label="Recolher menu" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><label id="windowsGlobalSearch" class="windows-global-search hidden"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="windowsGlobalSearchInput" type="search" placeholder="Pesquisar chamados..." aria-label="Pesquisar chamados"><kbd>Ctrl + K</kbd></label><button class="btn secondary installbtn installAppBtn hidden" id="installAppBtn" type="button" aria-describedby="installHelp">Instalar app</button><span class="small install-help hidden" id="installHelp" role="status" aria-live="polite"></span><button class="topbtn" id="themeBtn" title="Tema" aria-label="Alternar tema">☀️</button><div class="notifywrap">
 <button class="topbtn" id="notifyBtn" title="Ativar notificações">🔔<span id="notifyBadge" class="notifybadge hidden">0</span></button>
 <div id="notifyPanel" class="notifypanel hidden">
-  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type[...]
+  <div class="notifhead"><strong>Notificações</strong><button class="btn secondary" type="button" id="markNotificationsRead">Marcar como lidas</button></div><button class="btn primary full" type="button" id="enablePushBtn" style="margin:10px">🔔 Ativar notificações no aparelho</button><div id="notificationScope" class="small" style="padding:8px 12px;border-bottom:1px solid var(--line)"></div>
   <div id="notificationList" class="notificationlist"><div class="empty">Nenhuma notificação.</div></div>
 </div>
-</div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button></div></header>
+</div><button class="topbtn" id="refreshBtn" title="Atualizar">↻</button><div id="windowsAdminUser" class="windows-admin-user hidden"><span id="windowsAdminAvatar" class="windows-admin-avatar">A</span><span class="windows-admin-user-copy"><strong id="windowsAdminUserName">Administrador</strong><small id="windowsAdminUserEmail"></small></span></div></div></header>
+<script>
+(()=>{
+  const installButtons=[...document.querySelectorAll('.installAppBtn')];
+  const installHelpers=[document.getElementById('installHelp'),document.getElementById('installLoginHelp')].filter(Boolean);
+  if(!installButtons.length||!installHelpers.length)return;
+  let installPrompt=null;
+  const isAndroid=/Android/i.test(navigator.userAgent);
+  const isInstalled=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const hideInstall=()=>{
+    installButtons.forEach(button=>button.classList.add('hidden'));
+    installHelpers.forEach(help=>help.classList.add('hidden'));
+  };
+  if(isInstalled()) hideInstall();
+  else if(isAndroid) installButtons.forEach(button=>button.classList.remove('hidden'));
+
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault();
+    installPrompt=event;
+    if(!isInstalled()) installButtons.forEach(button=>button.classList.remove('hidden'));
+  });
+  window.addEventListener('appinstalled',()=>{
+    installPrompt=null;
+    hideInstall();
+  });
+  installButtons.forEach(button=>button.addEventListener('click',async()=>{
+    const installHelp=document.getElementById(button.getAttribute('aria-describedby'));
+    if(installPrompt){
+      const promptEvent=installPrompt;
+      installPrompt=null;
+      installHelp.textContent='';
+      installHelp.classList.add('hidden');
+      await promptEvent.prompt();
+      await promptEvent.userChoice;
+      return;
+    }
+    installHelp.textContent='No Android, abra o menu do Chrome e toque em “Instalar app” ou “Adicionar à tela inicial”.';
+    installHelp.classList.remove('hidden');
+  }));
+})();
+</script>
 <main class="layout">
 <section id="login" class="card login">
-<h1>🔐 Acesso ao sistema</h1><p class="small">Entre com seu usuário do Supabase.</p>
-<div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="off" placeholder="seu e-mail"></div>
+<h1>🔐 Acesso ao sistema</h1><p class="small">Entre com o usuário e a senha fornecidos pelo administrador.</p>
+<button class="btn secondary installbtn installAppBtn hidden" id="installLoginBtn" type="button" aria-describedby="installLoginHelp">Instalar app</button><span class="small install-help hidden" id="installLoginHelp" role="status" aria-live="polite"></span>
+<div class="field"><label for="email">Usuário ou e-mail</label><input id="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu usuário ou e-mail" data-testid="input-login"></div>
 <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
-<button class="btn primary full" id="loginBtn" type="button" onclick="if(window.__loginNow){window.__loginNow()}else{alert('O sistema ainda está carregando. Atualize a página e tente novamente.'[...]
+<button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
 </section>
 <section id="app" class="hidden">
-<div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="log[...]
-<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></butt[...]
-<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-[...]
-<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="newUserBtn" type="button"[...]
+<aside id="windowsAdminNav" class="windows-admin-nav hidden" aria-label="Navegação administrativa">
+  <div class="windows-admin-nav-label">MENU</div>
+  <nav class="windows-admin-nav-list">
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="dashboard" aria-current="page" title="Painel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Painel</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="calls" title="Chamados"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 4v14H7z"/><path d="M17 3v5h4M10 13h8M10 17h8"/></svg><span>Chamados</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="equipment" title="Equipamentos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h4M8 17h8"/></svg><span>Equipamentos</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="sectors" title="Setores"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h2M14 10h2M9 14h2M14 14h2"/></svg><span>Setores</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="mechanics" title="Mecânicos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3 3-3-3z"/></svg><span>Mecânicos</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="users" title="Usuários"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M17 11a3 3 0 1 0 0-6M18 14a4 4 0 0 1 3 4v2"/></svg><span>Usuários</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="history" title="Histórico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 9h8M8 13h8M8 17h5"/></svg><span>Histórico</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="preventive" title="Manutenção preventiva"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h6"/></svg><span>Preventiva</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="parts" title="Peças e estoque"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3.5 8.5 12 13l8.5-4.5M12 13v8"/></svg><span>Peças e Estoque</span></button>
+    <button class="windows-admin-nav-button" type="button" data-windows-nav="notifications" title="Notificações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span>Notificações</span></button>
+  </nav>
+  <button class="windows-admin-nav-button windows-admin-logout" type="button" data-windows-nav="logout" title="Sair"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg><span>Sair</span></button>
+</aside>
+<div id="windowsAdminContent">
+<div class="hero"><div><h1 id="hello">Olá!</h1><p id="profile">Carregando perfil...</p><div id="roleNotice" class="notice ok">Carregando acesso...</div></div><button class="btn secondary" id="logoutBtn">Sair</button></div>
+<section id="windowsAdminDashboard" class="windows-admin-dashboard hidden" aria-labelledby="windowsDashboardTitle">
+  <div class="windows-metrics" aria-label="Indicadores da manutenção">
+    <button class="windows-metric windows-metric-open" type="button" data-windows-ticket-filter="open" data-testid="metric-open-calls"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v5h5M9 12h7M9 16h7"/></svg></span><span class="windows-metric-copy"><span>Chamados abertos</span><strong id="windowsMetricOpen">—</strong><small id="windowsMetricUrgent">— urgentes</small></span></button>
+    <button class="windows-metric windows-metric-progress" type="button" data-windows-ticket-filter="in_progress" data-testid="metric-in-progress-calls"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="windows-metric-copy"><span>Em atendimento</span><strong id="windowsMetricProgress">—</strong><small>Chamados aceitos ou iniciados</small></span></button>
+    <div class="windows-metric windows-metric-completed"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><span class="windows-metric-copy"><span>Concluídos</span><strong id="windowsMetricCompleted30d">—</strong><small>Nos últimos 30 dias</small></span></div>
+    <div class="windows-metric windows-metric-equipment"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 8h10M7 12h5"/></svg></span><span class="windows-metric-copy"><span>Equipamentos</span><strong id="windowsMetricEquipment">—</strong><small>Total cadastrado</small></span></div>
+    <div class="windows-metric windows-metric-mechanics"><span class="windows-metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M17 11a3 3 0 1 0 0-6M18 14a4 4 0 0 1 3 4v2"/></svg></span><span class="windows-metric-copy"><span>Mecânicos</span><strong id="windowsMetricMechanics">—</strong><small>Perfis ativos; presença não monitorada</small></span></div>
+  </div>
+  <div class="windows-chart-grid">
+    <section class="windows-panel windows-status-panel">
+      <div class="windows-panel-heading"><div><h3>Chamados por situação</h3><p>Distribuição dos registros disponíveis</p></div></div>
+      <div class="windows-status-chart"><div id="windowsStatusDonut" class="windows-donut" aria-hidden="true"><div><strong id="windowsStatusTotal">—</strong><span>chamados</span></div></div><div id="windowsStatusLegend" class="windows-chart-legend"><div class="windows-data-state">Carregando dados reais…</div></div></div>
+    </section>
+    <section class="windows-panel">
+      <div class="windows-panel-heading"><div><h3>Chamados por prioridade</h3><p>Chamados ativos</p></div></div>
+      <div id="windowsPriorityChart" class="windows-priority-chart"><div class="windows-data-state">Carregando dados reais…</div></div>
+    </section>
+    <section class="windows-panel windows-equipment-status">
+      <div class="windows-panel-heading"><div><h3>Status dos equipamentos</h3><p>Situação cadastral; não indica funcionamento</p></div></div>
+      <div class="windows-status-chart"><div id="windowsEquipmentDonut" class="windows-donut" aria-hidden="true"><div><strong id="windowsEquipmentTotal">—</strong><span>equipamentos</span></div></div><div id="windowsEquipmentLegend" class="windows-chart-legend"><div class="windows-data-state">Carregando dados reais…</div></div></div>
+    </section>
+  </div>
+  <div class="windows-dashboard-lower">
+    <section class="windows-panel windows-recent-panel">
+      <div class="windows-panel-heading windows-recent-heading"><div><h3>Últimos chamados</h3></div><div class="windows-table-tools"><label class="windows-table-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="windowsCallSearch" type="search" placeholder="Pesquisar chamados..." aria-label="Pesquisar chamados"></label><select id="windowsCallStatusFilter" aria-label="Filtrar chamados por status"><option value="all">Todos os status</option><option value="open">Aberto</option><option value="accepted">Aceito</option><option value="in_progress">Em atendimento</option><option value="waiting_parts">Aguardando peça</option><option value="completed">Concluído</option><option value="cancelled">Cancelado</option></select><button id="windowsShowAllCalls" class="windows-link-button" type="button">Ver todos</button></div></div>
+      <div class="windows-table-wrap"><table class="windows-table"><thead><tr><th>#</th><th>Data</th><th>Máquina / Equipamento</th><th>Setor</th><th>Descrição</th><th>Prioridade</th><th>Status</th><th>Responsável</th><th>Ações</th></tr></thead><tbody id="windowsRecentCalls"><tr><td colspan="9" class="windows-data-state">Carregando chamados…</td></tr></tbody></table></div>
+    </section>
+  </div>
+  <div class="windows-bottom-grid">
+    <section class="windows-panel windows-sector-panel"><div class="windows-panel-heading"><div><h3>Chamados por setor</h3></div></div><div id="windowsSectorChart" class="windows-bars"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+    <section class="windows-panel windows-average-panel"><div class="windows-panel-heading"><div><h3>Tempo médio de atendimento</h3></div></div><div class="windows-average-summary"><span class="windows-average-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><strong id="windowsAverageTime" class="windows-average-value">—</strong></div><p class="windows-average-note">Calculado com início e conclusão registrados</p></section>
+    <section class="windows-panel windows-preventive-panel"><div class="windows-panel-heading"><div><h3>Manutenções preventivas</h3></div></div><div id="windowsPreventiveList" class="windows-activity-list"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+    <section class="windows-panel windows-activity-panel"><div class="windows-panel-heading"><div><h3>Últimas atividades</h3></div></div><div id="windowsActivityList" class="windows-activity-list"><div class="windows-data-state">Carregando dados reais…</div></div></section>
+  </div>
+</section>
+<div class="kpis"><button class="kpi k-yellow ticket-filter active" data-status="open" type="button" onclick="applyTicketFilter('open')"><span>🟡 Chamados abertos</span><b id="kOpen">0</b></button><button class="kpi k-red ticket-filter" data-status="urgent" type="button" onclick="applyTicketFilter('urgent')"><span>🔴 Urgentes</span><b id="kUrgent">0</b></button><button class="kpi k-blue ticket-filter" data-status="in_progress" type="button" onclick="applyTicketFilter('in_progress')"><span>🔵 Em atendimento</span><b id="kProgress">0</b></button><button class="kpi k-purple ticket-filter" data-status="waiting_parts" type="button" onclick="applyTicketFilter('waiting_parts')"><span>🟣 Aguardando peça</span><b id="kParts">0</b></button><button class="kpi k-green ticket-filter" data-status="completed" type="button" onclick="applyTicketFilter('completed')"><span>🟢 Concluídos</span><b id="kDone">0</b></button></div>
+<div id="adminPanel" class="card hidden"><div class="sectionhead"><h2>👨‍💼 Administração</h2><span class="small">Visão geral da organização</span></div><div class="kpis" style="margin-bottom:0"><div class="kpi k-blue"><span>👥 Usuários ativos</span><b id="aUsers">0</b></div><div class="kpi k-purple"><span>🏢 Setores</span><b id="aSectors">0</b></div><div class="kpi k-yellow"><span>⚙️ Equipamentos</span><b id="aEquipment">0</b></div><div class="kpi k-green"><span>📋 Total de chamados</span><b id="aOrders">0</b></div></div></div>
+<div id="usersPanel" class="card hidden"><div class="sectionhead"><h2>👥 Usuários e perfis</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="usersRoleFilter" class="hidden" aria-label="Filtrar por perfil"><option value="all">Todos os perfis</option><option value="admin">Administradores</option><option value="mechanic">Mecânicos</option><option value="sector">Setores</option></select><button class="btn" id="newUserBtn" type="button">➕ Novo usuário</button><button class="btn secondary" id="closeUsersBtn" type="button">Fechar</button></div></div><div id="newUserPanel" class="card hidden" style="margin:12px 0 0;background:rgba(255,255,255,.03)"><h3>➕ Novo usuário</h3><div class="modeswitch" role="group" aria-label="Forma de acesso"><button class="btn secondary active" type="button" id="newUserModePassword" data-testid="button-mode-password">Usuário e senha</button><button class="btn secondary" type="button" id="newUserModeInvite" data-testid="button-mode-invite">Convite por e-mail (legado)</button></div><div class="formgrid"><label>Nome completo<input id="newUserName" placeholder="Nome do usuário" data-testid="input-new-user-name"></label><label id="newUserLoginWrap">Login<input id="newUserLogin" placeholder="ex.: joao.silva" autocomplete="off" autocapitalize="none" spellcheck="false" data-testid="input-new-user-login"></label><label id="newUserPasswordWrap">Senha temporária<input id="newUserPassword" type="password" minlength="6" maxlength="128" autocomplete="new-password" placeholder="mínimo 6 caracteres" data-testid="input-new-user-password"></label><label id="newUserEmailWrap" class="hidden">E-mail<input id="newUserEmail" type="email" placeholder="usuario@empresa.com" autocomplete="off" data-testid="input-new-user-email"></label><label>Perfil<select id="newUserRole" data-testid="select-new-user-role"><option value="sector">🏢 Setor</option><option value="mechanic">🔧 Mecânico</option><option value="admin">👨‍💼 Administrador</option></select></label><label id="newUserSectorWrap">Setor<select id="newUserSector" data-testid="select-new-user-sector"><option value="">Carregando setores...</option></select></label></div><p class="small" id="newUserModeHint">O usuário entra com login e senha temporária e será obrigado a trocar a senha no primeiro acesso. E-mail não é necessário.</p><div id="newUserMsg" class="notice hidden" style="margin-top:12px"></div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNewUserBtn" type="button">Salvar usuário</button><button class="btn secondary" id="cancelNewUserBtn" type="button">Cancelar</button></div></div><div id="usersList" class="list"><div class="empty">Carregando usuários...</div></div></div>
 
-<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</bu[...]
+<div id="historyPanel" class="card hidden historypanel"><div class="sectionhead"><h2>📋 Histórico de manutenção</h2><button class="btn secondary" id="closeHistoryBtn" type="button">Fechar</button></div><div class="filtergrid"><div class="field"><label>Equipamento</label><select id="historyEquipment"><option value="">Todos os equipamentos</option></select></div><div class="field"><label>Tipo</label><select id="historyType"><option value="">Todos os tipos</option></select></div><div class="field"><label>De</label><input id="historyStart" type="date"></div><div class="field"><label>Até</label><input id="historyEnd" type="date"></div></div><div class="actions"><button class="btn primary" id="applyHistoryBtn" type="button">Aplicar filtros</button><button class="btn secondary" id="clearHistoryBtn" type="button">Limpar</button></div><div id="historyList" class="list" style="margin-top:14px"><div class="empty">Carregando histórico...</div></div></div>
 <div class="grid2">
 <div>
-<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class=[...]
+<div class="card"><div class="sectionhead"><h2 id="ticketsTitle">📋 Chamados</h2><button class="btn secondary" id="newBtn">+ Novo chamado</button></div><div id="tickets" class="list"><div class="empty">Carregando chamados...</div></div></div>
 </div>
 <div>
-<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><d[...]
+<div class="card hidden" id="newCard"><div class="sectionhead"><h2>➕ Novo chamado</h2></div><div class="field"><label>Título</label><input id="title" placeholder="Ex.: Máquina parada"></div><div class="field"><label>Descrição</label><textarea id="description" placeholder="Descreva o problema"></textarea></div><div class="field"><label>Prioridade</label><select id="priority"><option value="normal">Normal</option><option value="high">Alta</option><option value="urgent">Urgente</option><option value="low">Baixa</option></select></div><div class="field"><label>Equipamento</label><select id="equipment"><option value="">Selecione (opcional)</option></select></div><div class="field"><label>Foto do problema</label><div class="actions"><button class="btn secondary" type="button" id="galleryBtn">🖼️ Galeria</button><button class="btn secondary" type="button" id="cameraBtn">📷 Abrir câmera</button></div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><div id="photoName" class="small" style="margin-top:8px">Nenhuma foto selecionada.</div></div><button class="btn primary full" id="saveBtn">Registrar chamado</button><div id="saveMsg" class="notice hidden"></div></div>
 <div class="card hidden" id="shortcutsCard"><div class="sectionhead"><h2>🧭 Atalhos</h2></div><div id="shortcuts" class="list"></div></div>
 </div></div>
+</div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
 <script>
-window.__SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
-window.__SUPABASE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
-window.__supabaseClient=window.supabase?.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
-window.__loginNow=async function(){
-  const email=document.getElementById('email')?.value.trim();
+window.__directLogin=async function(){
+  const login=document.getElementById('email')?.value.trim();
   const password=document.getElementById('password')?.value||'';
   const msg=document.getElementById('loginMsg');
   const btn=document.getElementById('loginBtn');
-  const show=(t,cls='notice')=>{if(msg){msg.textContent=t;msg.className=cls;}};
-  if(!email||!password){show('Digite o e-mail e a senha.');return;}
-  if(!window.__supabaseClient){
-    if(window.supabase?.createClient){
-      window.__supabaseClient=window.supabase.createClient(window.__SUPABASE_URL,window.__SUPABASE_KEY);
-    }
-  }
-  if(!window.__supabaseClient){
-    show('Não foi possível carregar a conexão com o Supabase. Recarregue a página.','notice error');
+  if(!login||!password){
+    if(msg){msg.className='notice';msg.textContent='Digite o usuário (ou e-mail) e a senha.';}
     return;
   }
-  btn.disabled=true;
-  btn.textContent='Entrando...';
-  show('Verificando acesso...');
+  if(btn){btn.disabled=true;btn.textContent='Entrando...';}
+  if(msg){msg.className='notice';msg.textContent='Verificando acesso...';}
   try{
-    const {data,error}=await window.__supabaseClient.auth.signInWithPassword({email,password});
-    if(error)throw error;
-    if(!data?.session)throw new Error('Login aceito, mas a sessão não foi criada.');
-    show('Login realizado! Abrindo o sistema...','notice ok');
-    // Prefer reload to ensure main app code is loaded (avoids race where showApp isn't defined yet)
-    // Redirect with cache-buster like other login flows in the repo
-    location.replace('./?v=' + Date.now());
+    if(!window.supabase?.createClient||!sb) throw new Error('Biblioteca do sistema não carregou. Atualize a página.');
+    let res;
+    try{
+      res=await fetch(sb.supabaseUrl+'/functions/v1/account-login',{method:'POST',headers:{'Content-Type':'application/json',apikey:sb.supabaseKey},body:JSON.stringify({login,password})});
+    }catch(_){throw new Error('Sem conexão com o servidor. Verifique a internet e tente novamente.')}
+    if(res.status===429) throw new Error('Muitas tentativas de acesso. Aguarde alguns minutos e tente novamente.');
+    let body=null;try{body=await res.json()}catch(_){body=null}
+    if(!res.ok||!body?.ok||!body?.session?.access_token||!body?.session?.refresh_token) throw new Error(res.status>=500?'O servidor não respondeu corretamente. Tente novamente.':'Usuário ou senha inválidos.');
+    const {error}=await sb.auth.setSession({access_token:body.session.access_token,refresh_token:body.session.refresh_token});
+    body=null;
+    if(error) throw new Error('Não foi possível iniciar a sessão. Tente novamente.');
+    const pw=document.getElementById('password');if(pw)pw.value='';
+    window.__maintenanceAuthLinkType=null;
+    if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
+    await showApp();
   }catch(e){
-    show('Erro no login: '+(e?.message||e),'notice error');
-    btn.disabled=false;
-    btn.textContent='Entrar';
+    if(msg){msg.className='notice error';msg.textContent='Erro no login: '+(e?.message||'tente novamente.');}
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Entrar';}
   }
 };
 </script>
 <script>
+
 </script>
 <script>
-const SUPABASE_URL=window.__SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY=window.__SUPABASE_KEY;
-const sb=window.__supabaseClient;
+document.getElementById('loginBtn')?.addEventListener('click',()=>window.__directLogin?.());
+document.getElementById('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.__directLogin?.()});
+</script>
+<script>
+const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
+const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+window.sb=sb;
 const $=id=>document.getElementById(id);
 let session=null,profile=null,equipment=[];
+window.__maintenanceContext=()=>({session,profile});
+window.__maintenanceSuspend=function(){clearInterval(notificationTimer);notificationTimer=null;profile=null;$('app')?.classList.add('hidden')};
+window.__maintenanceLock=async function(message,signOut){
+  window.__maintenanceSuspend();
+  $('modal')?.classList.add('hidden');
+  $('notifyPanel')?.classList.add('hidden');
+  $('notifyBadge')?.classList.add('hidden');
+  window.dispatchEvent(new Event('maintenance-access-locked'));
+  for(const id of ['tickets','historyList','usersList','modalContent','notificationList'])if($(id))$(id).replaceChildren();
+  equipment=[];appNotifications=[];notificationBaseline=null;
+  localStorage.removeItem(NOTIFY_LIST_KEY);localStorage.removeItem(NOTIFY_KEY);
+  if(signOut){try{await window.nativePushManager?.unregisterCurrentDevice?.()}catch(e){console.warn('Push:',e?.message||e)}try{await sb.auth.signOut()}catch(e){}session=null}
+  $('login')?.classList.remove('hidden');
+  if(message) notice($('loginMsg'),message);
+};
+function waitAccessModule(){
+  if(window.maintenanceAccess) return Promise.resolve(window.maintenanceAccess);
+  return new Promise((resolve,reject)=>{
+    const t=setTimeout(()=>reject(new Error('Módulo de acesso não carregou. Atualize a página.')),20000);
+    window.addEventListener('maintenance-access-ready',()=>{clearTimeout(t);resolve(window.maintenanceAccess)},{once:true});
+  });
+}
 let notificationTimer=null,notificationBaseline=null;
 const NOTIFY_KEY='maint_last_notification_state';
 const NOTIFY_LIST_KEY='maint_notifications';
@@ -191,17 +421,22 @@ async function enableNotifications(){
   const p=await Notification.requestPermission();
   if(p==='granted'){
     $('notifyBtn').firstChild.textContent='🔔';
-    alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. A base PWA já está preparada; o Push com o sistema fechado será lig[...]
+     alert('Notificações ativadas. Enquanto o sistema estiver aberto, as atualizações serão verificadas automaticamente. Para receber avisos com o sistema fechado, ative também as notificações do aparelho.');
   }else if(p==='denied'){
     alert('As notificações foram bloqueadas. Ative-as nas configurações do navegador.');
   }
 }
 function notifyUser(title,body,tag){
   addAppNotification(title,body,tag);
+  if(window.nativePushManager?.isAvailable()) return;
+  if(window.maintenanceDesktop?.showNotification){
+    window.maintenanceDesktop.showNotification({title,body,callId:tag||null});
+    return;
+  }
   playNotificationSound();
   if(!('Notification' in window)||Notification.permission!=='granted') return;
   try{
-    const n=new Notification(title,{body,tag,icon:'icon-192-v10.png',badge:'icon-192-v10.png'});
+     const n=new Notification(title,{body,tag:`maintenance-${Date.now()}-${Math.random().toString(36).slice(2)}`,icon:new URL('./icon-192-v11.png',document.baseURI).href,badge:new URL('./icon-192-v11.png',document.baseURI).href});
     n.onclick=()=>{window.focus();n.close();openNotificationByCall(tag)};
   }catch(e){console.warn(e)}
 }
@@ -212,9 +447,24 @@ function urlBase64ToUint8Array(base64String){
   const raw=atob(base64);const out=new Uint8Array(raw.length);
   for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out;
 }
+async function triggerPush(workOrderId,eventType,extra={}){
+  try{
+    const {data,error}=await sb.functions.invoke('send-push',{body:{work_order_id:workOrderId,event_type:eventType,...extra}});
+    if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||'A função de notificações recusou o envio.');
+    if(data?.sent===0)console.info('Push sem dispositivos inscritos para este evento:',eventType);
+  }catch(e){console.warn('Push:',e?.message||e)}
+}
 async function registerPushOnDevice(){
   const btn=$('enablePushBtn');
   try{
+    if(window.nativePushManager?.isAvailable()){
+      if(!session?.user?.id) throw new Error('Entre no sistema antes de ativar as notificações.');
+      await window.nativePushManager.register();
+      if(btn){btn.textContent='✅ Notificações Android ativadas';btn.disabled=true;}
+      alert('Notificações nativas do Android ativadas. O envio com o aplicativo fechado depende da configuração do Firebase/FCM no Supabase.');
+      return;
+    }
     if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)){
       throw new Error('Este navegador não oferece Push. Instale o sistema como aplicativo no Android e tente novamente.');
     }
@@ -229,7 +479,7 @@ async function registerPushOnDevice(){
     const r=await sb.from('push_subscriptions').upsert({user_id:session.user.id,endpoint,p256dh,auth},{onConflict:'endpoint'});
     if(r.error)throw r.error;
     if(btn){btn.textContent='✅ Notificações do aparelho ativadas';btn.disabled=true;}
-    alert('Notificações ativadas neste aparelho. O mecânico poderá receber novos chamados mesmo fora da tela do sistema.');
+     alert('Este aparelho foi inscrito para receber novos chamados e atualizações. O envio em segundo plano depende da função Push e das chaves estarem configuradas no Supabase.');
   }catch(e){
     if(btn)btn.disabled=false;
     alert('Não foi possível ativar as notificações: '+(e?.message||e));
@@ -249,8 +499,8 @@ async function checkNotifications(){
       .select('id,title,status,priority,created_at,started_at,completed_at,mechanic_id,sector_id')
       .order('created_at',{ascending:false}).limit(50),
     sb.from('part_requests')
-      .select('id,work_order_id,part_name,quantity,status,requested_by,created_at')
-      .order('created_at',{ascending:false}).limit(50)
+      .select('id,work_order_id,part_name,quantity,status,requested_by,created_at:requested_at')
+      .order('requested_at',{ascending:false}).limit(50)
   ]);
   if(wr.error) return;
 
@@ -326,7 +576,7 @@ async function checkNotifications(){
       let title='🔔 Chamado atualizado';
       if(newStatus==='accepted') title='🔧 Chamado aceito';
       else if(newStatus==='in_progress') title='🛠️ Atendimento iniciado';
-      else if(newStatus==='waiting_parts') title='�� Aguardando peça';
+      else if(newStatus==='waiting_parts') title='📦 Aguardando peça';
       else if(oldStatus==='waiting_parts' && newStatus==='in_progress') title='▶️ Atendimento retomado';
       else if(newStatus==='completed') title='🟢 Chamado concluído';
       else if(newStatus==='cancelled') title='⚪ Chamado cancelado';
@@ -417,8 +667,159 @@ const labels={open:'Aberto',accepted:'Aceito',in_progress:'Em atendimento',waiti
 const plabels={urgent:'Urgente',high:'Alta',normal:'Normal',low:'Baixa'};
 function notice(el,t,ok=false){el.textContent=t;el.className='notice '+(ok?'ok':'error');el.classList.remove('hidden')}
 function fmt(d){return d?new Date(d).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):''}
+function preventiveDate(value){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw new Error('Informe a data programada da preventiva.');
+  const date=new Date(value+'T12:00:00Z');
+  if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)throw new Error('Informe uma data programada válida.');
+  return value;
+}
+function fmtPlannedDate(value){
+  if(!value)return '';
+  const [year,month,day]=value.split('-');
+  return `${day}/${month}/${year}`;
+}
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function theme(){const t=localStorage.getItem('maint_theme')||'dark';document.documentElement.classList.toggle('light',t==='light');$('themeBtn').textContent=t==='light'?'🌙':'☀️'}
+const windowsAdminDashboardState={orders:[],sectors:[],activity:[],equipmentCount:null,mechanicsCount:null,ordersLoaded:false,equipmentLoaded:false,ordersError:'',sectorError:'',activityError:''};
+let windowsDashboardGeneration=0;
+windowsAdminDashboardState.equipmentInactiveCount=null;
+windowsAdminDashboardState.equipmentTotalCount=null;
+windowsAdminDashboardState.equipmentError=false;
+windowsAdminDashboardState.searchText='';
+windowsAdminDashboardState.statusFilter='all';
+const windowsDashboardStatuses=[
+  {key:'open',label:'Abertos',color:'#dc2626'},
+  {key:'accepted',label:'Aceitos',color:'#2563eb'},
+  {key:'in_progress',label:'Em atendimento',color:'#0ea5e9'},
+  {key:'waiting_parts',label:'Aguardando peça',color:'#7c3aed'},
+  {key:'completed',label:'Concluídos',color:'#16a34a'},
+  {key:'cancelled',label:'Cancelados',color:'#64748b'}
+];
+function isWindowsDesktopAdmin(){return Boolean(session&&window.maintenanceDesktop?.platform==='win32'&&profile?.role==='admin')}
+function setWindowsAdminNavActive(action){
+  document.querySelectorAll('#windowsAdminNav [data-windows-nav]').forEach(button=>{
+    const active=button.dataset.windowsNav===action;
+    if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+  });
+}
+function updateWindowsAdminIdentity(){
+  const name=profile?.full_name||'Administrador';
+  const initials=name.trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join('').toLocaleUpperCase('pt-BR')||'A';
+  const avatar=$('windowsAdminAvatar'),userName=$('windowsAdminUserName'),userEmail=$('windowsAdminUserEmail');
+  if(avatar)avatar.textContent=initials;
+  if(userName)userName.textContent=name;
+  if(userEmail)userEmail.textContent=session?.user?.email||'Perfil administrador';
+}
+function setWindowsAdminView(view){
+  if(!isWindowsDesktopAdmin())return;
+  const app=$('app'),dashboard=$('windowsAdminDashboard');
+  if(!app||!dashboard)return;
+  const allowed=['dashboard','calls','users','history'];
+  const next=allowed.includes(view)?view:'dashboard';
+  app.dataset.windowsAdminView=next;
+  dashboard.classList.toggle('hidden',next!=='dashboard');
+  if(next==='dashboard'||next==='calls'){
+    $('usersPanel')?.classList.add('hidden');
+    $('historyPanel')?.classList.add('hidden');
+  }else if(next==='users')$('historyPanel')?.classList.add('hidden');
+  else if(next==='history')$('usersPanel')?.classList.add('hidden');
+  setWindowsAdminNavActive(next);
+}
+function setWindowsAdminMode(enabled){
+  const app=$('app'),nav=$('windowsAdminNav'),dashboard=$('windowsAdminDashboard');
+  const active=Boolean(enabled&&isWindowsDesktopAdmin());
+  document.documentElement.classList.toggle('windows-admin',active);
+  app?.classList.toggle('windows-admin-active',active);
+  nav?.classList.toggle('hidden',!active);
+  $('windowsNavToggle')?.classList.toggle('hidden',!active);
+  $('windowsGlobalSearch')?.classList.toggle('hidden',!active);
+  $('windowsAdminUser')?.classList.toggle('hidden',!active);
+  $('usersRoleFilter')?.classList.toggle('hidden',!active);
+  if(!active){
+    windowsDashboardGeneration++;
+    app?.removeAttribute('data-windows-admin-view');
+    dashboard?.classList.add('hidden');
+    app?.classList.remove('windows-sidebar-collapsed');
+    Object.assign(windowsAdminDashboardState,{orders:[],sectors:[],activity:[],equipmentCount:null,mechanicsCount:null,equipmentInactiveCount:null,equipmentTotalCount:null,equipmentError:false,ordersLoaded:false,equipmentLoaded:false,ordersError:'',sectorError:'',activityError:'',searchText:'',statusFilter:'all'});
+    return;
+  }
+  updateWindowsAdminIdentity();
+  setWindowsAdminView('dashboard');
+  renderWindowsAdminDashboard();
+}
+document.addEventListener('click',function(ev){
+  const nav=ev.target.closest('[data-windows-nav]');
+  if(nav&&isWindowsDesktopAdmin()){
+    ev.preventDefault();
+    const action=nav.dataset.windowsNav;
+    setWindowsAdminNavActive(action);
+    if(action==='dashboard'){
+      setWindowsAdminView('dashboard');
+      Promise.all([loadTickets(),loadAdminOverview()]).catch(e=>console.warn('Não foi possível atualizar o painel Windows.',e));
+    }else if(action==='calls'){
+      setWindowsAdminView('calls');
+      applyTicketFilter(window.ticketFilter||'open');
+    }else if(action==='users'){
+      setWindowsAdminView('users');
+      openUsersPanel('all');
+    }else if(action==='mechanics'){
+      setWindowsAdminView('users');
+      setWindowsAdminNavActive('mechanics');
+      openUsersPanel('mechanic');
+    }else if(action==='history'){
+      setWindowsAdminView('history');
+      openHistoryPanel();
+    }else if(action==='equipment')openEquipmentPanel();
+    else if(action==='sectors')openSectorsPanel();
+    else if(action==='preventive')openPreventivePanel();
+    else if(action==='parts')openPartsPanel();
+    else if(action==='notifications')$('notifyBtn')?.click();
+    else if(action==='logout')$('logoutBtn')?.click();
+    return;
+  }
+  const filter=ev.target.closest('[data-windows-ticket-filter]');
+  if(filter&&isWindowsDesktopAdmin()){
+    setWindowsAdminView('calls');
+    applyTicketFilter(filter.dataset.windowsTicketFilter);
+  }
+  if(ev.target.closest('#windowsShowAllCalls')&&isWindowsDesktopAdmin()){
+    setWindowsAdminView('calls');
+    applyTicketFilter('all');
+  }
+  if(ev.target.closest('#windowsDashboardRefresh')&&isWindowsDesktopAdmin()){
+    const button=$('windowsDashboardRefresh');
+    button.disabled=true;
+    Promise.all([loadTickets(),loadAdminOverview()]).catch(e=>console.warn('Não foi possível atualizar o painel Windows.',e)).finally(()=>{button.disabled=false});
+  }
+  const detailButton=ev.target.closest('[data-windows-detail]');
+  if(detailButton&&isWindowsDesktopAdmin())window.details?.(detailButton.dataset.windowsDetail);
+});
+document.addEventListener('input',function(ev){
+  if(!isWindowsDesktopAdmin())return;
+  if(ev.target.id==='windowsCallSearch'||ev.target.id==='windowsGlobalSearchInput'){
+    windowsAdminDashboardState.searchText=ev.target.value||'';
+    ['windowsCallSearch','windowsGlobalSearchInput'].forEach(id=>{const input=$(id);if(input&&input!==ev.target)input.value=ev.target.value});
+    renderWindowsAdminDashboard();
+  }
+});
+document.addEventListener('change',function(ev){
+  if(isWindowsDesktopAdmin()&&ev.target.id==='windowsCallStatusFilter'){
+    windowsAdminDashboardState.statusFilter=ev.target.value||'all';
+    renderWindowsAdminDashboard();
+  }
+});
+$('windowsNavToggle')?.addEventListener('click',()=>{
+  if(!isWindowsDesktopAdmin())return;
+  const collapsed=$('app').classList.toggle('windows-sidebar-collapsed');
+  $('windowsNavToggle').setAttribute('aria-expanded',String(!collapsed));
+  $('windowsNavToggle').setAttribute('aria-label',collapsed?'Expandir menu':'Recolher menu');
+});
+document.addEventListener('keydown',ev=>{
+  if(isWindowsDesktopAdmin()&&(ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='k'){
+    ev.preventDefault();
+    $('windowsGlobalSearchInput')?.focus();
+  }
+});
 document.addEventListener('pointerdown',()=>{unlockNotificationAudio()},{once:true});
 $('notifyBtn').onclick=()=>{
   if($('notifyPanel').classList.contains('hidden')) $('notifyPanel').classList.remove('hidden');
@@ -444,46 +845,249 @@ $('themeBtn').onclick=()=>{localStorage.setItem('maint_theme',(localStorage.getI
 loadLocalNotifications();
 if($('notificationScope')) $('notificationScope').textContent='As notificações exibidas aqui são filtradas pelo seu perfil.';
 function showError(e,prefix='Erro'){const msg=e?.message||String(e);alert(prefix+': '+msg);console.error(prefix,e)}
-async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).single();if(r.error)throw r.error;profile=r.dat[...]
-async function loadEquipment(){const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error){console.error(r.error);return}equipm[...]
-window.loadAdminUsers=async function loadAdminUsers(){
+async function getProfile(){const r=await sb.from('profiles').select('id,full_name,role,active,organization_id,sector_id').eq('id',session.user.id).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Não foi possível encontrar um perfil de usuário visível no Supabase. Confirme se há uma linha em public.profiles com o ID deste usuário e se as políticas RLS permitem a leitura.');profile=r.data;if(!profile.active)throw new Error('Usuário inativo.')}
+async function loadEquipment(){const prev=$('equipment').value;const r=await sb.from('equipment').select('id,name,code,location,sector_id,active').eq('active',true).order('name');if(r.error)throw new Error('Não foi possível carregar equipamentos: '+r.error.message);equipment=r.data||[];$('equipment').innerHTML='<option value="">Selecione (opcional)</option>'+equipment.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('');if(equipment.some(e=>e.id===prev))$('equipment').value=prev}
+window.loadAdminUsers=async function loadAdminUsers(roleFilterArg){
  if(profile?.role!=='admin'){ $('usersPanel').classList.add('hidden'); return; }
  $('usersPanel').classList.remove('hidden');
  $('usersList').innerHTML='<div class="empty">Carregando usuários...</div>';
  const [pr,sr]=await Promise.all([
-  sb.from('profiles').select('id,full_name,role,active,sector_id,created_at').eq('organization_id',profile.organization_id).order('full_name'),
-  sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+  sb.from('profiles').select('*').eq('organization_id',profile.organization_id).order('full_name'),
+  sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
  ]);
  if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
  const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
- const rows=pr.data||[];
+  const roleFilter=roleFilterArg||$('usersRoleFilter')?.value||'all';
+  const rows=(pr.data||[]).filter(user=>roleFilter==='all'||user.role===roleFilter);
  if(!rows.length){$('usersList').innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return}
  const roleLabel={admin:'👨‍💼 Administrador',mechanic:'🔧 Mecânico',sector:'🏢 Setor'};
- $('usersList').innerHTML=rows.map(u=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||''[...]
+ $('usersList').innerHTML=rows.map(u=>`<div class="ticket ${u.active?'':'inactive'}" data-testid="row-user-${u.id}"><div class="tickettop"><div><h3>${escapeHtml(u.full_name||'Sem nome')}</h3><div class="small">${roleLabel[u.role]||escapeHtml(u.role||'')}</div></div><div class="tags"><span class="tag ${u.active?'s-completed':'s-cancelled'}">${u.active?'Ativo':'Inativo'}</span></div></div><div class="small" style="margin-top:8px">${u.login?'Login: '+escapeHtml(u.login)+' · ':''}${u.role==='sector'?'Setor: '+escapeHtml(sectors[u.sector_id]||'Não vinculado'):u.role==='mechanic'?'Atuação: Manutenção':'Acesso total da organização'}</div>${u.id===session?.user?.id?'<div class="small" style="margin-top:8px">Seu usuário</div>':adminRowActions('users',u.id,u.full_name,u.active)}</div>`).join('');
 }
 
 async function loadAdminOverview(){
  if(profile?.role!=='admin'){ $('adminPanel').classList.add('hidden'); return; }
  $('adminPanel').classList.remove('hidden');
  const org=profile.organization_id;
- const [u,s,e,w]=await Promise.all([
+  const windowsAdmin=isWindowsDesktopAdmin(),generation=windowsDashboardGeneration;
+   if(windowsAdmin){windowsAdminDashboardState.equipmentLoaded=false;windowsAdminDashboardState.equipmentError=false;renderWindowsAdminDashboard()}
+  const [u,s,e,w,m,sectorRows,eInactive,eTotal]=await Promise.all([
   sb.from('profiles').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
-  sb.from('sectors').select('id',{count:'exact',head:true}).eq('organization_id',org),
+  sb.from('sectors').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
   sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true),
-  sb.from('work_orders').select('id',{count:'exact',head:true}).eq('organization_id',org)
+   sb.from('work_orders').select('id',{count:'exact',head:true}).eq('organization_id',org),
+   windowsAdmin?sb.from('profiles').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',true).eq('role','mechanic'):Promise.resolve({count:null,error:null}),
+    windowsAdmin?sb.from('sectors').select('id,name').eq('organization_id',org).order('name'):Promise.resolve({data:[],error:null}),
+    windowsAdmin?sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org).eq('active',false):Promise.resolve({count:null,error:null}),
+    windowsAdmin?sb.from('equipment').select('id',{count:'exact',head:true}).eq('organization_id',org):Promise.resolve({count:null,error:null})
  ]);
  $('aUsers').textContent=u.error?'—':(u.count||0);
  $('aSectors').textContent=s.error?'—':(s.count||0);
  $('aEquipment').textContent=e.error?'—':(e.count||0);
  $('aOrders').textContent=w.error?'—':(w.count||0);
+  if(windowsAdmin&&isWindowsDesktopAdmin()&&generation===windowsDashboardGeneration&&profile.organization_id===org){
+    windowsAdminDashboardState.equipmentCount=e.error?null:(e.count||0);
+    windowsAdminDashboardState.mechanicsCount=m.error?null:(m.count||0);
+     windowsAdminDashboardState.equipmentInactiveCount=eInactive.error?null:(eInactive.count||0);
+     windowsAdminDashboardState.equipmentTotalCount=eTotal.error?null:(eTotal.count||0);
+     windowsAdminDashboardState.equipmentError=Boolean(e.error||eInactive.error||eTotal.error);
+     windowsAdminDashboardState.equipmentLoaded=true;
+    windowsAdminDashboardState.sectors=sectorRows.data||[];
+    windowsAdminDashboardState.sectorError=Boolean(sectorRows.error);
+    renderWindowsAdminDashboard();
+  }
+}
+function renderWindowsDashboardBars(containerId,items,colorClass,emptyMessage){
+  const container=$(containerId);
+  if(!container)return;
+  if(!items.length){container.innerHTML='<div class="windows-data-state">'+escapeHtml(emptyMessage)+'</div>';return}
+  const max=Math.max(1,...items.map(item=>item.count));
+  container.innerHTML=items.map(item=>{
+    const width=Math.max(0,Math.min(100,(item.count/max)*100));
+    return `<div class="windows-bar-row"><div class="windows-bar-label"><span>${escapeHtml(item.label)}</span><strong>${item.count}</strong></div><div class="windows-bar-track"><span class="windows-bar-fill ${item.colorClass||colorClass||''}" style="width:${width}%"></span></div></div>`;
+  }).join('');
+}
+function normalizeWindowsSearch(value=''){
+  return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
+}
+function renderWindowsDonutChart(donutId,totalId,legendId,items,unit,emptyMessage){
+  const setValue=(id,value)=>{const element=$(id);if(element)element.textContent=String(value)};
+  const donut=$(donutId),legend=$(legendId),total=items.reduce((sum,item)=>sum+(Number(item.count)||0),0);
+  setValue(totalId,total);
+  if(donut){
+    let cursor=0;
+    const stops=items.filter(item=>item.count>0).map(item=>{
+      const start=total?cursor/total*100:0;
+      cursor+=item.count;
+      const end=total?cursor/total*100:100;
+      return `${item.color} ${start}% ${end}%`;
+    });
+    donut.style.background=total?`conic-gradient(${stops.join(',')})`:'conic-gradient(var(--line) 0 100%)';
+    const unitLabel=donut.querySelector('span');
+    if(unitLabel)unitLabel.textContent=unit;
+  }
+  if(legend)legend.innerHTML=total?items.map(item=>`<div class="windows-legend-row"><span class="windows-legend-dot" style="background:${item.color}"></span><span>${escapeHtml(item.label)}</span><strong>${item.count}</strong></div>`).join(''):`<div class="windows-data-state">${escapeHtml(emptyMessage)}</div>`;
+}
+function renderWindowsPriorityChart(items,emptyMessage){
+  const container=$('windowsPriorityChart');
+  if(!container)return;
+  if(!items.length){container.innerHTML=`<div class="windows-data-state">${escapeHtml(emptyMessage)}</div>`;return}
+  const max=Math.max(1,...items.map(item=>item.count));
+  container.innerHTML=`<div class="windows-priority-bars">${items.map(item=>{
+    const height=item.count?Math.max(6,Math.round(item.count/max*100)):0;
+    return `<div class="windows-priority-column"><strong>${item.count}</strong><div class="windows-priority-track"><span class="windows-priority-fill ${item.colorClass}" style="height:${height}%"></span></div><span class="windows-priority-label">${escapeHtml(item.label)}</span></div>`;
+  }).join('')}</div>`;
+}
+function renderWindowsAdminDashboard(){
+  if(!isWindowsDesktopAdmin())return;
+  const data=windowsAdminDashboardState,orders=data.orders||[];
+  const setValue=(id,value)=>{const element=$(id);if(element)element.textContent=String(value)};
+  if(!data.equipmentLoaded){
+    setValue('windowsMetricEquipment','—');
+    setValue('windowsMetricMechanics','—');
+  }else if(data.equipmentError){
+    setValue('windowsMetricEquipment','—');
+    setValue('windowsMetricMechanics',data.mechanicsCount??'—');
+    $('windowsEquipmentLegend').innerHTML='<div class="windows-data-state">Não foi possível carregar os equipamentos.</div>';
+    $('windowsEquipmentDonut').style.background='conic-gradient(var(--line) 0 100%)';
+    setValue('windowsEquipmentTotal','—');
+  }else{
+    setValue('windowsMetricEquipment',data.equipmentTotalCount??'—');
+    setValue('windowsMetricMechanics',data.mechanicsCount??'—');
+    const active=Number(data.equipmentCount)||0,inactive=Number(data.equipmentInactiveCount)||0,total=Number(data.equipmentTotalCount)||0;
+    const unclassified=Math.max(0,total-active-inactive);
+    const equipmentItems=[{label:'Ativos',count:active,color:'#16a34a'},{label:'Inativos',count:inactive,color:'#dc2626'}];
+    if(unclassified)equipmentItems.push({label:'Sem situação',count:unclassified,color:'#64748b'});
+    renderWindowsDonutChart('windowsEquipmentDonut','windowsEquipmentTotal','windowsEquipmentLegend',equipmentItems,'equipamentos','Nenhum equipamento cadastrado.');
+  }
+  if(data.ordersError){
+    ['windowsMetricOpen','windowsMetricUrgent','windowsMetricProgress','windowsMetricCompleted30d','windowsStatusTotal'].forEach(id=>setValue(id,'—'));
+    ['windowsStatusLegend','windowsPriorityChart','windowsSectorChart','windowsPreventiveList'].forEach(id=>{
+      const element=$(id);if(element)element.innerHTML='<div class="windows-data-state">Não foi possível carregar os chamados.</div>';
+    });
+    $('windowsStatusDonut').style.background='conic-gradient(var(--line) 0 100%)';
+    if($('windowsRecentCalls'))$('windowsRecentCalls').innerHTML='<tr><td colspan="9" class="windows-data-state">Não foi possível carregar os chamados.</td></tr>';
+    setValue('windowsAverageTime','—');
+    if($('windowsActivityList'))$('windowsActivityList').innerHTML='<div class="windows-data-state">Não foi possível carregar as atividades.</div>';
+    return;
+  }
+  if(!data.ordersLoaded)return;
+  const openCount=orders.filter(row=>row.status==='open').length;
+  const progressCount=orders.filter(row=>row.status==='accepted'||row.status==='in_progress').length;
+  const recentCutoff=Date.now()-30*24*60*60*1000;
+  const completedRecent=orders.filter(row=>row.status==='completed'&&row.completed_at&&new Date(row.completed_at).getTime()>=recentCutoff).length;
+  const urgentCount=orders.filter(row=>row.priority==='urgent'&&row.status!=='completed'&&row.status!=='cancelled').length;
+  setValue('windowsMetricOpen',openCount);
+  setValue('windowsMetricUrgent',`${urgentCount} urgentes`);
+  setValue('windowsMetricProgress',progressCount);
+  setValue('windowsMetricCompleted30d',completedRecent);
+
+  const statusCounts=windowsDashboardStatuses.map(status=>({...status,count:orders.filter(row=>row.status===status.key).length}));
+  renderWindowsDonutChart('windowsStatusDonut','windowsStatusTotal','windowsStatusLegend',statusCounts,'chamados','Nenhum chamado encontrado.');
+
+  const activeOrders=orders.filter(row=>row.status!=='completed'&&row.status!=='cancelled');
+  const priorityItems=[['urgent','Urgente','priority-urgent'],['high','Alta','priority-high'],['normal','Normal','priority-normal'],['low','Baixa','priority-low']].map(([key,label,colorClass])=>({key,label,colorClass,count:activeOrders.filter(row=>row.priority===key).length}));
+  renderWindowsPriorityChart('windowsPriorityChart',activeOrders.length?priorityItems:[],'Nenhum chamado ativo encontrado.');
+
+  if(data.sectorError)$('windowsSectorChart').innerHTML='<div class="windows-data-state">Não foi possível carregar os setores.</div>';
+  else{
+    const sectorNames=new Map((data.sectors||[]).map(sector=>[sector.id,sector.name]));
+    const sectorCounts=new Map();
+    activeOrders.forEach(row=>{
+      const key=row.sector_id||'__no_sector__';
+      const name=!row.sector_id?'Sem setor':(sectorNames.get(row.sector_id)||'Setor não disponível');
+      const current=sectorCounts.get(key)||{label:name,count:0};
+      current.count++;
+      sectorCounts.set(key,current);
+    });
+    const sectorItems=[...sectorCounts.values()].sort((a,b)=>b.count-a.count||a.label.localeCompare(b.label,'pt-BR')).slice(0,6);
+    renderWindowsDashboardBars('windowsSectorChart',sectorItems,'sector-fill',activeOrders.length?'Nenhum setor associado aos chamados.':'Nenhum chamado ativo encontrado.');
+  }
+
+  const sectorNames=new Map((data.sectors||[]).map(sector=>[sector.id,sector.name]));
+  const query=normalizeWindowsSearch(data.searchText);
+  const statusFilter=data.statusFilter||'all';
+  const filteredOrders=orders.filter(row=>{
+    if(statusFilter!=='all'&&row.status!==statusFilter)return false;
+    if(!query)return true;
+    const sectorName=row.sector_id?(sectorNames.get(row.sector_id)||'Setor não disponível'):'Sem setor';
+    const text=[row.id,row.title,row.description,row.equipment?.name,row.equipment?.code,sectorName,row.mechanic?.full_name,labels[row.status],plabels[row.priority]].join(' ');
+    return normalizeWindowsSearch(text).includes(query);
+  });
+  const recentRows=[...filteredOrders].sort((a,b)=>new Date(b.created_at||b.opened_at||0)-new Date(a.created_at||a.opened_at||0)).slice(0,5);
+  const recentBody=$('windowsRecentCalls');
+  if(recentBody)recentBody.innerHTML=recentRows.length?recentRows.map(row=>{
+    const statusClass=({open:'s-open',accepted:'s-accepted',in_progress:'s-in_progress',waiting_parts:'s-waiting_parts',completed:'s-completed',cancelled:'s-cancelled'})[row.status]||'';
+    const priorityClass=({urgent:'p-urgent',high:'p-high',normal:'p-normal',low:'p-low'})[row.priority]||'';
+    const sectorName=row.sector_id?(sectorNames.get(row.sector_id)||'Setor não disponível'):'Sem setor';
+    const equipment=row.equipment?.name||'Sem equipamento';
+    const description=row.description||'Sem descrição';
+    const shortId=String(row.id||'').slice(0,6).toLocaleUpperCase('pt-BR');
+    return `<tr><td><span class="windows-call-id">#${escapeHtml(shortId||'—')}</span></td><td>${escapeHtml(fmt(row.opened_at||row.created_at)||'—')}</td><td><span class="windows-cell-strong">${escapeHtml(equipment)}</span>${row.equipment?.code?`<small>${escapeHtml(row.equipment.code)}</small>`:''}</td><td>${escapeHtml(sectorName)}</td><td><span class="windows-call-title">${escapeHtml(row.title||'Chamado sem título')}</span><span class="windows-call-subtitle">${escapeHtml(description)}</span></td><td><span class="tag ${priorityClass}">${escapeHtml(plabels[row.priority]||row.priority||'—')}</span></td><td><span class="tag ${statusClass}">${escapeHtml(labels[row.status]||row.status||'—')}</span></td><td>${escapeHtml(row.mechanic?.full_name||'Não atribuído')}</td><td><button class="windows-open-call" type="button" title="Ver detalhes" aria-label="Ver detalhes do chamado ${escapeHtml(shortId)}" data-windows-detail="${escapeHtml(row.id)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></svg></button></td></tr>`;
+  }).join(''):'<tr><td colspan="9" class="windows-data-state">'+(query?'Nenhum chamado corresponde à pesquisa.':'Nenhum chamado encontrado.')+'</td></tr>';
+
+  const completedDurations=orders.filter(row=>row.status==='completed'&&row.started_at&&row.completed_at).map(row=>(new Date(row.completed_at).getTime()-new Date(row.started_at).getTime())/60000).filter(value=>Number.isFinite(value)&&value>=0);
+  if(completedDurations.length){
+    const average=completedDurations.reduce((sum,value)=>sum+value,0)/completedDurations.length;
+    setValue('windowsAverageTime',average<60?`${Math.round(average)} min`:`${(average/60).toLocaleString('pt-BR',{maximumFractionDigits:1})} h`);
+  }else setValue('windowsAverageTime','—');
+
+  const today=new Date(),todayString=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const preventiveRows=orders.filter(row=>row.scheduled_for&&row.scheduled_for>=todayString&&String(row.title||'').toLocaleLowerCase('pt-BR').startsWith('manutenção preventiva')).sort((a,b)=>String(a.scheduled_for).localeCompare(String(b.scheduled_for))).slice(0,3);
+  const preventiveList=$('windowsPreventiveList');
+  if(preventiveList)preventiveList.innerHTML=preventiveRows.length?preventiveRows.map(row=>`<div class="windows-preventive-item"><strong>${escapeHtml(row.title||'Manutenção preventiva')}</strong><span>${escapeHtml(row.equipment?.name||'Sem equipamento')} · ${escapeHtml(fmtPlannedDate(row.scheduled_for))}</span></div>`).join(''):'<div class="windows-data-state">Nenhuma preventiva futura registrada.</div>';
+
+  const activityList=$('windowsActivityList');
+  if(activityList){
+    if(data.activityError)activityList.innerHTML='<div class="windows-data-state">Não foi possível carregar as atividades.</div>';
+    else{
+      const orderNames=new Map(orders.map(row=>[row.id,row.title||'Chamado']));
+      activityList.innerHTML=data.activity.length?data.activity.slice(0,4).map(event=>`<div class="windows-activity-item"><strong>${escapeHtml(event.description||event.event_type||'Atualização de chamado')}</strong><span>${escapeHtml(orderNames.get(event.work_order_id)||'Chamado')}</span><time>${escapeHtml(fmt(event.created_at)||'—')}</time></div>`).join(''):'<div class="windows-data-state">Nenhuma atividade recente registrada.</div>';
+    }
+  }
+}
+async function loadWindowsAdminActivities(orders){
+  if(!isWindowsDesktopAdmin())return;
+  const generation=windowsDashboardGeneration,org=profile.organization_id;
+  const ids=(orders||[]).slice(0,30).map(row=>row.id).filter(Boolean);
+  if(!ids.length){
+    windowsAdminDashboardState.activity=[];
+    windowsAdminDashboardState.activityError='';
+    renderWindowsAdminDashboard();
+    return;
+  }
+  try{
+    const result=await sb.from('work_order_events').select('work_order_id,event_type,description,created_at').in('work_order_id',ids).order('created_at',{ascending:false}).limit(8);
+    if(!isWindowsDesktopAdmin()||generation!==windowsDashboardGeneration||profile.organization_id!==org)return;
+    windowsAdminDashboardState.activity=result.error?[]:(result.data||[]);
+    windowsAdminDashboardState.activityError=Boolean(result.error);
+  }catch(_){
+    if(!isWindowsDesktopAdmin()||generation!==windowsDashboardGeneration||profile.organization_id!==org)return;
+    windowsAdminDashboardState.activity=[];
+    windowsAdminDashboardState.activityError=true;
+  }
+  renderWindowsAdminDashboard();
 }
 async function loadTickets(){
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,requester_id,equipment(name,co[...]
-  if(r.error){$('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return}
+  const windowsAdmin=isWindowsDesktopAdmin(),generation=windowsDashboardGeneration;
+  if(windowsAdmin){windowsAdminDashboardState.ordersLoaded=false;windowsAdminDashboardState.ordersError='';renderWindowsAdminDashboard()}
+  let query=sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,sector_id,mechanic_id,requester_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').order('created_at',{ascending:false});
+  if(windowsAdmin)query=query.eq('organization_id',profile.organization_id);
+  const r=await query;
+  if(r.error){
+    if(windowsAdmin&&isWindowsDesktopAdmin()&&generation===windowsDashboardGeneration){windowsAdminDashboardState.ordersLoaded=true;windowsAdminDashboardState.ordersError='Não foi possível carregar chamados.';renderWindowsAdminDashboard()}
+    $('tickets').innerHTML='<div class="empty">Não foi possível carregar os chamados: '+escapeHtml(r.error.message)+'</div>';return
+  }
   const allRows=r.data||[];
+  if(windowsAdmin&&isWindowsDesktopAdmin()&&generation===windowsDashboardGeneration){
+    windowsAdminDashboardState.orders=allRows;
+    windowsAdminDashboardState.ordersLoaded=true;
+    windowsAdminDashboardState.ordersError='';
+    renderWindowsAdminDashboard();
+    loadWindowsAdminActivities(allRows);
+  }
   let open=0,urgent=0,prog=0,parts=0,done=0;
-  allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.[...]
-  let rows=allRows; const f=window.ticketFilter||'open'; if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'[...]
+  allRows.forEach(x=>{if(x.status==='open')open++;if(x.priority==='urgent'&&x.status!=='completed'&&x.status!=='cancelled')urgent++;if(x.status==='in_progress'||x.status==='accepted')prog++;if(x.status==='waiting_parts')parts++;if(x.status==='completed')done++});
+   let rows=allRows; const f=window.ticketFilter||'open'; if(f==='all') rows=allRows; else if(f==='urgent') rows=allRows.filter(x=>x.priority==='urgent'); else if(f==='in_progress') rows=allRows.filter(x=>x.status==='in_progress'||x.status==='accepted'); else rows=allRows.filter(x=>x.status===f);
   $('kOpen').textContent=open;$('kUrgent').textContent=urgent;$('kProgress').textContent=prog;$('kParts').textContent=parts;$('kDone').textContent=done;
   if(!rows.length){$('tickets').innerHTML='<div class="empty">Nenhum chamado encontrado.</div>';return}
   $('tickets').innerHTML=rows.map(x=>{
@@ -491,17 +1095,18 @@ async function loadTickets(){
     let actions='';
     if(profile?.role==='mechanic' && x.status==='open') actions+=`<button class="btn primary" onclick="acceptTicket('${x.id}')">Aceitar chamado</button>`;
     if(mine&&x.status==='accepted') actions+=`<button class="btn primary" onclick="startTicket('${x.id}')">Iniciar atendimento</button>`;
-    if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')[...]
+    if(mine&&x.status==='in_progress') actions+=`<button class="btn secondary" onclick="partTicket('${x.id}')">Solicitar peça</button><button class="btn primary" onclick="reportTicket('${x.id}')">Registrar serviço</button>`;
     if(mine&&x.status==='waiting_parts') actions+=`<button class="btn primary" onclick="resumeTicket('${x.id}')">Retomar atendimento</button>`;
     actions+=`<button class="btn secondary" onclick="details('${x.id}')">Ver detalhes</button>`;
-    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?[...]
+    return `<article class="ticket"><div class="tickettop"><div><h3>${escapeHtml(x.title||'Sem título')}</h3><div class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</div></div><div class="tags"><span class="tag s-${x.status}">${labels[x.status]||x.status}</span><span class="tag p-${x.priority}">${plabels[x.priority]||x.priority}</span></div></div><div class="desc">${escapeHtml(x.description||'Sem descrição')}</div>${x.scheduled_for?`<div class="small"><b>Data programada:</b> ${escapeHtml(fmtPlannedDate(x.scheduled_for))}</div>`:''}<div class="small">Aberto: ${fmt(x.opened_at||x.created_at)} ${x.mechanic?.full_name?'· Mecânico: '+escapeHtml(x.mechanic.full_name):''}</div><div class="actions">${actions}</div></article>`;
   }).join('')
 }
-async function updateStatus(id,status,extra={}){
+async function updateStatus(id,status,extra={},shouldNotify=true){
   try{
     const r=await sb.from('work_orders').update({status,...extra}).eq('id',id).select('id,status,mechanic_id').single();
     if(r.error)throw r.error;
     if(!r.data)throw new Error('Nenhum chamado foi alterado. Verifique as permissões do usuário.');
+     if(shouldNotify) await triggerPush(id,'updated');
     await loadTickets();return true;
   }catch(e){showError(e,'Não foi possível alterar o chamado');return false}
 }
@@ -511,14 +1116,20 @@ window.resumeTicket=async id=>{if(!confirm('Retomar o atendimento?'))return;awai
 window.partTicket=async id=>{
   const part=prompt('Nome da peça necessária:');if(!part)return;
   const qty=parseInt(prompt('Quantidade:','1')||'1',10);if(!Number.isFinite(qty)||qty<1)return alert('Quantidade inválida.');
-  try{const r=await sb.from('part_requests').insert({organization_id:profile.organization_id,work_order_id:id,requested_by:session.user.id,part_name:part.trim(),quantity:qty}).select('id,status')[...]
+  try{
+    const r=await sb.from('part_requests').insert({organization_id:profile.organization_id,work_order_id:id,requested_by:session.user.id,part_name:part.trim(),quantity:qty}).select('id,status').single();
+    if(r.error)throw r.error;
+    if(!await updateStatus(id,'waiting_parts',{},false))return;
+    await triggerPush(id,'part_requested',{part_request_id:r.data.id});
+    alert('Peça solicitada com sucesso. O chamado foi movido para Aguardando peça.');
+  }catch(e){showError(e,'Não foi possível solicitar a peça')}
 };
-function equipmentOptions(selected=''){return '<option value="">Selecione um equipamento</option>'+equipment.map(e=>`<option value="${e.id}" ${e.id===selected?'selected':''}>${escapeHtml(e.name)}[...]
+function equipmentOptions(selected=''){return '<option value="">Selecione um equipamento</option>'+equipment.map(e=>`<option value="${e.id}" ${e.id===selected?'selected':''}>${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}
 window.reportTicket=async id=>{
   try{
     const woR=await sb.from('work_orders').select('id,equipment_id,title').eq('id',id).single();if(woR.error)throw woR.error;
     let eqId=woR.data.equipment_id||'';
-    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEqu[...]
+    $('modalContent').innerHTML=`<h2>🛠️ Registrar serviço</h2><p class="small">${escapeHtml(woR.data.title||'Chamado')}</p><div class="field"><label>Equipamento</label><select id="reportEquipment">${equipmentOptions(eqId)}</select></div><div class="field"><label>Diagnóstico</label><textarea id="reportDiagnosis" placeholder="O que foi encontrado?"></textarea></div><div class="field"><label>Serviço realizado</label><textarea id="reportWork" placeholder="O que foi feito?"></textarea></div><div class="field"><label>Peças utilizadas</label><input id="reportParts" placeholder="Nenhuma"></div><div class="actions"><button class="btn primary" id="confirmReport">Registrar serviço</button><button class="btn secondary" id="cancelReport">Cancelar</button></div>`;
     $('modal').classList.remove('hidden');
     $('cancelReport').onclick=()=>$('modal').classList.add('hidden');
     $('confirmReport').onclick=async()=>{
@@ -527,15 +1138,15 @@ window.reportTicket=async id=>{
       const btn=$('confirmReport');btn.disabled=true;btn.textContent='Salvando...';
       try{
         if(!woR.data.equipment_id){const ur=await sb.from('work_orders').update({equipment_id:eq}).eq('id',id).select('id').single();if(ur.error)throw ur.error}
-        const r=await sb.from('maintenance_reports').insert({organization_id:profile.organization_id,work_order_id:id,mechanic_id:session.user.id,equipment_id:eq,diagnosis,work_performed:work,par[...]
-        $('modal').classList.add('hidden');await loadTickets();if(confirm('Serviço registrado. Finalizar o chamado agora?')){await updateStatus(id,'completed')}else{alert('Serviço registrado co[...]
+        const r=await sb.from('maintenance_reports').insert({organization_id:profile.organization_id,work_order_id:id,mechanic_id:session.user.id,equipment_id:eq,diagnosis,work_performed:work,parts_used:parts}).select('id').single();if(r.error)throw r.error;
+        $('modal').classList.add('hidden');await loadTickets();if(confirm('Serviço registrado. Finalizar o chamado agora?')){await updateStatus(id,'completed')}else{alert('Serviço registrado com sucesso.')}
       }catch(e){showError(e,'Não foi possível registrar o serviço')}finally{if($('confirmReport')){$('confirmReport').disabled=false;$('confirmReport').textContent='Registrar serviço'}}
     };
   }catch(e){showError(e,'Não foi possível abrir o registro de serviço')}
 };
 window.details=async id=>{
  try{
-  const r=await sb.from('work_orders').select('id,title,description,priority,status,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:[...]
+  const r=await sb.from('work_orders').select('id,title,description,priority,status,scheduled_for,opened_at,started_at,completed_at,created_at,photo_path,equipment_id,mechanic_id,equipment(name,code),mechanic:profiles!work_orders_mechanic_id_fkey(full_name)').eq('id',id).single();if(r.error)throw r.error;const x=r.data;if(!x)throw new Error('Chamado não encontrado.');
   const [rep,parts,photos,events]=await Promise.all([
    sb.from('maintenance_reports').select('diagnosis,work_performed,parts_used,created_at').eq('work_order_id',id).order('created_at',{ascending:false}).limit(1),
    sb.from('part_requests').select('part_name,quantity,status,requested_at').eq('work_order_id',id).order('requested_at',{ascending:true}),
@@ -544,14 +1155,15 @@ window.details=async id=>{
   ]);
   if(rep.error)throw rep.error;if(parts.error)throw parts.error;if(photos.error)throw photos.error;if(events.error)throw events.error;
   const mr=rep.data?.[0]||{};const partText=(parts.data||[]).map(p=>`${p.part_name} (qtd: ${p.quantity}) — ${labels[p.status]||p.status}`).join(', ')||'Nenhuma';
-  let time='Não iniciado';if(x.started_at){const end=x.completed_at?new Date(x.completed_at):new Date();const mins=Math.max(0,Math.floor((end-new Date(x.started_at))/60000));time=`${Math.floor(m[...]
-  let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" sr[...]
-  let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<di[...]
+  let time='Não iniciado';if(x.started_at){const end=x.completed_at?new Date(x.completed_at):new Date();const mins=Math.max(0,Math.floor((end-new Date(x.started_at))/60000));time=`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')}`}
+  let problemPhoto='';if(x.photo_path){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(x.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)problemPhoto=`<img class="photo" src="${sr.data.signedUrl}" alt="Foto do problema">`}
+  let extraPhotos='';for(const ph of (photos.data||[])){const sr=await sb.storage.from('maintenance-photos').createSignedUrl(ph.photo_path,3600);if(!sr.error&&sr.data?.signedUrl)extraPhotos+=`<div class="historyitem"><b>${escapeHtml(ph.photo_type||'Foto')}:</b> ${escapeHtml(ph.description||'')}<img class="photo" src="${sr.data.signedUrl}" alt="Foto da manutenção"></div>`}
   const timeline=(events.data||[]).map(e=>`<div class="historyitem"><b>${fmt(e.created_at)}</b> — ${escapeHtml(e.description||e.event_type||'Evento')}</div>`).join('');
-  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.cod[...]
+  $('modalContent').innerHTML=`<h2>${escapeHtml(x.title||'Detalhes')}</h2><p class="small">${escapeHtml(x.equipment?.name||'Sem equipamento')} ${x.equipment?.code?'· '+escapeHtml(x.equipment.code):''}</p><div class="history"><div class="historyitem"><b>Status:</b> ${labels[x.status]||x.status}</div><div class="historyitem"><b>Prioridade:</b> ${plabels[x.priority]||x.priority}</div><div class="historyitem"><b>Aberto:</b> ${fmt(x.opened_at||x.created_at)}</div><div class="historyitem"><b>Início:</b> ${fmt(x.started_at)||'Não iniciado'}</div><div class="historyitem"><b>Conclusão:</b> ${fmt(x.completed_at)||'Não concluído'}</div><div class="historyitem"><b>Tempo de manutenção:</b> ${time}</div><div class="historyitem"><b>Mecânico:</b> ${escapeHtml(x.mechanic?.full_name||'Não definido')}</div><div class="historyitem"><b>Descrição:</b> ${escapeHtml(x.description||'Sem descrição')}</div><div class="historyitem"><b>Diagnóstico:</b> ${escapeHtml(mr.diagnosis||'Não registrado')}</div><div class="historyitem"><b>Serviço realizado:</b> ${escapeHtml(mr.work_performed||'Não registrado')}</div><div class="historyitem"><b>Peças utilizadas:</b> ${escapeHtml(mr.parts_used||'Nenhuma')}</div><div class="historyitem"><b>Solicitações de peças:</b> ${escapeHtml(partText)}</div></div>${problemPhoto?`<h3>📷 Foto do problema</h3>${problemPhoto}`:''}${extraPhotos?`<h3>📷 Fotos da manutenção</h3>${extraPhotos}`:''}${timeline?`<h3>🕒 Histórico do chamado</h3><div class="history">${timeline}</div>`:''}`;$('modal').classList.remove('hidden')
+  if(x.scheduled_for){const planned=document.createElement('div');planned.className='notice';planned.textContent='Data programada: '+fmtPlannedDate(x.scheduled_for);$('modalContent').prepend(planned)}
  }catch(e){showError(e,'Não foi possível abrir os detalhes')}
 };
-$('closeModal').onclick=()=>$('modal').classList.add('hidden');$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
+$('closeModal').onclick=()=>{$('modal').classList.add('hidden');currentAdminModal=null};$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')};
 $('newBtn').onclick=()=>{
   $('newCard').classList.remove('hidden');
   $('newCard').scrollIntoView({behavior:'smooth',block:'start'});
@@ -573,18 +1185,19 @@ $('refreshBtn').onclick=async()=>{
   u.searchParams.set('v',Date.now().toString());
   location.replace(u.toString());
 };
-$('closeUsersBtn').onclick=()=>$('usersPanel').classList.add('hidden');
+$('closeUsersBtn').onclick=()=>{$('usersPanel').classList.add('hidden');if(isWindowsDesktopAdmin())setWindowsAdminView('dashboard')};
 $('saveBtn').onclick=async()=>{
- const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('save[...]
+ const title=$('title').value.trim(),desc=$('description').value.trim();if(!title||!desc)return notice($('saveMsg'),'Preencha título e descrição.');if(!profile?.sector_id)return notice($('saveMsg'),'Seu perfil não possui setor vinculado.');
  $('saveBtn').disabled=true;$('saveBtn').textContent='Salvando...';
- try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`[...]
- const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,[...]
- notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').valu[...]
+ try{let photo_path=null;const f=$('photo').files[0];if(f){const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`${profile.organization_id}/${session.user.id}/${Date.now()}.${ext}`;const up=await sb.storage.from('maintenance-photos').upload(path,f,{contentType:f.type,upsert:false});if(up.error)throw up.error;photo_path=path}
+ const r=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:profile.sector_id,requester_id:session.user.id,title,description:desc,priority:$('priority').value,status:'open',equipment_id:$('equipment').value||null,photo_path}).select('id').single();if(r.error)throw r.error;
+ await triggerPush(r.data.id,'created');
+ notice($('saveMsg'),'Chamado registrado com sucesso!',true);$('title').value='';$('description').value='';$('photo').value='';$('cameraPhoto').value='';$('equipment').value='';$('priority').value='normal';$('photoName').textContent='';$('newCard').classList.add('hidden');await loadTickets()
  }catch(e){notice($('saveMsg'),'Erro: '+(e?.message||e))}finally{$('saveBtn').disabled=false;$('saveBtn').textContent='Registrar chamado'}
 };
 
-$('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Digite o e-mail primeiro.');const r=await sb.auth.resetPasswordForEmail(email,{redirect[...]
-$('logoutBtn').onclick=async()=>{await sb.auth.signOut();session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
+$('forgotBtn').onclick=async()=>{const email=$('email').value.trim();if(!email)return notice($('loginMsg'),'Se você entra com usuário, peça ao administrador para redefinir sua senha. Se tem e-mail cadastrado, digite-o acima e toque novamente.');if(!email.includes('@'))return notice($('loginMsg'),'Usuários sem e-mail devem pedir ao administrador uma nova senha temporária.');const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(r.error)return notice($('loginMsg'),r.error.message);notice($('loginMsg'),'E-mail de redefinição enviado.',true)};
+$('logoutBtn').onclick=async()=>{await window.__maintenanceLock('',true)};
 function applyTicketFilter(status){
   window.ticketFilter=status||'open';
   document.querySelectorAll('.ticket-filter').forEach(b=>b.classList.toggle('active',b.dataset.status===(window.ticketFilter||'open')));
@@ -592,16 +1205,18 @@ function applyTicketFilter(status){
 }
 async function showApp(){
   const s=await sb.auth.getSession();
-  if(s.error) throw s.error;
   session=s.data.session;
-  if(!session){$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
+  if(!session){setWindowsAdminMode(false);$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
   try{
+    const access=await waitAccessModule();
+    if(!await access.ensureReady()){setWindowsAdminMode(false);return}
     await getProfile();
     if(!['admin','mechanic','sector'].includes(profile.role))throw new Error('Perfil de usuário inválido.');
+    setWindowsAdminMode(isWindowsDesktopAdmin());
     $('login').classList.add('hidden');
     $('app').classList.remove('hidden');
     $('hello').textContent='Olá, '+(profile.full_name||'usuário')+'!';
-    const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profi[...]
+    const info={admin:['👨‍💼','Administrador','Visão geral da organização'],mechanic:['🔧','Mecânico','Painel de manutenção'],sector:['🏢','Setor','Chamados do seu setor']}[profile.role];
     $('profile').textContent=info[0]+' '+info[1]+' · '+info[2];
     $('roleNotice').textContent='';
     $('roleNotice').className='notice hidden';
@@ -612,7 +1227,7 @@ async function showApp(){
       $('ticketsTitle').textContent='📋 Todos os chamados';
       const sc=$('shortcutsCard');
       if(sc)sc.classList.remove('hidden');
-      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sect[...]
+      $('shortcuts').innerHTML='<button class="btn secondary full" id="usersShortcut" type="button" data-action="users">👥 Usuários e perfis</button><button class="btn secondary full" id="sectorsShortcut" type="button">🏢 Setores</button><button class="btn secondary full" id="equipmentShortcut" type="button">⚙️ Equipamentos</button><button class="btn secondary full" id="historyShortcut" type="button">📋 Histórico de manutenção</button><button class="btn secondary full" id="partsShortcut" type="button">📦 Peças</button><button class="btn secondary full" id="preventiveShortcut" type="button">🗓️ Manutenção preventiva</button>';
     }else if(profile.role==='mechanic'){
       $('ticketsTitle').textContent='🔧 Chamados para atendimento';
       const shortcuts=$('shortcuts');if(shortcuts)shortcuts.innerHTML='';
@@ -625,35 +1240,82 @@ async function showApp(){
     await loadEquipment();
     await loadTickets();
     await loadAdminOverview();
-    startNotificationPolling()
+     startNotificationPolling();
+     const callId=new URLSearchParams(window.location.search).get('call');
+     if(callId){
+       const cleanUrl=new URL(window.location.href);
+       cleanUrl.searchParams.delete('call');
+       history.replaceState({},'',cleanUrl);
+       await details(callId);
+     }
   }catch(e){
+    setWindowsAdminMode(false);
     $('app').classList.add('hidden');
     $('login').classList.remove('hidden');
-    notice($('loginMsg'),'Erro ao carregar perfil: '+e.message)
+    notice($('loginMsg'),'Erro ao abrir o sistema: '+e.message)
   }
 }
-window.showApp=showApp;
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
 document.getElementById('cameraBtn')?.addEventListener('click',()=>document.getElementById('cameraPhoto')?.click());
 document.getElementById('photo')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){document.getElementById('photoName').textContent='Foto selecionada: '+f.name;}});
-document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files[...]
-sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN')setTimeout(showApp,0)});
-showApp();
-
-$('loginBtn')?.addEventListener('click',()=>window.__loginNow?.());
-$('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.__loginNow?.()});
+document.getElementById('cameraPhoto')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('photo').files=dt.files;document.getElementById('photoName').textContent='Foto da câmera: '+f.name;}});
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v17.js',{scope:'./'}).catch(e=>console.warn('Service Worker:',e)); }
+(async()=>{
+  const loginButton=$('loginBtn');
+  if(loginButton)loginButton.disabled=true;
+  try{
+    const current=await sb.auth.getSession();
+    if(current.error)throw current.error;
+    if(!current.data.session){
+      const accessToken=localStorage.getItem('sb-access-token');
+      const refreshToken=localStorage.getItem('sb-refresh-token');
+      if(accessToken&&refreshToken){
+        const restored=await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+        if(restored.error)throw restored.error;
+      }
+    }
+    localStorage.removeItem('sb-access-token');
+    localStorage.removeItem('sb-refresh-token');
+    await showApp();
+  }catch(e){
+    localStorage.removeItem('sb-access-token');
+    localStorage.removeItem('sb-refresh-token');
+    notice($('loginMsg'),'Não foi possível restaurar a sessão: '+(e?.message||e));
+  }finally{
+    if(loginButton)loginButton.disabled=false;
+  }
+})();
 
 async function openNewUserPanel(){
   if(profile?.role!=='admin') return;
   const panel=document.getElementById('newUserPanel');
   if(!panel) return;
   panel.classList.remove('hidden');
-  const sr=await sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name');
-  const sel=document.getElementById('newUserSector');
-  if(sr.error){ sel.innerHTML='<option value="">Erro ao carregar setores</option>'; }
-  else { sel.innerHTML=(sr.data||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('') || '<option value="">Nenhum setor cadastrado</option>'; }
+  await refreshNewUserSectors();
   updateNewUserRoleUI();
   panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function refreshNewUserSectors(){
+  const sel=document.getElementById('newUserSector'); if(!sel||profile?.role!=='admin')return;
+  const prev=sel.value;
+  const sr=await sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name');
+  if(sr.error){ sel.innerHTML='<option value="">Erro ao carregar setores</option>'; return; }
+  const act=(sr.data||[]).filter(x=>x.active!==false);
+  sel.innerHTML=act.length?'<option value="">Selecione o setor</option>'+act.map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join(''):'<option value="">Nenhum setor ativo</option>';
+  if(act.some(x=>x.id===prev)) sel.value=prev;
+}
+let newUserMode='password';
+function setNewUserMode(mode){
+  newUserMode=mode==='invite'?'invite':'password';
+  const inv=newUserMode==='invite';
+  $('newUserModePassword')?.classList.toggle('active',!inv);
+  $('newUserModeInvite')?.classList.toggle('active',inv);
+  $('newUserLoginWrap')?.classList.toggle('hidden',inv);
+  $('newUserPasswordWrap')?.classList.toggle('hidden',inv);
+  $('newUserEmailWrap')?.classList.toggle('hidden',!inv);
+  const h=$('newUserModeHint');
+  if(h)h.textContent=inv?'Modo legado: o usuário recebe um convite por e-mail e define a própria senha pelo link.':'O usuário entra com login e senha temporária e será obrigado a trocar a senha no primeiro acesso. E-mail não é necessário.';
+  const b=$('saveNewUserBtn'); if(b) b.textContent=inv?'Enviar convite':'Salvar usuário';
 }
 function updateNewUserRoleUI(){
   const role=document.getElementById('newUserRole')?.value;
@@ -672,14 +1334,104 @@ function showNewUserMessage(msg,ok=false){
 }
 async function submitNewUser(){
   if(profile?.role!=='admin') return;
-  const name=document.getElementById('newUserName').value.trim();
-  const email=document.getElementById('newUserEmail').value.trim();
-  const role=document.getElementById('newUserRole').value;
-  const sector=document.getElementById('newUserSector').value || null;
-  if(!name || !email) return showNewUserMessage('Preencha nome e e-mail.');
+  const inv=newUserMode==='invite';
+  const name=$('newUserName').value.trim();
+  const email=$('newUserEmail').value.trim();
+  const login=$('newUserLogin').value.trim().toLowerCase();
+  const password=$('newUserPassword').value;
+  const role=$('newUserRole').value;
+  const sector=$('newUserSector').value || null;
+  if(!name) return showNewUserMessage('Preencha o nome completo.');
+  if(inv){ if(!email||!email.includes('@')) return showNewUserMessage('Informe um e-mail válido para o convite.'); }
+  else{
+    if(!/^[a-z0-9._-]{3,40}$/.test(login)) return showNewUserMessage('Login inválido: use de 3 a 40 letras, números, ponto, hífen ou sublinhado, sem espaços.');
+    if(password.length<6 || password.length>128) return showNewUserMessage('A senha temporária deve ter entre 6 e 128 caracteres.');
+  }
   if(role==='sector' && !sector) return showNewUserMessage('Selecione o setor.');
-  showNewUserMessage('Formulário pronto. A criação segura da conta de acesso será conectada ao servidor na próxima etapa.');
+  const button=$('saveNewUserBtn');
+  const idle=inv?'Enviar convite':'Salvar usuário';
+  if(button){button.disabled=true;button.textContent=inv?'Enviando convite...':'Criando usuário...'}
+  showNewUserMessage(inv?'Enviando convite de acesso...':'Criando usuário...');
+  try{
+    const body=inv?{full_name:name,email,role,sector_id:role==='sector'?sector:null,mode:'invite'}:{full_name:name,login,password,role,sector_id:role==='sector'?sector:null};
+    const {data,error}=await sb.functions.invoke('admin-create-user',{body});
+    if(error){const f=await window.maintenanceAccess?.readFunctionError?.(error);throw new Error(f?.message||error.message)}
+    if(!data?.ok)throw new Error(data?.error||'O servidor não confirmou a criação do usuário.');
+    $('newUserPassword').value='';
+    if(inv) showNewUserMessage(`Convite enviado para ${email}. O usuário concluirá o acesso pelo e-mail.`,true);
+    else showNewUserMessage(`Usuário criado. Login: ${data.login||login}. Entregue a senha temporária pessoalmente; a troca será obrigatória no primeiro acesso.`,true);
+    $('newUserName').value='';$('newUserEmail').value='';$('newUserLogin').value='';
+    await loadAdminUsers();await loadAdminOverview();
+  }catch(e){
+    showNewUserMessage('Não foi possível criar o usuário: '+(e?.message||e));
+  }finally{
+    if(button){button.disabled=false;button.textContent=idle}
+  }
 }
+
+// ===== EXCLUIR / DESATIVAR / REATIVAR =====
+const entityNames={users:'usuário',sectors:'setor',equipment:'equipamento'};
+let currentAdminModal=null;
+function adminRowActions(entity,id,name,active){
+  const n=escapeHtml(name||'').replace(/"/g,'&quot;');
+  const t=`data-entity="${entity}" data-id="${id}" data-name="${n}"`;
+  return `<div class="rowactions">${active===false?`<button class="btn primary" type="button" data-manage="reactivate" ${t} data-testid="button-reactivate-${entity}-${id}">Reativar</button>`:`<button class="btn secondary" type="button" data-manage="deactivate" ${t} data-testid="button-deactivate-${entity}-${id}">Desativar</button>`}<button class="btn danger" type="button" data-manage="delete" ${t} data-testid="button-delete-${entity}-${id}">Excluir</button></div>`;
+}
+async function refreshAfterAdminMutation(entity){
+  const tasks=[loadAdminOverview(),loadEquipment()];
+  if(!$('usersPanel').classList.contains('hidden')) tasks.push(loadAdminUsers());
+  if(!$('newUserPanel').classList.contains('hidden')) tasks.push(refreshNewUserSectors());
+  await Promise.all(tasks);
+  if(!$('modal').classList.contains('hidden')){
+    if(currentAdminModal==='sectors') await openSectorsPanel();
+    else if(currentAdminModal==='equipment') await openEquipmentPanel();
+  }
+  if(!$('historyPanel').classList.contains('hidden')&&entity==='equipment'){
+    const er=await sb.from('equipment').select('id,name,code,active').eq('organization_id',profile.organization_id).order('name');
+    const sel=$('historyEquipment'),prev=sel.value;
+    sel.innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}${e.active===false?' (inativo)':''}</option>`).join('');
+    sel.value=prev;
+  }
+}
+async function adminManage(entity,id,action,name,btn){
+  if(!adminOnly())return;
+  const label=entityNames[entity]||'registro', who=name?` "${name}"`:'';
+  const q={delete:`Excluir definitivamente o ${label}${who}? Registros com histórico não podem ser excluídos.`,deactivate:`Desativar o ${label}${who}? O histórico será preservado e ele deixará de aparecer em novas seleções.`,reactivate:`Reativar o ${label}${who}?`}[action];
+  if(!confirm(q))return;
+  if(btn)btn.disabled=true;
+  try{
+    await window.maintenanceAccess.manageEntity(entity,id,action);
+    alert({delete:'Excluído com sucesso.',deactivate:'Desativado com sucesso.',reactivate:'Reativado com sucesso.'}[action]);
+  }catch(e){
+    if(action==='delete'&&(e?.status===409||e?.body?.can_deactivate)){
+      if(e?.body?.can_deactivate&&confirm(`Não é possível excluir o ${label}${who}: ${e.message}\n\nDeseja desativá-lo, preservando o histórico?`)){
+        try{await window.maintenanceAccess.manageEntity(entity,id,'deactivate');alert('Desativado com sucesso.')}
+        catch(e2){alert('Não foi possível desativar: '+(e2?.message||e2))}
+      }else if(!e?.body?.can_deactivate) alert('Não foi possível excluir: '+e.message);
+    }else alert('Não foi possível concluir a operação: '+(e?.message||e));
+  }finally{
+    if(btn)btn.disabled=false;
+    try{await refreshAfterAdminMutation(entity)}catch(e){alert('Atualize a página para conferir os cadastros: '+(e?.message||e))}
+  }
+}
+document.addEventListener('click',function(ev){
+  const b=ev.target.closest('button[data-manage]');
+  if(!b)return;
+  ev.preventDefault();ev.stopPropagation();
+  adminManage(b.dataset.entity,b.dataset.id,b.dataset.manage,b.dataset.name,b);
+});
+// Refresh shared catalogues without rebuilding open forms or losing typed data.
+window.__maintenanceRefreshCatalogs=async function(){
+  if(!session||!profile)return;
+  try{
+    await loadEquipment();
+    if(profile.role==='admin'){
+      await loadAdminOverview();
+      if(!$('usersPanel').classList.contains('hidden'))await loadAdminUsers();
+      if(!$('newUserPanel').classList.contains('hidden'))await refreshNewUserSectors();
+    }
+  }catch(e){console.warn('Sincronização dos cadastros indisponível. Tente atualizar a página.')}
+};
 
 
 // ===== PAINÉIS DO ADMINISTRADOR =====
@@ -690,10 +1442,11 @@ function openAdminModal(title,html){
   $('modal').classList.remove('hidden');
 }
 async function openSectorsPanel(){
+  currentAdminModal='sectors';
   if(!adminOnly())return;
   try{
     const [sr,ur,er]=await Promise.all([
-      sb.from('sectors').select('id,name,created_at').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name'),
       sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id),
       sb.from('equipment').select('id,sector_id,active').eq('organization_id',profile.organization_id)
     ]);
@@ -703,8 +1456,8 @@ async function openSectorsPanel(){
     const rows=sr.data||[];
     openAdminModal('🏢 Setores',`
       <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
-      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket"><h3>${escapeHtml(s.name)}</h3><div class="small">👥 ${uc[s.id]||0} usuário(s[...]
-      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><di[...]
+      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}" data-testid="row-sector-${s.id}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div>${adminRowActions('sectors',s.id,s.name,s.active!==false)}</div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
+      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
     $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
     $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
     $('refreshSectorsAdmin').onclick=openSectorsPanel;
@@ -712,79 +1465,94 @@ async function openSectorsPanel(){
       const name=$('newSectorAdminName').value.trim(); if(!name)return notice($('sectorAdminMsg'),'Informe o nome do setor.');
       const x=await sb.from('sectors').insert({organization_id:profile.organization_id,name}).select('id').single();
       if(x.error)return notice($('sectorAdminMsg'),x.error.message);
-      openSectorsPanel();
+      await refreshAfterAdminMutation('sectors');
     };
   }catch(e){showError(e,'Não foi possível carregar os setores')}
 }
 async function openEquipmentPanel(){
   if(!adminOnly())return;
+  currentAdminModal='equipment';
   try{
     const [er,sr]=await Promise.all([
       sb.from('equipment').select('id,name,code,location,sector_id,active,created_at').eq('organization_id',profile.organization_id).order('name'),
-      sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+      sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
     ]);
     if(er.error)throw er.error;
     const sectors=Object.fromEntries((sr.data||[]).map(x=>[x.id,x.name]));
     const rows=er.data||[];
     openAdminModal('⚙️ Equipamentos',`
       <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button><button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
-      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small"[...]
-      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class=[...]
-    $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket ${e.active?'':'inactive'}" data-testid="row-equipment-${e.id}"><div class="tickettop"><div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div>${adminRowActions('equipment',e.id,e.name,e.active)}</div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
+      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
+    $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).filter(s=>s.active!==false).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
     $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
     $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden')};
     $('refreshEquipmentAdmin').onclick=openEquipmentPanel;
     $('saveEquipmentAdmin').onclick=async()=>{
       const name=$('newEquipmentName').value.trim();if(!name)return notice($('equipmentAdminMsg'),'Informe o nome do equipamento.');
-      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,s[...]
+      const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true}).select('id').single();
       if(x.error)return notice($('equipmentAdminMsg'),x.error.message);
-      openEquipmentPanel(); await loadEquipment(); await loadAdminOverview();
+      await refreshAfterAdminMutation('equipment');
     };
   }catch(e){showError(e,'Não foi possível carregar os equipamentos')}
 }
 async function openPartsPanel(){
   if(!adminOnly())return;
+  currentAdminModal=null;
   try{
-    const r=await sb.from('part_requests').select('id,work_order_id,part_name,quantity,status,requested_at,created_at,requested_by').order('created_at',{ascending:false}).limit(100);
+    const r=await sb.from('part_requests').select('id,work_order_id,part_name,quantity,status,requested_at,created_at:requested_at,requested_by').order('requested_at',{ascending:false}).limit(100);
     if(r.error)throw r.error;
     const rows=r.data||[];
     openAdminModal('📦 Peças',`
       <div class="actions"><button class="btn secondary" id="refreshPartsAdmin">↻ Atualizar</button></div>
-      <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidad[...]
+      <div class="list" style="margin-top:14px">${rows.length?rows.map(p=>`<div class="ticket"><div class="tickettop"><div><h3>${escapeHtml(p.part_name||'Peça')}</h3><div class="small">Quantidade: ${p.quantity||1} · Chamado: ${escapeHtml(p.work_order_id||'')}</div></div><span class="tag">${escapeHtml(p.status||'Sem status')}</span></div><div class="small" style="margin-top:8px">Solicitada em: ${fmt(p.requested_at||p.created_at)}</div></div>`).join(''):'<div class="empty">Nenhuma solicitação de peça encontrada.</div>'}</div>`);
     $('refreshPartsAdmin').onclick=openPartsPanel;
   }catch(e){showError(e,'Não foi possível carregar as solicitações de peças')}
 }
 async function openPreventivePanel(){
   if(!adminOnly())return;
+  currentAdminModal=null;
   try{
     const [er,sr]=await Promise.all([
       sb.from('equipment').select('id,name,code,sector_id,active').eq('organization_id',profile.organization_id).eq('active',true).order('name'),
-      sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
+      sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
     ]);
-    if(er.error)throw er.error;
-    const eqs=er.data||[], sectors=sr.data||[];
+    if(er.error)throw er.error;if(sr.error)throw sr.error;
+    const eqs=er.data||[], sectors=(sr.data||[]).filter(s=>s.active!==false);
     openAdminModal('🗓️ Manutenção preventiva',`
       <p class="small">Crie um chamado preventivo para um equipamento e encaminhe-o ao setor responsável.</p>
-      <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_[...]
-      <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}<[...]
+      <div class="field"><label>Equipamento</label><select id="preventiveEquipment"><option value="">Selecione o equipamento</option>${eqs.map(e=>`<option value="${e.id}" data-sector="${e.sector_id||''}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</option>`).join('')}</select></div>
+      <div class="field"><label>Setor responsável</label><select id="preventiveSector"><option value="">Selecione o setor</option>${sectors.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></div>
+      <div class="field"><label for="preventiveDate">Data programada</label><input id="preventiveDate" type="date" required><div class="small">Data prevista para realizar a manutenção. O chamado é criado e enviado ao setor agora.</div></div>
       <div class="field"><label>Descrição da preventiva</label><textarea id="preventiveDescription" placeholder="Ex.: inspeção, lubrificação, troca de filtros..."></textarea></div>
       <div class="actions"><button class="btn primary" id="createPreventive">Criar chamado preventivo</button></div><div id="preventiveMsg" class="notice hidden"></div>
       <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
       <h3>Últimos chamados preventivos</h3><div id="preventiveRecent" class="list"><div class="empty">Carregando...</div></div>`);
     $('preventiveEquipment').onchange=()=>{const s=$('preventiveEquipment').selectedOptions[0]?.dataset.sector||'';if(s)$('preventiveSector').value=s};
-    $('createPreventive').onclick=async()=>{
-      const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=$('preventiveDescription').value.trim();
-      if(!eq||!sector||!desc)return notice($('preventiveMsg'),'Preencha equipamento, setor e descrição.');
-      const e=eqs.find(x=>x.id===eq);
-      const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:des[...]
-      if(x.error)return notice($('preventiveMsg'),x.error.message);
-      notice($('preventiveMsg'),'Chamado preventivo criado com sucesso.',true);$('preventiveDescription').value='';await loadTickets();
-      loadPreventiveRecent();
+    const createButton=$('createPreventive'), message=$('preventiveMsg'), descriptionInput=$('preventiveDescription'), recentBox=$('preventiveRecent');
+    let creating=false;
+    createButton.onclick=async()=>{
+      if(creating)return;
+      try{
+        const eq=$('preventiveEquipment').value,sector=$('preventiveSector').value,desc=descriptionInput.value.trim();
+        if(!eq||!sector||!desc)throw new Error('Preencha equipamento, setor e descrição.');
+        const scheduled_for=preventiveDate($('preventiveDate').value);
+        const e=eqs.find(x=>x.id===eq);
+        if(!e||!sectors.some(s=>s.id===sector))throw new Error('Selecione um equipamento e setor ativos.');
+        creating=true;createButton.disabled=true;
+        const x=await sb.from('work_orders').insert({organization_id:profile.organization_id,sector_id:sector,requester_id:session.user.id,title:'Manutenção preventiva · '+e.name,description:desc,priority:'normal',status:'open',equipment_id:eq,scheduled_for}).select('id').single();
+        if(x.error)throw x.error;
+        descriptionInput.value='';
+        notice(message,'Chamado preventivo criado para '+fmtPlannedDate(scheduled_for)+'.',true);
+        await triggerPush(x.data.id,'created');
+        await Promise.all([loadTickets(),loadPreventiveRecent()]);
+      }catch(e){notice(message,e.message||'Não foi possível criar a preventiva.')}
+      finally{creating=false;createButton.disabled=false;}
     };
     async function loadPreventiveRecent(){
-      const x=await sb.from('work_orders').select('id,title,status,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order([...]
-      if(x.error){$('preventiveRecent').innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
-      $('preventiveRecent').innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.stat[...]
+      const x=await sb.from('work_orders').select('id,title,status,scheduled_for,created_at,equipment(name,code)').eq('organization_id',profile.organization_id).ilike('title','Manutenção preventiva%').order('created_at',{ascending:false}).limit(10);
+      if(x.error){recentBox.innerHTML='<div class="empty">'+escapeHtml(x.error.message)+'</div>';return}
+      recentBox.innerHTML=(x.data||[]).map(w=>`<div class="ticket"><h3>${escapeHtml(w.title)}</h3><div class="small">${escapeHtml(w.equipment?.name||'')} · ${labels[w.status]||w.status} · ${fmt(w.created_at)}</div>${w.scheduled_for?`<div class="small"><b>Data programada:</b> ${escapeHtml(fmtPlannedDate(w.scheduled_for))}</div>`:''}<div class="actions"><button class="btn secondary" onclick="details('${w.id}')">Ver detalhes</button></div></div>`).join('')||'<div class="empty">Nenhuma preventiva criada.</div>';
     }
     loadPreventiveRecent();
   }catch(e){showError(e,'Não foi possível abrir a manutenção preventiva')}
@@ -794,15 +1562,15 @@ async function openHistoryPanel(){
   if(!adminOnly())return;
   const panel=$('historyPanel'); if(!panel)return;
   panel.classList.remove('hidden'); panel.scrollIntoView({behavior:'smooth',block:'start'});
-  const er=await sb.from('equipment').select('id,name,code').eq('organization_id',profile.organization_id).order('name');
-  $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}</opt[...]
-  $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças u[...]
+  const er=await sb.from('equipment').select('id,name,code,active').eq('organization_id',profile.organization_id).order('name');
+  $('historyEquipment').innerHTML='<option value="">Todos os equipamentos</option>'+(er.data||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.name)}${e.code?' — '+escapeHtml(e.code):''}${e.active===false?' (inativo)':''}</option>`).join('');
+  $('historyType').innerHTML='<option value="">Todos os tipos</option><option value="diagnosis">Diagnóstico</option><option value="work">Serviço realizado</option><option value="parts">Peças utilizadas</option>';
   await renderAdminHistory();
 }
 async function renderAdminHistory(){
   if(profile?.role!=='admin')return;
   const list=$('historyList'); if(!list)return; list.innerHTML='<div class="empty">Carregando histórico...</div>';
-  let q=sb.from('maintenance_reports').select('id,work_order_id,equipment_id,diagnosis,work_performed,parts_used,created_at').eq('organization_id',profile.organization_id).order('created_at',{asc[...]
+  let q=sb.from('maintenance_reports').select('id,work_order_id,equipment_id,diagnosis,work_performed,parts_used,created_at').eq('organization_id',profile.organization_id).order('created_at',{ascending:false}).limit(200);
   const eq=$('historyEquipment')?.value,start=$('historyStart')?.value,end=$('historyEnd')?.value,type=$('historyType')?.value;
   if(eq)q=q.eq('equipment_id',eq);
   if(start)q=q.gte('created_at',start+'T00:00:00');
@@ -811,7 +1579,7 @@ async function renderAdminHistory(){
   const rows=r.data||[];const ids=[...new Set(rows.map(x=>x.work_order_id).filter(Boolean))];
   let titles={}; if(ids.length){const wr=await sb.from('work_orders').select('id,title').in('id',ids);titles=Object.fromEntries((wr.data||[]).map(x=>[x.id,x.title]))}
   const filtered=rows.filter(x=>!type||(type==='diagnosis'?x.diagnosis:type==='work'?x.work_performed:x.parts_used));
-  list.innerHTML=filtered.map(x=>`<div class="historyrow"><h3>${escapeHtml(titles[x.work_order_id]||'Manutenção')}</h3><div class="historymeta"><span>${fmt(x.created_at)}</span></div><div class[...]
+  list.innerHTML=filtered.map(x=>`<div class="historyrow"><h3>${escapeHtml(titles[x.work_order_id]||'Manutenção')}</h3><div class="historymeta"><span>${fmt(x.created_at)}</span></div><div class="historydetail"><b>Diagnóstico:</b> ${escapeHtml(x.diagnosis||'Não registrado')}<br><b>Serviço:</b> ${escapeHtml(x.work_performed||'Não registrado')}<br><b>Peças:</b> ${escapeHtml(x.parts_used||'Nenhuma')}</div><div class="historyactions"><button class="btn secondary" onclick="details('${x.work_order_id}')">Ver chamado</button></div></div>`).join('')||'<div class="empty">Nenhum registro encontrado.</div>';
 }
 
 // Atalhos administrativos
@@ -823,17 +1591,18 @@ document.addEventListener('click',function(ev){
   if(id==='preventiveShortcut')openPreventivePanel();
 });
 
-$('closeHistoryBtn').onclick=()=>closeHistoryPanel();
+$('closeHistoryBtn').onclick=()=>{closeHistoryPanel();if(isWindowsDesktopAdmin())setWindowsAdminView('dashboard')};
 $('historyShortcut')?.addEventListener('click',openHistoryPanel);
 $('applyHistoryBtn').onclick=()=>renderAdminHistory();
 $('clearHistoryBtn').onclick=()=>{ $('historyEquipment').value='';$('historyType').value='';$('historyStart').value='';$('historyEnd').value='';renderAdminHistory() };
 
-function openUsersPanel(){
+function openUsersPanel(roleFilter='all'){
   const panel=document.getElementById('usersPanel');
   if(!panel) return;
   panel.classList.remove('hidden');
   panel.scrollIntoView({behavior:'smooth',block:'start'});
-  if(typeof window.loadAdminUsers==='function') window.loadAdminUsers();
+  const filter=$('usersRoleFilter');if(filter)filter.value=roleFilter;
+  if(typeof window.loadAdminUsers==='function') window.loadAdminUsers(roleFilter);
 }
 document.addEventListener('click',function(ev){
   const btn=ev.target.closest('#usersShortcut');
@@ -844,12 +1613,46 @@ document.addEventListener('click',function(ev){
   if(cancelNew){ ev.preventDefault(); closeNewUserPanel(); }
   const saveNew=ev.target.closest('#saveNewUserBtn');
   if(saveNew){ ev.preventDefault(); submitNewUser(); }
+  if(ev.target.closest('#newUserModePassword')){ev.preventDefault();setNewUserMode('password');}
+  if(ev.target.closest('#newUserModeInvite')){ev.preventDefault();setNewUserMode('invite');}
   const close=ev.target.closest('#closeUsersBtn');
   if(close){ ev.preventDefault(); const p=document.getElementById('usersPanel'); if(p) p.classList.add('hidden'); }
 });
-document.addEventListener('change',function(ev){ if(ev.target.id==='newUserRole') updateNewUserRoleUI(); });
+document.addEventListener('change',function(ev){
+  if(ev.target.id==='newUserRole') updateNewUserRoleUI();
+  if(ev.target.id==='usersRoleFilter'&&profile?.role==='admin')window.loadAdminUsers(ev.target.value);
+});
 </script>
 
 <script>
+</script>
+<script>
+(()=>{
+  const root=document.documentElement;
+  const viewport=window.visualViewport;
+  const syncVisualViewport=()=>{
+    if(!viewport)return;
+    root.style.setProperty('--maintenance-visual-viewport-height',`${Math.round(viewport.height)}px`);
+    root.style.setProperty('--maintenance-visual-viewport-top',`${Math.max(0,Math.round(viewport.offsetTop))}px`);
+  };
+  syncVisualViewport();
+  viewport?.addEventListener('resize',syncVisualViewport,{passive:true});
+  viewport?.addEventListener('scroll',syncVisualViewport,{passive:true});
+  window.addEventListener('resize',syncVisualViewport,{passive:true});
+  document.addEventListener('focusin',event=>{
+    const control=event.target;
+    if(!(control instanceof HTMLElement)||control.closest('#login')||!control.closest('#app,#modal'))return;
+    if(!control.matches('input,select,textarea,[contenteditable="true"]'))return;
+    window.setTimeout(()=>{
+      if(!window.visualViewport||window.visualViewport.height>=window.innerHeight*.86)return;
+      const rect=control.getBoundingClientRect();
+      const visibleTop=window.visualViewport.offsetTop+12;
+      const visibleBottom=window.visualViewport.offsetTop+window.visualViewport.height-24;
+      if(rect.top<visibleTop||rect.bottom>visibleBottom){
+        control.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});
+      }
+    },220);
+  },true);
+})();
 </script>
 </body></html>
