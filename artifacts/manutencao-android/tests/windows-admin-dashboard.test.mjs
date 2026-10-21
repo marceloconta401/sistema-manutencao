@@ -74,3 +74,21 @@ test("existing maintenance, account, history, and push flows remain present", as
   assert.match(html, /data-windows-nav="logout"/);
 });
 
+test("Windows sidebar collapse overrides intermediate responsive widths", async () => {
+  const css = await read("../src/windows-admin-dashboard.css");
+  const finalCollapseOverride = css.lastIndexOf(
+    "/* Keep the collapsed grid state stronger than the responsive expanded widths. */",
+  );
+  const intermediateBreakpoint = css.lastIndexOf("@media (max-width: 1050px)");
+  const overrides = css.slice(finalCollapseOverride);
+
+  assert.ok(finalCollapseOverride > intermediateBreakpoint);
+  assert.match(
+    overrides,
+    /#app\.windows-admin-active\.windows-sidebar-collapsed\s*\{\s*grid-template-columns:\s*58px minmax\(0,\s*1fr\)/,
+  );
+  assert.match(
+    overrides,
+    /@media \(max-width: 760px\)[\s\S]*?grid-template-columns:\s*0 minmax\(0,\s*1fr\)/,
+  );
+});
