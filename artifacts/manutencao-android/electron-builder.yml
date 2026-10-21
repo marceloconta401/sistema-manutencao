@@ -1,0 +1,26 @@
+appId: com.sistemamanutencao.app
+productName: Sistema de Manutenção
+artifactName: "${productName}-${version}-${arch}.${ext}"
+asar: true
+directories:
+  output: release
+  buildResources: desktop/assets
+files:
+  - dist/public/**/*
+  - desktop/**/*
+  - package.json
+win:
+  icon: desktop/assets/system-icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Sistema de Manutenção
+  installerIcon: desktop/assets/system-icon.ico
+  uninstallerIcon: desktop/assets/system-icon.ico

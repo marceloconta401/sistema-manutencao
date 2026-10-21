@@ -1,0 +1,82 @@
+name: Build Sistema de Manutenção
+on:
+  push:
+    branches: ["native-builds/**"]
+    paths-ignore:
+      - "**/*.md"
+      - ".github/workflows/native-builds.yml"
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        default: all
+        options: [all, android, windows]
+        description: Plataforma para compilar
+permissions:
+  contents: read
+concurrency:
+  group: native-builds-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    if: (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/native-builds/') && !startsWith(github.ref, 'refs/heads/native-builds/android-')) || (github.event_name == 'workflow_dispatch' && (inputs.platform == 'all' || inputs.platform == 'windows'))
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @workspace/manutencao-android test
+      - run: pnpm --filter @workspace/manutencao-android typecheck
+      - run: pnpm --filter @workspace/manutencao-android run windows:exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sistema-de-Manutencao-Windows
+          path: artifacts/manutencao-android/release/*.exe
+          if-no-files-found: error
+  android:
+    if: (github.event_name == 'workflow_dispatch' && (inputs.platform == 'all' || inputs.platform == 'android')) || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/native-builds/android-'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools platforms;android-36 build-tools;36.0.0"
+          log-accepted-android-sdk-licenses: false
+      - run: pnpm install --frozen-lockfile
+      - name: Configure Firebase Android
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          node -e 'const fs=require("fs");const value=process.env.GOOGLE_SERVICES_JSON_BASE64;if(!value)throw new Error("Configure GOOGLE_SERVICES_JSON_BASE64 in GitHub Actions secrets");const data=Buffer.from(value,"base64");JSON.parse(data);fs.writeFileSync("artifacts/manutencao-android/android/app/google-services.json",data);'
+      - name: Restore persistent debug signing key
+        env:
+          ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+        run: |
+          node -e 'const fs=require("fs");const path=require("path");const value=process.env.ANDROID_DEBUG_KEYSTORE_BASE64;if(!value)throw new Error("Configure ANDROID_DEBUG_KEYSTORE_BASE64 in GitHub Actions secrets");const dir=path.join(process.env.GITHUB_WORKSPACE,".local","android-signing");fs.mkdirSync(dir,{recursive:true,mode:0o700});const file=path.join(dir,"android-debug.p12");fs.writeFileSync(file,Buffer.from(value,"base64"),{mode:0o600});fs.appendFileSync(process.env.GITHUB_ENV,`ANDROID_DEBUG_KEYSTORE_PATH=${file}\n`);'
+      - run: pnpm --filter @workspace/manutencao-android test
+      - run: pnpm --filter @workspace/manutencao-android typecheck
+      - run: pnpm --filter @workspace/manutencao-android run android:apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sistema-de-Manutencao-Android-debug
+          path: artifacts/manutencao-android/release/*.apk
+          if-no-files-found: error
