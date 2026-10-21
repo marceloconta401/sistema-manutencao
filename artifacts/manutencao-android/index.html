@@ -898,6 +898,7 @@ async function loadAdminOverview(){
 function renderWindowsDashboardBars(containerId,items,colorClass,emptyMessage){
   const container=$(containerId);
   if(!container)return;
+  if(!Array.isArray(items)){container.innerHTML='<div class="windows-data-state">Dados do gráfico indisponíveis. Atualize o painel.</div>';return}
   if(!items.length){container.innerHTML='<div class="windows-data-state">'+escapeHtml(emptyMessage)+'</div>';return}
   const max=Math.max(1,...items.map(item=>item.count));
   container.innerHTML=items.map(item=>{
@@ -910,7 +911,14 @@ function normalizeWindowsSearch(value=''){
 }
 function renderWindowsDonutChart(donutId,totalId,legendId,items,unit,emptyMessage){
   const setValue=(id,value)=>{const element=$(id);if(element)element.textContent=String(value)};
-  const donut=$(donutId),legend=$(legendId),total=items.reduce((sum,item)=>sum+(Number(item.count)||0),0);
+  const donut=$(donutId),legend=$(legendId);
+  if(!Array.isArray(items)){
+    setValue(totalId,'—');
+    if(donut)donut.style.background='conic-gradient(var(--line) 0 100%)';
+    if(legend)legend.innerHTML='<div class="windows-data-state">Dados do gráfico indisponíveis. Atualize o painel.</div>';
+    return;
+  }
+  const total=items.reduce((sum,item)=>sum+(Number(item.count)||0),0);
   setValue(totalId,total);
   if(donut){
     let cursor=0;
@@ -929,6 +937,7 @@ function renderWindowsDonutChart(donutId,totalId,legendId,items,unit,emptyMessag
 function renderWindowsPriorityChart(items,emptyMessage){
   const container=$('windowsPriorityChart');
   if(!container)return;
+  if(!Array.isArray(items)){container.innerHTML='<div class="windows-data-state">Dados do gráfico indisponíveis. Atualize o painel.</div>';return}
   if(!items.length){container.innerHTML=`<div class="windows-data-state">${escapeHtml(emptyMessage)}</div>`;return}
   const max=Math.max(1,...items.map(item=>item.count));
   container.innerHTML=`<div class="windows-priority-bars">${items.map(item=>{
@@ -985,7 +994,7 @@ function renderWindowsAdminDashboard(){
 
   const activeOrders=orders.filter(row=>row.status!=='completed'&&row.status!=='cancelled');
   const priorityItems=[['urgent','Urgente','priority-urgent'],['high','Alta','priority-high'],['normal','Normal','priority-normal'],['low','Baixa','priority-low']].map(([key,label,colorClass])=>({key,label,colorClass,count:activeOrders.filter(row=>row.priority===key).length}));
-  renderWindowsPriorityChart('windowsPriorityChart',activeOrders.length?priorityItems:[],'Nenhum chamado ativo encontrado.');
+  renderWindowsPriorityChart(activeOrders.length?priorityItems:[],'Nenhum chamado ativo encontrado.');
 
   if(data.sectorError)$('windowsSectorChart').innerHTML='<div class="windows-data-state">Não foi possível carregar os setores.</div>';
   else{

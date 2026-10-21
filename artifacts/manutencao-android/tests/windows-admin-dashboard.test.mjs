@@ -50,6 +50,17 @@ test("Windows dashboard uses real organization-scoped records and does not inven
   assert.match(html, /applyTicketFilter\('all'\)/);
 });
 
+
+test("Windows chart renderers receive arrays and isolate malformed chart data", async () => {
+  const html = await read("../index.html");
+
+  assert.match(html, /renderWindowsPriorityChart\(activeOrders\.length\?priorityItems:\[\],'Nenhum chamado ativo encontrado\.'\);/);
+  assert.doesNotMatch(html, /renderWindowsPriorityChart\('windowsPriorityChart'/);
+  assert.match(html, /function renderWindowsPriorityChart\(items,emptyMessage\)\{[\s\S]*?if\(!Array\.isArray\(items\)\)/);
+  assert.match(html, /function renderWindowsDonutChart\([^)]*items[^)]*\)\{[\s\S]*?if\(!Array\.isArray\(items\)\)/);
+  assert.match(html, /function renderWindowsDashboardBars\([^)]*items[^)]*\)\{[\s\S]*?if\(!Array\.isArray\(items\)\)/);
+});
+
 test("existing maintenance, account, history, and push flows remain present", async () => {
   const html = await read("../index.html");
   const requiredFunctions = [
