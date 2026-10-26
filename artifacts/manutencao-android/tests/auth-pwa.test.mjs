@@ -264,7 +264,7 @@ test("service worker only caches same-origin app-shell resources", async () => {
   assert.doesNotThrow(() => new vm.Script(serviceWorker));
   assert.match(serviceWorker, /requestUrl\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /const isAppShellAsset = APP_SHELL/);
-  assert.match(serviceWorker, /sistema-manutencao-v21/);
+  assert.match(serviceWorker, /sistema-manutencao-v22/);
   assert.match(serviceWorker, /key\.startsWith\("sistema-manutencao-"\)/);
   assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
   assert.equal(publicServiceWorker, serviceWorker);

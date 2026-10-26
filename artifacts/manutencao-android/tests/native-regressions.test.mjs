@@ -86,8 +86,8 @@ test("Android and FCM use the same new channel with the system ringtone", async 
 test("CI restores a stable debug certificate without putting keys in the APK assets", async () => {
   const gradle = await readFile(new URL("../android/app/build.gradle", import.meta.url), "utf8");
   const workflow = await readFile(new URL("../../../.github/workflows/native-builds.yml", import.meta.url), "utf8");
-  assert.match(gradle, /versionCode 8/);
-  assert.match(gradle, /versionName "1\.0\.7"/);
+  assert.match(gradle, /versionCode 9/);
+  assert.match(gradle, /versionName "1\.0\.8"/);
   assert.match(gradle, /signingConfig signingConfigs\.persistentDebug/);
   assert.match(gradle, /storeType 'PKCS12'/);
   assert.match(workflow, /secrets\.ANDROID_DEBUG_KEYSTORE_BASE64/);

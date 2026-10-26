@@ -4,7 +4,7 @@
 
 - Cadastro padrão com nome, login e senha temporária, incluindo Setor e Mecânico. E-mail não é obrigatório.
 - Contas existentes continuam usando seu e-mail e senha. O convite por e-mail é preservado como opção legada.
-- Novas contas usam Supabase Auth, sem envio de confirmação. A senha deve ter pelo menos 12 caracteres.
+- Novas contas usam Supabase Auth, sem envio de confirmação. A senha deve ter entre 6 e 128 caracteres, inclusive na troca obrigatória do primeiro acesso.
 - Troca obrigatória antes de abrir o sistema; o RLS também impede acessar os dados usando a senha temporária, inclusive por REST ou clientes antigos.
 - Exclusão, desativação e reativação administrativas, com confirmação, validação da organização e proteção dos vínculos históricos.
 - Não é permitido remover/desativar a própria conta nem remover o último administrador ativo.
