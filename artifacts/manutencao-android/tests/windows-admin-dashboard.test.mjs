@@ -20,6 +20,25 @@ test("Windows dashboard is gated to authenticated Windows administrators", async
   assert.doesNotMatch(css, /(^|\n)\s*(?!html\.windows-admin)[.#][\w-]+\s*\{/);
 });
 
+test("Windows sidebar collapse overrides intermediate responsive widths", async () => {
+  const css = await read("../src/windows-admin-dashboard.css");
+  const finalCollapseOverride = css.lastIndexOf(
+    "/* Keep the collapsed grid state stronger than the responsive expanded widths. */",
+  );
+  const intermediateBreakpoint = css.lastIndexOf("@media (max-width: 1050px)");
+  const overrides = css.slice(finalCollapseOverride);
+
+  assert.ok(finalCollapseOverride > intermediateBreakpoint);
+  assert.match(
+    overrides,
+    /#app\.windows-admin-active\.windows-sidebar-collapsed\s*\{\s*grid-template-columns:\s*58px minmax\(0,\s*1fr\)/,
+  );
+  assert.match(
+    overrides,
+    /@media \(max-width: 760px\)[\s\S]*?grid-template-columns:\s*0 minmax\(0,\s*1fr\)/,
+  );
+});
+
 test("Windows dashboard uses real organization-scoped records and does not invent machine state", async () => {
   const html = await read("../index.html");
   const dashboard = html.slice(
@@ -50,11 +69,13 @@ test("Windows dashboard uses real organization-scoped records and does not inven
   assert.match(html, /applyTicketFilter\('all'\)/);
 });
 
-
 test("Windows chart renderers receive arrays and isolate malformed chart data", async () => {
   const html = await read("../index.html");
 
-  assert.match(html, /renderWindowsPriorityChart\(activeOrders\.length\?priorityItems:\[\],'Nenhum chamado ativo encontrado\.'\);/);
+  assert.match(
+    html,
+    /renderWindowsPriorityChart\(activeOrders\.length\?priorityItems:\[\],'Nenhum chamado ativo encontrado\.'\);/,
+  );
   assert.doesNotMatch(html, /renderWindowsPriorityChart\('windowsPriorityChart'/);
   assert.match(html, /function renderWindowsPriorityChart\(items,emptyMessage\)\{[\s\S]*?if\(!Array\.isArray\(items\)\)/);
   assert.match(html, /function renderWindowsDonutChart\([^)]*items[^)]*\)\{[\s\S]*?if\(!Array\.isArray\(items\)\)/);
@@ -85,21 +106,3 @@ test("existing maintenance, account, history, and push flows remain present", as
   assert.match(html, /data-windows-nav="logout"/);
 });
 
-test("Windows sidebar collapse overrides intermediate responsive widths", async () => {
-  const css = await read("../src/windows-admin-dashboard.css");
-  const finalCollapseOverride = css.lastIndexOf(
-    "/* Keep the collapsed grid state stronger than the responsive expanded widths. */",
-  );
-  const intermediateBreakpoint = css.lastIndexOf("@media (max-width: 1050px)");
-  const overrides = css.slice(finalCollapseOverride);
-
-  assert.ok(finalCollapseOverride > intermediateBreakpoint);
-  assert.match(
-    overrides,
-    /#app\.windows-admin-active\.windows-sidebar-collapsed\s*\{\s*grid-template-columns:\s*58px minmax\(0,\s*1fr\)/,
-  );
-  assert.match(
-    overrides,
-    /@media \(max-width: 760px\)[\s\S]*?grid-template-columns:\s*0 minmax\(0,\s*1fr\)/,
-  );
-});

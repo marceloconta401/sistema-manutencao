@@ -146,10 +146,16 @@ export async function ensureReady(): Promise<boolean> {
   let status;
   try {
     status = await getAccessStatus();
-  } catch {
+  } catch (error: any) {
     suspendApp();
     if (typeof w.__maintenanceLock === "function") {
-      w.__maintenanceLock("Não foi possível verificar seu acesso. Verifique a conexão e entre novamente.", false);
+      const revoked = error?.status === 401 || error?.status === 403;
+      w.__maintenanceLock(
+        revoked
+          ? "Sua sessão expirou ou o acesso foi desativado. Entre novamente ou procure o administrador."
+          : "Não foi possível confirmar o acesso por uma falha de conexão. Tente reconectar sem digitar a senha novamente.",
+        revoked,
+      );
     }
     return false;
   }
@@ -222,7 +228,8 @@ async function freshnessCheck(force = false): Promise<void> {
 }
 function resumeAccess(): void { pauseVisibleData(); void freshnessCheck(true); }
 window.addEventListener("maintenance-access-locked", () => { pausedUi = null; });
-window.setInterval(() => { void freshnessCheck(); }, 5000);
+const freshnessIntervalMs = w.maintenanceDesktop?.platform === "win32" ? 60_000 : 5_000;
+window.setInterval(() => { void freshnessCheck(); }, freshnessIntervalMs);
 window.addEventListener("focus", resumeAccess);
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") resumeAccess();

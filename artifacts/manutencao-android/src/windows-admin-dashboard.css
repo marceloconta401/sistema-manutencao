@@ -1617,7 +1617,6 @@ html.light.windows-admin .windows-table .p-normal {
   }
 }
 
-
 /* Keep the collapsed grid state stronger than the responsive expanded widths. */
 html.windows-admin #app.windows-admin-active.windows-sidebar-collapsed {
   grid-template-columns: 58px minmax(0, 1fr);

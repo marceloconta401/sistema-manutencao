@@ -201,9 +201,12 @@ header.top button:focus-visible,#app button:focus-visible,#app input:focus-visib
 <section id="login" class="card login">
 <h1>🔐 Acesso ao sistema</h1><p class="small">Entre com o usuário e a senha fornecidos pelo administrador.</p>
 <button class="btn secondary installbtn installAppBtn hidden" id="installLoginBtn" type="button" aria-describedby="installLoginHelp">Instalar app</button><span class="small install-help hidden" id="installLoginHelp" role="status" aria-live="polite"></span>
-<div class="field"><label for="email">Usuário ou e-mail</label><input id="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu usuário ou e-mail" data-testid="input-login"></div>
-<div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
-<button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button><div id="loginMsg" class="notice hidden"></div>
+<div id="loginCredentials">
+  <div class="field"><label for="email">Usuário ou e-mail</label><input id="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu usuário ou e-mail" data-testid="input-login"></div>
+  <div class="field"><label>Senha</label><input id="password" type="password" autocomplete="current-password"></div>
+  <button class="btn primary full" id="loginBtn">Entrar</button><button class="btn secondary full" id="forgotBtn">Esqueci minha senha</button>
+</div>
+<button class="btn primary full hidden" id="retrySessionBtn" type="button">Tentar reconectar</button><div id="loginMsg" class="notice hidden"></div>
 </section>
 <section id="app" class="hidden">
 <aside id="windowsAdminNav" class="windows-admin-nav hidden" aria-label="Navegação administrativa">
@@ -301,6 +304,7 @@ window.__directLogin=async function(){
     const {error}=await sb.auth.setSession({access_token:body.session.access_token,refresh_token:body.session.refresh_token});
     body=null;
     if(error) throw new Error('Não foi possível iniciar a sessão. Tente novamente.');
+    if(window.maintenanceDesktop?.platform==='win32')localStorage.setItem('maintenance_windows_login',login);
     const pw=document.getElementById('password');if(pw)pw.value='';
     window.__maintenanceAuthLinkType=null;
     if(msg){msg.className='notice ok';msg.textContent='Login realizado! Abrindo o sistema...';}
@@ -318,15 +322,60 @@ window.__directLogin=async function(){
 <script>
 document.getElementById('loginBtn')?.addEventListener('click',()=>window.__directLogin?.());
 document.getElementById('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.__directLogin?.()});
+document.getElementById('retrySessionBtn')?.addEventListener('click',async event=>{
+  const button=event.currentTarget;
+  button.disabled=true;
+  button.textContent='Reconectando...';
+  try{
+    const current=await sb.auth.getSession();
+    if(current.error)throw current.error;
+    if(!current.data.session){
+      try{await sb.auth.signOut()}catch(_){}
+      session=null;
+      setLoginRecoveryMode(false);
+      notice($('loginMsg'),'A sessão não está mais válida. Entre novamente com seu usuário e senha.');
+      return;
+    }
+    session=current.data.session;
+    await showApp();
+  }catch(_){
+    showSessionRecovery('Sem conexão com o servidor. Sua sessão foi mantida; verifique a internet e tente novamente.');
+  }finally{
+    button.disabled=false;
+    button.textContent='Tentar reconectar';
+  }
+});
 </script>
 <script>
 const SUPABASE_URL='https://aijkbluzpmffmnflhjyv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7E3aFPi5oZgyJ3WxckI9xA_qtHKJjdw';
-const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const SUPABASE_AUTH_STORAGE_KEY='sb-aijkbluzpmffmnflhjyv-auth-token';
+const sb=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{
+  persistSession:true,
+  autoRefreshToken:true,
+  storageKey:SUPABASE_AUTH_STORAGE_KEY
+}});
 window.sb=sb;
 const $=id=>document.getElementById(id);
 let session=null,profile=null,equipment=[];
 window.__maintenanceContext=()=>({session,profile});
+function hasPersistedAuth(){
+  try{return Boolean(localStorage.getItem(SUPABASE_AUTH_STORAGE_KEY))}catch(_){return false}
+}
+function setLoginRecoveryMode(enabled){
+  $('loginCredentials')?.classList.toggle('hidden',enabled);
+  $('retrySessionBtn')?.classList.toggle('hidden',!enabled);
+}
+function showSessionRecovery(message){
+  const canResume=window.maintenanceDesktop?.platform==='win32'&&(Boolean(session)||hasPersistedAuth());
+  setLoginRecoveryMode(canResume);
+  $('app')?.classList.add('hidden');
+  $('login')?.classList.remove('hidden');
+  if(message)notice($('loginMsg'),message);
+}
+if(window.maintenanceDesktop?.platform==='win32'){
+  try{$('email').value=localStorage.getItem('maintenance_windows_login')||''}catch(_){}
+}
 window.__maintenanceSuspend=function(){clearInterval(notificationTimer);notificationTimer=null;profile=null;$('app')?.classList.add('hidden')};
 window.__maintenanceLock=async function(message,signOut){
   window.__maintenanceSuspend();
@@ -338,8 +387,7 @@ window.__maintenanceLock=async function(message,signOut){
   equipment=[];appNotifications=[];notificationBaseline=null;
   localStorage.removeItem(NOTIFY_LIST_KEY);localStorage.removeItem(NOTIFY_KEY);
   if(signOut){try{await window.nativePushManager?.unregisterCurrentDevice?.()}catch(e){console.warn('Push:',e?.message||e)}try{await sb.auth.signOut()}catch(e){}session=null}
-  $('login')?.classList.remove('hidden');
-  if(message) notice($('loginMsg'),message);
+  showSessionRecovery(message);
 };
 function waitAccessModule(){
   if(window.maintenanceAccess) return Promise.resolve(window.maintenanceAccess);
@@ -351,8 +399,18 @@ function waitAccessModule(){
 let notificationTimer=null,notificationBaseline=null;
 const NOTIFY_KEY='maint_last_notification_state';
 const NOTIFY_LIST_KEY='maint_notifications';
+const NOTIFY_CLEANUP_KEY='maint_notifications_cleanup_v1';
 let appNotifications=[];
+function clearLegacyLocalNotificationsOnce(){
+  try{
+    if(localStorage.getItem(NOTIFY_CLEANUP_KEY)==='done')return;
+    localStorage.removeItem(NOTIFY_LIST_KEY);
+    localStorage.removeItem(NOTIFY_KEY);
+    localStorage.setItem(NOTIFY_CLEANUP_KEY,'done');
+  }catch(e){console.warn('Não foi possível limpar o histórico local de notificações:',e?.message||e)}
+}
 function loadLocalNotifications(){
+  clearLegacyLocalNotificationsOnce();
   try{
     appNotifications=JSON.parse(localStorage.getItem(NOTIFY_LIST_KEY)||'[]');
     if(!Array.isArray(appNotifications)) appNotifications=[];
@@ -851,7 +909,7 @@ window.loadAdminUsers=async function loadAdminUsers(roleFilterArg){
  $('usersPanel').classList.remove('hidden');
  $('usersList').innerHTML='<div class="empty">Carregando usuários...</div>';
  const [pr,sr]=await Promise.all([
-  sb.from('profiles').select('*').eq('organization_id',profile.organization_id).order('full_name'),
+   sb.from('profiles').select('*').eq('organization_id',profile.organization_id).is('deleted_at',null).order('full_name'),
   sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
  ]);
  if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
@@ -1212,10 +1270,11 @@ function applyTicketFilter(status){
   if(typeof loadTickets==='function') loadTickets();
 }
 async function showApp(){
-  const s=await sb.auth.getSession();
-  session=s.data.session;
-  if(!session){setWindowsAdminMode(false);$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
   try{
+    const s=await sb.auth.getSession();
+    if(s.error)throw s.error;
+    session=s.data.session;
+    if(!session){setWindowsAdminMode(false);setLoginRecoveryMode(false);$('login').classList.remove('hidden');$('app').classList.add('hidden');return}
     const access=await waitAccessModule();
     if(!await access.ensureReady()){setWindowsAdminMode(false);return}
     await getProfile();
@@ -1258,9 +1317,14 @@ async function showApp(){
      }
   }catch(e){
     setWindowsAdminMode(false);
-    $('app').classList.add('hidden');
-    $('login').classList.remove('hidden');
-    notice($('loginMsg'),'Erro ao abrir o sistema: '+e.message)
+    if(window.maintenanceDesktop?.platform==='win32'&&(Boolean(session)||hasPersistedAuth())){
+      await window.__maintenanceLock('Não foi possível confirmar o acesso agora. Confira a conexão e tente reconectar; não é necessário digitar a senha novamente.',false);
+    }else{
+      $('app').classList.add('hidden');
+      $('login').classList.remove('hidden');
+      setLoginRecoveryMode(false);
+      notice($('loginMsg'),'Erro ao abrir o sistema: '+e.message)
+    }
   }
 }
 document.getElementById('galleryBtn')?.addEventListener('click',()=>document.getElementById('photo')?.click());
@@ -1288,7 +1352,11 @@ if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw_v17.js'
   }catch(e){
     localStorage.removeItem('sb-access-token');
     localStorage.removeItem('sb-refresh-token');
-    notice($('loginMsg'),'Não foi possível restaurar a sessão: '+(e?.message||e));
+    if(window.maintenanceDesktop?.platform==='win32'&&hasPersistedAuth()){
+      showSessionRecovery('Não foi possível validar a sessão agora. Verifique a internet e tente reconectar; não é necessário digitar a senha novamente.');
+    }else{
+      notice($('loginMsg'),'Não foi possível restaurar a sessão: '+(e?.message||e));
+    }
   }finally{
     if(loginButton)loginButton.disabled=false;
   }
@@ -1449,35 +1517,45 @@ function openAdminModal(title,html){
   $('modalContent').innerHTML=`<h2>${title}</h2>${html}`;
   $('modal').classList.remove('hidden');
 }
-async function openSectorsPanel(){
-  currentAdminModal='sectors';
-  if(!adminOnly())return;
-  try{
-    const [sr,ur,er]=await Promise.all([
-      sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name'),
-      sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id),
-      sb.from('equipment').select('id,sector_id,active').eq('organization_id',profile.organization_id)
-    ]);
-    if(sr.error)throw sr.error;
-    const usersBy=Object.fromEntries((ur.data||[]).map(x=>[x.sector_id,(Object.values(Object.fromEntries([])).length)]));
-    const uc={},ec={}; (ur.data||[]).forEach(x=>{if(x.sector_id)uc[x.sector_id]=(uc[x.sector_id]||0)+1}); (er.data||[]).forEach(x=>{if(x.sector_id)ec[x.sector_id]=(ec[x.sector_id]||0)+1});
-    const rows=sr.data||[];
-    openAdminModal('🏢 Setores',`
-      <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
-      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}" data-testid="row-sector-${s.id}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div>${adminRowActions('sectors',s.id,s.name,s.active!==false)}</div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
-      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
-    $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
-    $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
-    $('refreshSectorsAdmin').onclick=openSectorsPanel;
-    $('saveSectorAdmin').onclick=async()=>{
-      const name=$('newSectorAdminName').value.trim(); if(!name)return notice($('sectorAdminMsg'),'Informe o nome do setor.');
-      const x=await sb.from('sectors').insert({organization_id:profile.organization_id,name}).select('id').single();
-      if(x.error)return notice($('sectorAdminMsg'),x.error.message);
-      await refreshAfterAdminMutation('sectors');
-    };
-  }catch(e){showError(e,'Não foi possível carregar os setores')}
-}
 const MACHINE_PHOTO_MAX_BYTES=4.5*1024*1024;
+const equipmentLabelFieldGroups=[
+  {title:'Identificação técnica',fields:[
+    {key:'manufacturer',label:'Fabricante'},
+    {key:'model',label:'Modelo'},
+    {key:'serial_number',label:'Nº de série'},
+    {key:'manufacturing_year',label:'Ano de fabricação',type:'number',min:'1900',max:'9999'},
+    {key:'installation_date',label:'Data de instalação',type:'date'}
+  ]},
+  {title:'Dados elétricos',fields:[
+    {key:'voltage',label:'Tensão'},
+    {key:'current_rating',label:'Corrente'},
+    {key:'power_rating',label:'Potência'},
+    {key:'frequency',label:'Frequência'},
+    {key:'phase_count',label:'Nº de fases'}
+  ]},
+  {title:'Dados mecânicos / operacionais',fields:[
+    {key:'capacity',label:'Capacidade'},
+    {key:'working_pressure',label:'Pressão de trabalho'},
+    {key:'stroke',label:'Curso'},
+    {key:'dimensions',label:'Dimensões (C × L × A)'},
+    {key:'weight',label:'Peso'}
+  ]},
+  {title:'Lubrificação',fields:[
+    {key:'lubricant',label:'Óleo / graxa'},
+    {key:'lubricant_quantity',label:'Volume / quantidade'},
+    {key:'lubrication_interval',label:'Troca / periodicidade'}
+  ]},
+  {title:'Manutenção preventiva',fields:[
+    {key:'preventive_general_inspection',label:'Inspeção geral'},
+    {key:'preventive_electrical_check',label:'Verificação elétrica'},
+    {key:'preventive_oil_change',label:'Troca do óleo'},
+    {key:'preventive_general_overhaul',label:'Revisão geral'}
+  ]}
+];
+const equipmentLabelFields=equipmentLabelFieldGroups.flatMap(group=>group.fields);
+function equipmentLabelFormMarkup(){
+  return equipmentLabelFieldGroups.map(group=>`<section class="card" style="margin-top:12px"><h3>${escapeHtml(group.title)}</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;margin-top:10px">${group.fields.map(field=>`<div class="field"><label for="equipmentField_${field.key}">${escapeHtml(field.label)}</label><input id="equipmentField_${field.key}" data-equipment-field="${field.key}" type="${field.type||'text'}" ${field.min?`min="${field.min}"`:''} ${field.max?`max="${field.max}"`:''} autocomplete="off"></div>`).join('')}</div></section>`).join('');
+}
 async function prepareEquipmentPhoto(file){
   if(!file||!file.type?.startsWith('image/'))throw new Error('Selecione um arquivo de imagem.');
   if(file.size>30*1024*1024)throw new Error('A imagem original deve ter até 30 MB.');
@@ -1573,13 +1651,136 @@ async function printEquipmentReport(rows,sectors){
   frame.srcdoc=report;
   document.body.append(frame);
 }
-
+async function printEquipmentLabel(machine,sectors){
+  const labelImage=new URL('./etiqueta-equipamento.png',document.baseURI).href;
+  const value=(item,fallback='')=>escapeHtml(item==null||item===''?fallback:String(item));
+  const dateValue=machine.installation_date?String(machine.installation_date).slice(0,10).split('-').reverse().join('/'):'';
+  const field=(key)=>value(machine[key]);
+  const tag=`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Etiqueta · ${value(machine.name,'Equipamento')}</title>
+    <style>
+      @page{size:120mm 80mm;margin:0}
+      *{box-sizing:border-box}
+      html,body{width:120mm;height:80mm;margin:0;padding:0;overflow:hidden}
+      body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .label{position:relative;width:120mm;height:80mm;overflow:hidden}
+      .template{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+      .value{position:absolute;display:flex;align-items:center;overflow:hidden;white-space:nowrap;padding:0 1mm;color:#0b1e42;font:700 2.7mm/1 Arial,sans-serif}
+      .code{left:77.5%;top:7.4%;width:15.5%;height:4.7%;justify-content:center}
+      .equipment{left:16.3%;top:15.4%;width:79%;height:4.2%}
+      .sector{left:27%;top:20.3%;width:21%;height:4%}
+      .location{left:67%;top:20.3%;width:27.5%;height:4%}
+      .manufacturer{left:27%;top:25.1%;width:21%;height:4%}
+      .model{left:67%;top:25.1%;width:27.5%;height:4%}
+      .serial-number{left:27%;top:30%;width:21%;height:4%}
+      .manufacturing-year{left:67%;top:30%;width:27.5%;height:4%}
+      .installation-date{left:27%;top:34.8%;width:21%;height:4%}
+      .status{left:65%;top:34.8%;width:29.5%;height:4%}
+      .electrical-voltage,.electrical-current,.electrical-power,.electrical-frequency,.electrical-phases{left:24%;width:22%;height:3.6%}
+      .mechanical-capacity,.mechanical-pressure,.mechanical-stroke,.mechanical-dimensions,.mechanical-weight{left:73%;width:21.5%;height:3.6%}
+      .electrical-voltage,.mechanical-capacity{top:45.3%}
+      .electrical-current,.mechanical-pressure{top:49.3%}
+      .electrical-power,.mechanical-stroke{top:53.3%}
+      .electrical-frequency,.mechanical-dimensions{top:57.3%}
+      .electrical-phases,.mechanical-weight{top:61.3%}
+      .lubricant{left:27%;top:69.1%;width:19%;height:3.4%}
+      .lubricant-quantity{left:27%;top:73%;width:19%;height:3.4%}
+      .lubrication-interval{left:27%;top:76.8%;width:19%;height:3.4%}
+      .preventive-inspection,.preventive-electrical,.preventive-oil,.preventive-overhaul{left:73%;width:21.5%;height:3.1%}
+      .preventive-inspection{top:69%}
+      .preventive-electrical{top:72.8%}
+      .preventive-oil{top:76.5%}
+      .preventive-overhaul{top:80.2%}
+      @media screen{body{margin:0;background:#e5e7eb}.label{box-shadow:0 4px 24px #0004}}
+    </style></head><body><main class="label">
+      <img class="template" src="${escapeHtml(labelImage)}" alt="">
+      <div class="value code">${value(machine.code,'—')}</div>
+      <div class="value equipment">${value(machine.name,'—')}</div>
+      <div class="value sector">${value(machine.sector_id?sectors[machine.sector_id]:'','—')}</div>
+      <div class="value location">${value(machine.location,'—')}</div>
+      <div class="value manufacturer">${field('manufacturer')}</div>
+      <div class="value model">${field('model')}</div>
+      <div class="value serial-number">${field('serial_number')}</div>
+      <div class="value manufacturing-year">${field('manufacturing_year')}</div>
+      <div class="value installation-date">${dateValue}</div>
+      <div class="value status">${machine.active===false?'Inativa':'Ativa'}</div>
+      <div class="value electrical-voltage">${field('voltage')}</div>
+      <div class="value electrical-current">${field('current_rating')}</div>
+      <div class="value electrical-power">${field('power_rating')}</div>
+      <div class="value electrical-frequency">${field('frequency')}</div>
+      <div class="value electrical-phases">${field('phase_count')}</div>
+      <div class="value mechanical-capacity">${field('capacity')}</div>
+      <div class="value mechanical-pressure">${field('working_pressure')}</div>
+      <div class="value mechanical-stroke">${field('stroke')}</div>
+      <div class="value mechanical-dimensions">${field('dimensions')}</div>
+      <div class="value mechanical-weight">${field('weight')}</div>
+      <div class="value lubricant">${field('lubricant')}</div>
+      <div class="value lubricant-quantity">${field('lubricant_quantity')}</div>
+      <div class="value lubrication-interval">${field('lubrication_interval')}</div>
+      <div class="value preventive-inspection">${field('preventive_general_inspection')}</div>
+      <div class="value preventive-electrical">${field('preventive_electrical_check')}</div>
+      <div class="value preventive-oil">${field('preventive_oil_change')}</div>
+      <div class="value preventive-overhaul">${field('preventive_general_overhaul')}</div>
+    </main></body></html>`;
+  const frame=document.createElement('iframe');
+  frame.title=`Etiqueta de ${machine.name||'equipamento'} para impressão`;
+  frame.style.cssText='position:fixed;left:-200mm;top:0;width:120mm;height:80mm;border:0;visibility:hidden';
+  const cleanup=()=>{if(frame.isConnected)frame.remove()};
+  frame.onload=async()=>{
+    const printWindow=frame.contentWindow;
+    if(!printWindow){cleanup();throw new Error('Não foi possível preparar a etiqueta para impressão.')}
+    try{
+      const image=printWindow.document.querySelector('.template');
+      if(!image)throw new Error('A imagem original da etiqueta não foi carregada.');
+      if(!image.complete)await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('Não foi possível carregar o modelo da etiqueta.'))});
+      if(image.decode)await image.decode();
+      printWindow.addEventListener('afterprint',cleanup,{once:true});
+      printWindow.focus();
+      printWindow.print();
+      setTimeout(cleanup,120000);
+    }catch(error){cleanup();alert(error?.message||'Não foi possível gerar a etiqueta.')}
+  };
+  frame.srcdoc=tag;
+  document.body.append(frame);
+}
+let includeInactiveSectors=false;
+async function openSectorsPanel(){
+  currentAdminModal='sectors';
+  if(!adminOnly())return;
+  try{
+    const [sr,ur,er]=await Promise.all([
+      sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id),
+      sb.from('equipment').select('id,sector_id,active').eq('organization_id',profile.organization_id)
+    ]);
+    if(sr.error)throw sr.error;
+    const usersBy=Object.fromEntries((ur.data||[]).map(x=>[x.sector_id,(Object.values(Object.fromEntries([])).length)]));
+    const uc={},ec={}; (ur.data||[]).forEach(x=>{if(x.sector_id)uc[x.sector_id]=(uc[x.sector_id]||0)+1}); (er.data||[]).forEach(x=>{if(x.sector_id)ec[x.sector_id]=(ec[x.sector_id]||0)+1});
+     const rows=sr.data||[];
+     const inactiveCount=rows.filter(s=>s.active===false).length;
+     const visibleRows=includeInactiveSectors?rows:rows.filter(s=>s.active!==false);
+     const sectorListHtml=visibleRows.length?visibleRows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}" data-testid="row-sector-${s.id}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div>${adminRowActions('sectors',s.id,s.name,s.active!==false)}</div>`).join(''):`<div class="empty">${includeInactiveSectors?'Nenhum setor cadastrado.':'Nenhum setor ativo. Os setores inativos estão ocultos.'}</div>`;
+    openAdminModal('🏢 Setores',`
+       <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="toggleInactiveSectors" ${inactiveCount?'':'disabled'}>${includeInactiveSectors?'Ocultar setores inativos':`Mostrar setores inativos (${inactiveCount})`}</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
+       <div id="sectorAdminList" class="list" style="margin-top:14px">${sectorListHtml}</div>
+      <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
+    $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
+     $('toggleInactiveSectors').onclick=()=>{includeInactiveSectors=!includeInactiveSectors;openSectorsPanel()};
+    $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
+    $('refreshSectorsAdmin').onclick=openSectorsPanel;
+    $('saveSectorAdmin').onclick=async()=>{
+      const name=$('newSectorAdminName').value.trim(); if(!name)return notice($('sectorAdminMsg'),'Informe o nome do setor.');
+      const x=await sb.from('sectors').insert({organization_id:profile.organization_id,name}).select('id').single();
+      if(x.error)return notice($('sectorAdminMsg'),x.error.message);
+      await refreshAfterAdminMutation('sectors');
+    };
+  }catch(e){showError(e,'Não foi possível carregar os setores')}
+}
 async function openEquipmentPanel(){
   if(!adminOnly())return;
   currentAdminModal='equipment';
   try{
     const [er,sr]=await Promise.all([
-      sb.from('equipment').select('id,name,code,location,sector_id,active,created_at,photo_path').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('equipment').select(`id,name,code,location,sector_id,active,created_at,photo_path,${equipmentLabelFields.map(field=>field.key).join(',')}`).eq('organization_id',profile.organization_id).order('name'),
       sb.from('sectors').select('*').eq('organization_id',profile.organization_id).order('name')
     ]);
     if(er.error)throw er.error;
@@ -1587,14 +1788,48 @@ async function openEquipmentPanel(){
     const rows=er.data||[];
     const photoEntries=await Promise.all(rows.map(async e=>[e.id,await signedEquipmentPhoto(e.photo_path)]));
     const photoUrls=Object.fromEntries(photoEntries);
-    let selectedEquipmentPhoto=null,photoPreviewUrl='';
+    let selectedEquipmentPhoto=null,photoPreviewUrl='',editingEquipment=null;
     const printAction=isWindowsDesktopAdmin()?'<button class="btn secondary" id="printEquipmentReport" type="button">📄 PDF / Imprimir</button>':'';
     openAdminModal('⚙️ Equipamentos',`
       <div class="actions"><button class="btn primary" id="newEquipmentAdmin">➕ Novo equipamento</button>${printAction}<button class="btn secondary" id="refreshEquipmentAdmin">↻ Atualizar</button></div>
-      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket ${e.active?'':'inactive'}" data-testid="row-equipment-${e.id}"><div class="tickettop"><div style="display:flex;gap:12px;align-items:center">${photoUrls[e.id]?`<img src="${escapeHtml(photoUrls[e.id])}" alt="Foto de ${escapeHtml(e.name)}" style="width:76px;height:64px;object-fit:cover;border-radius:10px">`:''}<div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div>${adminRowActions('equipment',e.id,e.name,e.active)}</div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
-      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div><div class="field"><label>Foto da máquina</label><div class="actions"><button class="btn secondary" type="button" id="newEquipmentPhotoGallery">🖼️ Escolher foto</button><button class="btn secondary" type="button" id="newEquipmentPhotoCamera">📷 Tirar foto</button></div><input id="newEquipmentPhotoFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="newEquipmentPhotoCameraFile" type="file" accept="image/*" capture="environment" hidden><div id="newEquipmentPhotoPreview" class="small" style="margin-top:8px">Nenhuma foto selecionada. A imagem será reduzida para até 5 MB.</div></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
+      <div id="equipmentAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(e=>`<div class="ticket ${e.active?'':'inactive'}" data-testid="row-equipment-${e.id}"><div class="tickettop"><div style="display:flex;gap:12px;align-items:center">${photoUrls[e.id]?`<img src="${escapeHtml(photoUrls[e.id])}" alt="Foto de ${escapeHtml(e.name)}" style="width:76px;height:64px;object-fit:cover;border-radius:10px">`:''}<div><h3>${escapeHtml(e.name)}</h3><div class="small">${e.code?'Código: '+escapeHtml(e.code)+' · ':''}${escapeHtml(e.location||'Sem localização')}</div></div></div><span class="tag ${e.active?'s-completed':'s-cancelled'}">${e.active?'Ativo':'Inativo'}</span></div><div class="small" style="margin-top:8px">🏢 ${escapeHtml(sectors[e.sector_id]||'Sem setor')}</div><div class="actions"><button class="btn secondary" type="button" data-equipment-label="${escapeHtml(e.id)}">🏷️ Gerar etiqueta (PDF / imprimir)</button><button class="btn secondary" type="button" data-equipment-edit="${escapeHtml(e.id)}">Editar cadastro</button></div>${adminRowActions('equipment',e.id,e.name,e.active)}</div>`).join(''):'<div class="empty">Nenhum equipamento cadastrado.</div>'}</div>
+      <div id="newEquipmentAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome</label><input id="newEquipmentName" placeholder="Ex.: Compressor"></div><div class="field"><label>Código</label><input id="newEquipmentCode" placeholder="Ex.: EQ-001"></div><div class="field"><label>Localização</label><input id="newEquipmentLocation" placeholder="Ex.: Linha 1"></div><div class="field"><label>Setor</label><select id="newEquipmentSector"></select></div>${equipmentLabelFormMarkup()}<div class="field" style="margin-top:12px"><label>Foto da máquina (opcional; não é a etiqueta)</label><div class="actions"><button class="btn secondary" type="button" id="newEquipmentPhotoGallery">🖼️ Escolher foto</button><button class="btn secondary" type="button" id="newEquipmentPhotoCamera">📷 Tirar foto</button></div><input id="newEquipmentPhotoFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="newEquipmentPhotoCameraFile" type="file" accept="image/*" capture="environment" hidden><div id="newEquipmentPhotoPreview" class="small" style="margin-top:8px">Nenhuma foto selecionada. A imagem será reduzida para até 5 MB.</div></div><div class="actions"><button class="btn primary" id="saveEquipmentAdmin">Salvar</button><button class="btn secondary" id="cancelEquipmentAdmin">Cancelar</button></div><div id="equipmentAdminMsg" class="notice hidden"></div></div>`);
     $('newEquipmentSector').innerHTML='<option value="">Sem setor</option>'+(sr.data||[]).filter(s=>s.active!==false).map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
-    $('newEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
+    $('equipmentAdminList').addEventListener('click',async event=>{
+      const editButton=event.target.closest('button[data-equipment-edit]');
+      if(editButton){
+        const machine=rows.find(row=>row.id===editButton.dataset.equipmentEdit);
+        if(!machine)return;
+        editingEquipment=machine;
+        $('newEquipmentName').value=machine.name||'';
+        $('newEquipmentCode').value=machine.code||'';
+        $('newEquipmentLocation').value=machine.location||'';
+        $('newEquipmentSector').value=machine.sector_id||'';
+        equipmentLabelFields.forEach(field=>{const input=document.querySelector(`[data-equipment-field="${field.key}"]`);if(input)input.value=machine[field.key]??''});
+        $('saveEquipmentAdmin').textContent='Salvar alterações';
+        $('newEquipmentPhotoPreview').innerHTML=photoUrls[machine.id]?`<img src="${escapeHtml(photoUrls[machine.id])}" alt="Foto atual de ${escapeHtml(machine.name)}" style="display:block;max-width:220px;max-height:160px;object-fit:cover;border-radius:10px;margin-top:8px"><span>A foto atual será mantida se nenhuma nova for escolhida.</span>`:'Nenhuma foto cadastrada. A foto será mantida separada da etiqueta.';
+        $('equipmentAdminMsg').classList.add('hidden');
+        $('newEquipmentAdminBox').classList.remove('hidden');
+        $('newEquipmentName').focus();
+        return;
+      }
+      const button=event.target.closest('button[data-equipment-label]');
+      if(!button)return;
+      const machine=rows.find(row=>row.id===button.dataset.equipmentLabel);
+      if(!machine)return;
+      button.disabled=true;
+      try{await printEquipmentLabel(machine,sectors)}
+      catch(error){showError(error,'Não foi possível gerar a etiqueta')}
+      finally{button.disabled=false}
+    });
+    const resetEquipmentForm=()=>{
+      editingEquipment=null;
+      $('newEquipmentName').value='';$('newEquipmentCode').value='';$('newEquipmentLocation').value='';$('newEquipmentSector').value='';
+      equipmentLabelFields.forEach(field=>{const input=document.querySelector(`[data-equipment-field="${field.key}"]`);if(input)input.value=''});
+      $('saveEquipmentAdmin').textContent='Salvar';
+      clearPhotoSelection();
+    };
+    $('newEquipmentAdmin').onclick=()=>{resetEquipmentForm();$('equipmentAdminMsg').classList.add('hidden');$('newEquipmentAdminBox').classList.remove('hidden');$('newEquipmentName').focus()};
     const clearPhotoSelection=()=>{
       selectedEquipmentPhoto=null;
       if(photoPreviewUrl)URL.revokeObjectURL(photoPreviewUrl);
@@ -1621,25 +1856,38 @@ async function openEquipmentPanel(){
     $('newEquipmentPhotoCamera').onclick=()=> $('newEquipmentPhotoCameraFile').click();
     $('newEquipmentPhotoFile').onchange=e=>handleEquipmentPhoto(e.currentTarget);
     $('newEquipmentPhotoCameraFile').onchange=e=>handleEquipmentPhoto(e.currentTarget);
-    $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden');clearPhotoSelection()};
+    $('cancelEquipmentAdmin').onclick=()=>{$('newEquipmentAdminBox').classList.add('hidden');resetEquipmentForm()};
     $('refreshEquipmentAdmin').onclick=openEquipmentPanel;
     $('saveEquipmentAdmin').onclick=async()=>{
       const name=$('newEquipmentName').value.trim();if(!name)return notice($('equipmentAdminMsg'),'Informe o nome do equipamento.');
       const saveButton=$('saveEquipmentAdmin');saveButton.disabled=true;
-      let photoPath=null;
+      let photoPath=null,uploadedPhotoPath=null;
       try{
         if(selectedEquipmentPhoto){
           const safeId=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
           photoPath=`${profile.organization_id}/${session.user.id}/equipment-${safeId}.jpg`;
           const upload=await sb.storage.from('maintenance-photos').upload(photoPath,selectedEquipmentPhoto,{contentType:'image/jpeg',upsert:false});
           if(upload.error)throw upload.error;
+          uploadedPhotoPath=photoPath;
         }
-        const x=await sb.from('equipment').insert({organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:true,photo_path:photoPath}).select('id').single();
+        const equipmentData={organization_id:profile.organization_id,name,code:$('newEquipmentCode').value.trim()||null,location:$('newEquipmentLocation').value.trim()||null,sector_id:$('newEquipmentSector').value||null,active:editingEquipment?editingEquipment.active!==false:true};
+        equipmentLabelFields.forEach(field=>{
+          const raw=document.querySelector(`[data-equipment-field="${field.key}"]`)?.value?.trim()||'';
+          equipmentData[field.key]=raw?(field.key==='manufacturing_year'?Number(raw):raw):null;
+        });
+        if(uploadedPhotoPath)equipmentData.photo_path=uploadedPhotoPath;
+        const x=editingEquipment
+          ?await sb.from('equipment').update(equipmentData).eq('id',editingEquipment.id).eq('organization_id',profile.organization_id).select('id').single()
+          :await sb.from('equipment').insert({...equipmentData,photo_path:uploadedPhotoPath}).select('id').single();
         if(x.error){
-          if(photoPath){const cleanup=await sb.storage.from('maintenance-photos').remove([photoPath]);if(cleanup.error)console.warn('Não foi possível limpar uma foto sem cadastro de máquina associado.',cleanup.error.message)}
+          if(uploadedPhotoPath){const cleanup=await sb.storage.from('maintenance-photos').remove([uploadedPhotoPath]);if(cleanup.error)console.warn('Não foi possível limpar uma foto sem cadastro de máquina associado.',cleanup.error.message)}
           throw x.error;
         }
-        clearPhotoSelection();
+        if(uploadedPhotoPath&&editingEquipment?.photo_path&&editingEquipment.photo_path!==uploadedPhotoPath){
+          const cleanup=await sb.storage.from('maintenance-photos').remove([editingEquipment.photo_path]);
+          if(cleanup.error)console.warn('Não foi possível remover a foto antiga após a substituição.',cleanup.error.message);
+        }
+        resetEquipmentForm();
         await refreshAfterAdminMutation('equipment');
       }catch(e){notice($('equipmentAdminMsg'),e?.message||'Não foi possível cadastrar a máquina.')}
       finally{saveButton.disabled=false}

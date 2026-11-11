@@ -119,8 +119,18 @@ let session=null,profile=null,equipment=[];
 let notificationTimer=null,notificationBaseline=null;
 const NOTIFY_KEY='maint_last_notification_state';
 const NOTIFY_LIST_KEY='maint_notifications';
+const NOTIFY_CLEANUP_KEY='maint_notifications_cleanup_v1';
 let appNotifications=[];
+function clearLegacyLocalNotificationsOnce(){
+  try{
+    if(localStorage.getItem(NOTIFY_CLEANUP_KEY)==='done')return;
+    localStorage.removeItem(NOTIFY_LIST_KEY);
+    localStorage.removeItem(NOTIFY_KEY);
+    localStorage.setItem(NOTIFY_CLEANUP_KEY,'done');
+  }catch(e){console.warn('Não foi possível limpar o histórico local de notificações:',e?.message||e)}
+}
 function loadLocalNotifications(){
+  clearLegacyLocalNotificationsOnce();
   try{
     appNotifications=JSON.parse(localStorage.getItem(NOTIFY_LIST_KEY)||'[]');
     if(!Array.isArray(appNotifications)) appNotifications=[];
@@ -468,7 +478,7 @@ window.loadAdminUsers=async function loadAdminUsers(){
  $('usersPanel').classList.remove('hidden');
  $('usersList').innerHTML='<div class="empty">Carregando usuários...</div>';
  const [pr,sr]=await Promise.all([
-  sb.from('profiles').select('id,full_name,role,active,sector_id,created_at').eq('organization_id',profile.organization_id).order('full_name'),
+   sb.from('profiles').select('id,full_name,role,active,sector_id,created_at').eq('organization_id',profile.organization_id).is('deleted_at',null).order('full_name'),
   sb.from('sectors').select('id,name').eq('organization_id',profile.organization_id).order('name')
  ]);
  if(pr.error){$('usersList').innerHTML='<div class="empty">Não foi possível carregar os usuários: '+escapeHtml(pr.error.message)+'</div>';return}
@@ -754,22 +764,27 @@ function openAdminModal(title,html){
   $('modalContent').innerHTML=`<h2>${title}</h2>${html}`;
   $('modal').classList.remove('hidden');
 }
+let includeInactiveSectors=false;
 async function openSectorsPanel(){
   if(!adminOnly())return;
   try{
     const [sr,ur,er]=await Promise.all([
-      sb.from('sectors').select('id,name,created_at').eq('organization_id',profile.organization_id).order('name'),
-      sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id),
+      sb.from('sectors').select('id,name,created_at,active').eq('organization_id',profile.organization_id).order('name'),
+      sb.from('profiles').select('id,sector_id,active').eq('organization_id',profile.organization_id).is('deleted_at',null),
       sb.from('equipment').select('id,sector_id,active').eq('organization_id',profile.organization_id)
     ]);
     if(sr.error)throw sr.error;
     const usersBy=Object.fromEntries((ur.data||[]).map(x=>[x.sector_id,(Object.values(Object.fromEntries([])).length)]));
     const uc={},ec={}; (ur.data||[]).forEach(x=>{if(x.sector_id)uc[x.sector_id]=(uc[x.sector_id]||0)+1}); (er.data||[]).forEach(x=>{if(x.sector_id)ec[x.sector_id]=(ec[x.sector_id]||0)+1});
     const rows=sr.data||[];
+    const inactiveCount=rows.filter(s=>s.active===false).length;
+    const visibleRows=includeInactiveSectors?rows:rows.filter(s=>s.active!==false);
+    const sectorListHtml=visibleRows.length?visibleRows.map(s=>`<div class="ticket ${s.active===false?'inactive':''}"><div class="tickettop"><h3>${escapeHtml(s.name)}</h3><span class="tag ${s.active===false?'s-cancelled':'s-completed'}">${s.active===false?'Inativo':'Ativo'}</span></div><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div></div>`).join(''):`<div class="empty">${includeInactiveSectors?'Nenhum setor cadastrado.':'Nenhum setor ativo. Os setores inativos estão ocultos.'}</div>`;
     openAdminModal('🏢 Setores',`
-      <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
-      <div id="sectorAdminList" class="list" style="margin-top:14px">${rows.length?rows.map(s=>`<div class="ticket"><h3>${escapeHtml(s.name)}</h3><div class="small">👥 ${uc[s.id]||0} usuário(s) · ⚙️ ${ec[s.id]||0} equipamento(s)</div></div>`).join(''):'<div class="empty">Nenhum setor cadastrado.</div>'}</div>
+      <div class="actions"><button class="btn primary" id="newSectorAdmin">➕ Novo setor</button><button class="btn secondary" id="toggleInactiveSectors" ${inactiveCount?'':'disabled'}>${includeInactiveSectors?'Ocultar setores inativos':`Mostrar setores inativos (${inactiveCount})`}</button><button class="btn secondary" id="refreshSectorsAdmin">↻ Atualizar</button></div>
+      <div id="sectorAdminList" class="list" style="margin-top:14px">${sectorListHtml}</div>
       <div id="newSectorAdminBox" class="card hidden" style="margin-top:14px"><div class="field"><label>Nome do setor</label><input id="newSectorAdminName" placeholder="Ex.: Produção"></div><div class="actions"><button class="btn primary" id="saveSectorAdmin">Salvar</button><button class="btn secondary" id="cancelSectorAdmin">Cancelar</button></div><div id="sectorAdminMsg" class="notice hidden"></div></div>`);
+    $('toggleInactiveSectors').onclick=()=>{includeInactiveSectors=!includeInactiveSectors;openSectorsPanel()};
     $('newSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.remove('hidden');$('newSectorAdminName').focus()};
     $('cancelSectorAdmin').onclick=()=>{$('newSectorAdminBox').classList.add('hidden')};
     $('refreshSectorsAdmin').onclick=openSectorsPanel;
@@ -811,7 +826,6 @@ async function prepareEquipmentPhoto(file){
     throw new Error('Não foi possível reduzir a imagem para o limite de armazenamento de 5 MB.');
   }finally{URL.revokeObjectURL(sourceUrl)}
 }
-
 async function openEquipmentPanel(){
   if(!adminOnly())return;
   try{

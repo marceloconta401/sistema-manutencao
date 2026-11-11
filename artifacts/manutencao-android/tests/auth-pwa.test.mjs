@@ -215,6 +215,21 @@ test("mobile hides the header install button while keeping login installation av
   assert.match(html, /id="installLoginBtn"/);
 });
 
+test("Windows keeps the Supabase session and can retry access without re-entering the password", async () => {
+  const html = await readAppFile("index.html");
+  const accessSource = await readFile(new URL("src/access-management.ts", artifactDir), "utf8");
+
+  assert.match(html, /persistSession:\s*true/);
+  assert.match(html, /autoRefreshToken:\s*true/);
+  assert.match(html, /storageKey:SUPABASE_AUTH_STORAGE_KEY/);
+  assert.match(html, /id="retrySessionBtn"/);
+  assert.match(html, /showSessionRecovery/);
+  assert.match(html, /maintenance_windows_login/);
+  assert.doesNotMatch(html, /localStorage\.setItem\([^,]*(?:password|senha)/i);
+  assert.match(accessSource, /w\.maintenanceDesktop\?\.platform === "win32" \? 60_000/);
+  assert.match(accessSource, /falha de conexão\. Tente reconectar sem digitar a senha novamente/i);
+});
+
 test("Android install button opens the native prompt and hides after install", async () => {
   const html = await readAppFile("index.html");
   const installScript = getInlineScripts(html).find((script) =>
@@ -268,6 +283,18 @@ test("service worker only caches same-origin app-shell resources", async () => {
   assert.match(serviceWorker, /key\.startsWith\("sistema-manutencao-"\)/);
   assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
   assert.equal(publicServiceWorker, serviceWorker);
+});
+
+test("archived profiles and inactive sectors stay hidden by default while local notification history is cleared once", async () => {
+  for (const file of ["index.html", "app.html"]) {
+    const source = await readAppFile(file);
+    assert.match(source, /maint_notifications_cleanup_v1/);
+    assert.match(source, /removeItem\(NOTIFY_LIST_KEY\)/);
+    assert.match(source, /removeItem\(NOTIFY_KEY\)/);
+    assert.match(source, /\.is\('deleted_at',null\)/);
+    assert.match(source, /filter\(s=>s\.active!==false\)/);
+    assert.match(source, /toggleInactiveSectors/);
+  }
 });
 
 test("Push Edge Function authenticates users and routes Web Push and Android FCM", async () => {
