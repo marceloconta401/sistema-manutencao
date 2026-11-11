@@ -272,6 +272,26 @@ test("PWA manifest is installable as a standalone Android app", async () => {
   }
 });
 
+test("Supabase browser client is local and available to the Windows installer", async () => {
+  const vendor = await readAppFile("supabase-client.js");
+  const license = await readAppFile("SUPABASE-JS-LICENSE.txt");
+  assert.ok(vendor.length > 100_000, "the bundled Supabase client should not be an empty placeholder");
+  assert.match(license, /Copyright \(c\) 2020 Supabase/);
+
+  const context = vm.createContext({
+    console, setTimeout, clearTimeout, fetch, URL, URLSearchParams,
+    Headers, Request, Response, AbortController, FormData, Blob,
+  });
+  vm.runInContext(vendor, context, { timeout: 3_000 });
+  assert.equal(typeof context.supabase?.createClient, "function");
+
+  for (const file of ["index.html", "app.html", "login_v3.html"]) {
+    const html = await readAppFile(file);
+    assert.match(html, /<script src="\.\/supabase-client\.js"><\/script>/, `${file} should load the local client`);
+    assert.doesNotMatch(html, /cdn\.jsdelivr\.net\/npm\/@supabase|unpkg\.com\/@supabase/, `${file} must not depend on a CDN`);
+  }
+});
+
 test("service worker only caches same-origin app-shell resources", async () => {
   const serviceWorker = await readAppFile("sw_v17.js");
   const publicServiceWorker = await readAppFile("public/sw_v17.js");
@@ -279,7 +299,8 @@ test("service worker only caches same-origin app-shell resources", async () => {
   assert.doesNotThrow(() => new vm.Script(serviceWorker));
   assert.match(serviceWorker, /requestUrl\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /const isAppShellAsset = APP_SHELL/);
-  assert.match(serviceWorker, /sistema-manutencao-v22/);
+  assert.match(serviceWorker, /sistema-manutencao-v23/);
+  assert.match(serviceWorker, /"\.\/supabase-client\.js"/);
   assert.match(serviceWorker, /key\.startsWith\("sistema-manutencao-"\)/);
   assert.match(serviceWorker, /client\.navigate\(targetUrl\)/);
   assert.equal(publicServiceWorker, serviceWorker);

@@ -24,6 +24,16 @@ test("Electron applies ASCII User-Agent before loading the application", async (
   assert.match(source, /app\.setName\("Sistema de Manutenção"\)/);
 });
 
+test("Windows packaging includes the offline Supabase browser client", async () => {
+  const builderConfig = await readFile(new URL("../electron-builder.yml", import.meta.url), "utf8");
+  const buildScript = await readFile(new URL("../scripts/build-web.mjs", import.meta.url), "utf8");
+  const source = await readFile(new URL("../supabase-client.js", import.meta.url), "utf8");
+  assert.match(builderConfig, /dist\/public\/\*\*\/\*/);
+  assert.match(buildScript, /dist.*public/);
+  assert.match(buildScript, /supabase-client\.js/);
+  assert.ok(source.length > 100_000);
+});
+
 test("an accented Electron User-Agent corrupts UTF-8 on the HTTP wire, and the fixed value does not", async (t) => {
   const original = "Mozilla/5.0 SistemadeManutenção/1.0.0 Chrome/152 Electron/44 Safari/537.36";
   const server = createServer((req, res) => {

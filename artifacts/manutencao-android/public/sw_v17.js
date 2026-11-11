@@ -1,7 +1,8 @@
-const CACHE_NAME = "sistema-manutencao-v22";
+const CACHE_NAME = "sistema-manutencao-v23";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./supabase-client.js",
   "./manifest_v11.json",
   "./favicon-v11.ico",
   "./icon-192-v11.png",

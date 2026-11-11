@@ -83,8 +83,7 @@ body:has(#login:not(.hidden)) .top{display:none}
 </div></div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<script src="https://unpkg.com/@supabase/supabase-js@2.110.8/dist/umd/supabase.js"></script>
-<script>if(!window.supabase){document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/dist/umd/supabase.js"><\/script>')}</script>
+<script src="./supabase-client.js"></script>
 <script>
 window.__directLogin=async function(){
   const email=document.getElementById('email')?.value.trim();

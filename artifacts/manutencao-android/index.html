@@ -278,8 +278,7 @@ header.top button:focus-visible,#app button:focus-visible,#app input:focus-visib
 </div>
 </section></main>
 <div id="modal" class="modal hidden"><div class="modalbox"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>if(!window.supabase){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
+<script src="./supabase-client.js"></script>
 <script>
 window.__directLogin=async function(){
   const login=document.getElementById('email')?.value.trim();
