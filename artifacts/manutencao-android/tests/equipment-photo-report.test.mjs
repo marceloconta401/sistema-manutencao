@@ -61,6 +61,10 @@ test("machine list generates the supplied label image at exact 120 by 80 mm usin
   assert.match(panel, /data-equipment-label=/);
   assert.match(panel, /printEquipmentLabel\(machine,sectors\)/);
   assert.match(label, /@page\{size:120mm 80mm;margin:0\}/);
+  assert.match(label, /\.equipment\{left:21\.5%;top:15\.1%;width:74%;height:4\.3%\}/);
+  assert.match(label, /\.sector,\.manufacturer,\.serial-number,\.installation-date\{left:20\.5%;width:28\.5%\}/);
+  assert.match(label, /\.location,\.model,\.manufacturing-year\{left:68\.5%;width:27%\}/);
+  assert.match(label, /\.status\{left:65\.8%;top:34\.8%;width:29%;height:4%\}/);
   assert.match(label, /new URL\('\.\/etiqueta-equipamento\.png',document\.baseURI\)/);
   assert.match(label, /machine\.code/);
   assert.match(label, /machine\.name/);
