@@ -77,6 +77,11 @@ test("machine list generates the supplied label image at exact 120 by 80 mm usin
   assert.match(label, /field\('voltage'\)/);
   assert.match(label, /field\('working_pressure'\)/);
   assert.match(label, /field\('preventive_general_overhaul'\)/);
+  assert.match(label, /id="equipmentLabelPreviewFrame"/);
+  assert.match(label, /Pré-visualização da etiqueta/);
+  assert.match(label, /id="printEquipmentLabelNow"/);
+  assert.match(label, /printWindow\.print\(\)/);
+  assert.doesNotMatch(label, /frame\.style\.cssText='position:fixed;left:-200mm/);
 });
 
 test("equipment form persists every optional data field shown on the label with an additive Supabase migration", async () => {

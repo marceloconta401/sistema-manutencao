@@ -92,6 +92,11 @@ header.top button:focus-visible,#app button:focus-visible,#app input:focus-visib
   overscroll-behavior:contain;
 }
 .modalbox{max-height:100%;overflow-y:auto;overscroll-behavior:contain;margin:clamp(8px,4vh,32px) auto}
+.equipment-label-preview-shell h2{margin:0 0 8px}
+.equipment-label-preview-frame-wrap{width:100%;min-height:220px;overflow:auto;display:flex;justify-content:center;align-items:flex-start;background:#dbe3ee;border-radius:12px;padding:12px}
+.equipment-label-preview-frame{display:block;width:100%;height:min(80vh,360px);border:0;background:#e5e7eb;border-radius:8px}
+.equipment-label-preview-shell .actions{justify-content:flex-end}
+.equipment-label-preview-shell .actions .btn{flex:0 1 auto;min-width:180px}
 .notifypanel{max-width:calc(100vw - 24px - var(--maintenance-safe-left) - var(--maintenance-safe-right))}
 .notificationlist{overscroll-behavior:contain}
 
@@ -1691,7 +1696,7 @@ async function printEquipmentLabel(machine,sectors){
       .preventive-electrical{top:72.8%}
       .preventive-oil{top:76.5%}
       .preventive-overhaul{top:80.2%}
-      @media screen{body{margin:0;background:#e5e7eb}.label{box-shadow:0 4px 24px #0004}}
+      @media screen{body{margin:0 auto;background:#e5e7eb}.label{box-shadow:0 4px 24px #0004}}
     </style></head><body><main class="label">
       <img class="template" src="${escapeHtml(labelImage)}" alt="">
       <div class="value code">${value(machine.code,'—')}</div>
@@ -1722,26 +1727,38 @@ async function printEquipmentLabel(machine,sectors){
       <div class="value preventive-oil">${field('preventive_oil_change')}</div>
       <div class="value preventive-overhaul">${field('preventive_general_overhaul')}</div>
     </main></body></html>`;
-  const frame=document.createElement('iframe');
-  frame.title=`Etiqueta de ${machine.name||'equipamento'} para impressão`;
-  frame.style.cssText='position:fixed;left:-200mm;top:0;width:120mm;height:80mm;border:0;visibility:hidden';
-  const cleanup=()=>{if(frame.isConnected)frame.remove()};
+  $('modalContent').innerHTML=`<div class="equipment-label-preview-shell">
+    <h2>Pré-visualização da etiqueta</h2>
+    <p class="small">Confira os dados e o alinhamento na etiqueta de 120 × 80 mm. A impressão ou o salvamento em PDF só começa quando você clicar no botão abaixo.</p>
+    <div class="equipment-label-preview-frame-wrap"><iframe id="equipmentLabelPreviewFrame" class="equipment-label-preview-frame" title="Pré-visualização da etiqueta de ${value(machine.name,'equipamento')}"></iframe></div>
+    <div id="equipmentLabelPreviewMessage" class="small" role="status" aria-live="polite">Carregando pré-visualização…</div>
+    <div class="actions"><button class="btn primary" id="printEquipmentLabelNow" type="button" disabled>Imprimir / salvar como PDF</button><button class="btn secondary" id="closeEquipmentLabelPreview" type="button">Fechar</button></div>
+  </div>`;
+  $('modal').classList.remove('hidden');
+  const frame=$('equipmentLabelPreviewFrame');
+  const printButton=$('printEquipmentLabelNow');
+  const previewMessage=$('equipmentLabelPreviewMessage');
+  $('closeEquipmentLabelPreview').onclick=()=>$('modal').classList.add('hidden');
   frame.onload=async()=>{
-    const printWindow=frame.contentWindow;
-    if(!printWindow){cleanup();throw new Error('Não foi possível preparar a etiqueta para impressão.')}
     try{
-      const image=printWindow.document.querySelector('.template');
-      if(!image)throw new Error('A imagem original da etiqueta não foi carregada.');
-      if(!image.complete)await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('Não foi possível carregar o modelo da etiqueta.'))});
+      const image=frame.contentDocument?.querySelector('.template');
+      if(!image)throw new Error('Não foi possível carregar a pré-visualização da etiqueta.');
+      if(!image.complete)await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('Não foi possível carregar a imagem da etiqueta.'))});
       if(image.decode)await image.decode();
-      printWindow.addEventListener('afterprint',cleanup,{once:true});
-      printWindow.focus();
-      printWindow.print();
-      setTimeout(cleanup,120000);
-    }catch(error){cleanup();alert(error?.message||'Não foi possível gerar a etiqueta.')}
+      previewMessage.textContent='Pré-visualização pronta. Confira os campos antes de imprimir.';
+      printButton.disabled=false;
+    }catch(error){
+      previewMessage.textContent=error?.message||'Não foi possível carregar a pré-visualização.';
+      previewMessage.classList.add('error');
+    }
+  };
+  printButton.onclick=()=>{
+    const printWindow=frame.contentWindow;
+    if(!printWindow){previewMessage.textContent='Não foi possível abrir a pré-visualização para impressão.';return}
+    printWindow.focus();
+    printWindow.print();
   };
   frame.srcdoc=tag;
-  document.body.append(frame);
 }
 let includeInactiveSectors=false;
 async function openSectorsPanel(){
