@@ -62,9 +62,16 @@ test("machine list generates the supplied label image at exact 120 by 80 mm usin
   assert.match(panel, /printEquipmentLabel\(machine,sectors\)/);
   assert.match(label, /@page\{size:120mm 80mm;margin:0\}/);
   assert.match(label, /\.equipment\{left:21\.5%;top:15\.1%;width:74%;height:4\.3%\}/);
-  assert.match(label, /\.sector,\.manufacturer,\.serial-number,\.installation-date\{left:20\.5%;width:28\.5%\}/);
+  assert.match(label, /\.sector,\.manufacturer,\.serial-number\{left:20\.5%;width:28\.5%\}/);
+  assert.match(label, /\.installation-date\{left:26\.5%;top:34\.3%;width:22\.5%;height:4%\}/);
   assert.match(label, /\.location,\.model,\.manufacturing-year\{left:68\.5%;width:27%\}/);
-  assert.match(label, /\.status\{left:65\.8%;top:34\.8%;width:29%;height:4%\}/);
+  assert.match(label, /\.status\{left:64\.8%;top:34\.3%;width:30%;height:4%\}/);
+  assert.match(label, /\.electrical-voltage,\.electrical-current,\.electrical-power,\.electrical-frequency,\.electrical-phases\{left:24\.3%;width:21\.7%;height:3\.2%\}/);
+  assert.match(label, /\.electrical-voltage,\.mechanical-capacity\{top:44\.9%\}/);
+  assert.match(label, /\.electrical-phases,\.mechanical-weight\{top:59\.3%\}/);
+  assert.match(label, /\.preventive-inspection,\.preventive-electrical,\.preventive-oil,\.preventive-overhaul\{left:72\.5%;width:22%;height:3%\}/);
+  assert.match(label, /\.preventive-overhaul\{top:78\.5%\}/);
+  assert.match(label, /font:600 2\.25mm\/1 Arial,sans-serif/);
   assert.match(label, /new URL\('\.\/etiqueta-equipamento\.png',document\.baseURI\)/);
   assert.match(label, /machine\.code/);
   assert.match(label, /machine\.name/);

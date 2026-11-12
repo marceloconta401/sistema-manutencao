@@ -1668,34 +1668,34 @@ async function printEquipmentLabel(machine,sectors){
       body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       .label{position:relative;width:120mm;height:80mm;overflow:hidden}
       .template{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
-      .value{position:absolute;display:flex;align-items:center;overflow:hidden;white-space:nowrap;padding:0 1mm;color:#0b1e42;font:700 2.7mm/1 Arial,sans-serif}
+      .value{position:absolute;display:flex;align-items:center;min-width:0;overflow:hidden;white-space:nowrap;padding:0 1mm;color:#0b1e42;font:600 2.25mm/1 Arial,sans-serif}
       .code{left:77.5%;top:7.4%;width:15.5%;height:4.7%;justify-content:center}
       .equipment{left:21.5%;top:15.1%;width:74%;height:4.3%}
-      .sector,.manufacturer,.serial-number,.installation-date{left:20.5%;width:28.5%}
+      .sector,.manufacturer,.serial-number{left:20.5%;width:28.5%}
       .sector{top:20.3%;height:4%}
       .location,.model,.manufacturing-year{left:68.5%;width:27%}
       .location{top:20.3%;height:4%}
-      .manufacturer{top:25.1%;height:4%}
+      .manufacturer{top:24.9%;height:4%}
       .model{top:25.1%;height:4%}
-      .serial-number{top:30%;height:4%}
+      .serial-number{top:29.6%;height:4%}
       .manufacturing-year{top:30%;height:4%}
-      .installation-date{top:34.8%;height:4%}
-      .status{left:65.8%;top:34.8%;width:29%;height:4%}
-      .electrical-voltage,.electrical-current,.electrical-power,.electrical-frequency,.electrical-phases{left:24%;width:22%;height:3.6%}
-      .mechanical-capacity,.mechanical-pressure,.mechanical-stroke,.mechanical-dimensions,.mechanical-weight{left:73%;width:21.5%;height:3.6%}
-      .electrical-voltage,.mechanical-capacity{top:45.3%}
-      .electrical-current,.mechanical-pressure{top:49.3%}
-      .electrical-power,.mechanical-stroke{top:53.3%}
-      .electrical-frequency,.mechanical-dimensions{top:57.3%}
-      .electrical-phases,.mechanical-weight{top:61.3%}
-      .lubricant{left:27%;top:69.1%;width:19%;height:3.4%}
-      .lubricant-quantity{left:27%;top:73%;width:19%;height:3.4%}
-      .lubrication-interval{left:27%;top:76.8%;width:19%;height:3.4%}
-      .preventive-inspection,.preventive-electrical,.preventive-oil,.preventive-overhaul{left:73%;width:21.5%;height:3.1%}
-      .preventive-inspection{top:69%}
-      .preventive-electrical{top:72.8%}
-      .preventive-oil{top:76.5%}
-      .preventive-overhaul{top:80.2%}
+      .installation-date{left:26.5%;top:34.3%;width:22.5%;height:4%}
+      .status{left:64.8%;top:34.3%;width:30%;height:4%}
+      .electrical-voltage,.electrical-current,.electrical-power,.electrical-frequency,.electrical-phases{left:24.3%;width:21.7%;height:3.2%}
+      .mechanical-capacity,.mechanical-pressure,.mechanical-stroke,.mechanical-dimensions,.mechanical-weight{left:72.5%;width:22%;height:3.2%}
+      .electrical-voltage,.mechanical-capacity{top:44.9%}
+      .electrical-current,.mechanical-pressure{top:48.5%}
+      .electrical-power,.mechanical-stroke{top:52.1%}
+      .electrical-frequency,.mechanical-dimensions{top:55.7%}
+      .electrical-phases,.mechanical-weight{top:59.3%}
+      .lubricant{left:27.2%;top:68.2%;width:18.8%;height:3.2%}
+      .lubricant-quantity{left:27.2%;top:71.9%;width:18.8%;height:3.2%}
+      .lubrication-interval{left:27.2%;top:75.6%;width:18.8%;height:3.2%}
+      .preventive-inspection,.preventive-electrical,.preventive-oil,.preventive-overhaul{left:72.5%;width:22%;height:3%}
+      .preventive-inspection{top:68%}
+      .preventive-electrical{top:71.5%}
+      .preventive-oil{top:75%}
+      .preventive-overhaul{top:78.5%}
       @media screen{body{margin:0 auto;background:#e5e7eb}.label{box-shadow:0 4px 24px #0004}}
     </style></head><body><main class="label">
       <img class="template" src="${escapeHtml(labelImage)}" alt="">

@@ -1,6 +1,6 @@
 {
   "name": "@workspace/manutencao-android",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Sistema de Manutenção para Web, Android e Windows",
   "private": true,
   "type": "module",
